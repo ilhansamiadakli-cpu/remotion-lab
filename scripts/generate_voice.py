@@ -32,12 +32,36 @@ from pathlib import Path
 from typing import Any, Protocol
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
+INBOX_DIR = ROOT_DIR / "src" / "data" / "inbox"
 DEFAULT_SCRIPT = ROOT_DIR / "src" / "data" / "script.md"
 DEFAULT_PRONUNCIATION = ROOT_DIR / "src" / "data" / "pronunciation.json"
 DEFAULT_AUDIO_OUT = ROOT_DIR / "public" / "audio" / "kayit.wav"
 DEFAULT_TRANSCRIPT_OUT = ROOT_DIR / "src" / "data" / "transcript.json"
 
 TICKS_PER_SEC = 10_000_000.0  # edge-tts offset/duration birimi: 100 nanosaniye
+
+
+def resolve_input_script(explicit_path: str | None) -> tuple[Path, str]:
+    """
+    Açık dosya verilmemişse önce `src/data/inbox/` içindeki en güncel `.md`/`.txt`
+    dosyasını seçer; klasör boşsa `src/data/script.md` varsayılanına düşer.
+    """
+    if explicit_path:
+        return Path(explicit_path).resolve(), "explicit"
+
+    if INBOX_DIR.is_dir():
+        candidates = [
+            p
+            for p in INBOX_DIR.iterdir()
+            if p.is_file()
+            and not p.name.startswith(".")
+            and p.suffix.lower() in (".md", ".txt")
+        ]
+        if candidates:
+            newest = max(candidates, key=lambda p: p.stat().st_mtime)
+            return newest.resolve(), "inbox"
+
+    return DEFAULT_SCRIPT.resolve(), "default"
 
 
 @dataclass
@@ -522,7 +546,7 @@ def concat_and_master_wav(
 
 
 async def generate_all(args: argparse.Namespace) -> int:
-    script_path = Path(args.script).resolve()
+    script_path, source_mode = resolve_input_script(args.script)
     pron_path = Path(args.pronunciation).resolve()
     audio_out = Path(args.audio_out).resolve()
     transcript_out = Path(args.transcript_out).resolve()
@@ -535,7 +559,8 @@ async def generate_all(args: argparse.Namespace) -> int:
     pron_rules = load_pronunciation(pron_path)
     provider = EdgeTtsProvider(voice=args.voice, rate=args.rate, pitch=args.pitch)
 
-    print(f"[voice] Betik: {script_path.name} ({len(chapters)} bölüm) | Başlık: {doc_title}")
+    source_tag = "inbox (otomatik)" if source_mode == "inbox" else source_mode
+    print(f"[voice] Betik: {script_path.name} [{source_tag}] ({len(chapters)} bölüm) | Başlık: {doc_title}")
     print(f"[voice] Sağlayıcı: edge-tts | Ses: {args.voice} | Hız: {args.rate} | Telaffuz kuralı: {len(pron_rules)}")
 
     all_segments: list[dict[str, Any]] = []
@@ -635,8 +660,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "script",
         nargs="?",
-        default=str(DEFAULT_SCRIPT),
-        help="Girdi Markdown anlatım betiği (varsayılan: src/data/script.md)",
+        default=None,
+        help="Girdi .md/.txt betiği (boş bırakılırsa: src/data/inbox/ içindeki en yeni dosya, yoksa src/data/script.md)",
     )
     parser.add_argument(
         "--voice",

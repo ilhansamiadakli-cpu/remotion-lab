@@ -40,7 +40,8 @@ remotion-lab/
 │   │   ├── DotMatrixBg.tsx       # dotMatrix
 │   │   └── RadialGlowBg.tsx      # radialGlow
 │   ├── data/
-│   │   ├── script.md             # Bölüm başlıklarıyla (## Bölüm 1: ...) ayrılmış Markdown anlatım betiği
+│   │   ├── inbox/                # Buraya bırakılan en güncel .md/.txt betiği `produce` tarafından otomatik algılanır
+│   │   ├── script.md             # inbox/ boşken kullanılan varsayılan Markdown anlatım betiği
 │   │   ├── pronunciation.json    # edge-tts Türkçe teknik terim okunuş haritası (ekran yazımını kirletmez)
 │   │   ├── timeline.json         # MainVideo aktif tekil zaman çizelgesi
 │   │   ├── chapters/             # YALNIZCA aktif üretilen videonun bölüm JSON'ları (ChaptersVideo + Chapter-*)
@@ -122,16 +123,16 @@ remotion-lab/
 
 ## 4. Standart İş Akışları
 
-### A. Metinden Tek Komutla Üretim Akışı (`script.md` + `edge-tts` — Önerilen)
-1. **Anlatım Betiği:** Anlatım metni `## Bölüm 1: ...` başlıklarıyla `src/data/script.md` içine yazılır; gerekiyorsa yeni teknik terim telaffuzları `src/data/pronunciation.json` dosyasına eklenir.
-2. **Tek Komutluk Boru Hattı (Taslak Öncelikli):**
+### A. Metinden Tek Komutla Üretim Akışı (`inbox/` veya `script.md` + `edge-tts` — Önerilen)
+1. **Anlatım Betiği:** Anlatım metni `## Bölüm 1: ...` başlıklarıyla `src/data/inbox/` klasörüne herhangi bir `.md`/`.txt` dosyası olarak bırakılır (boşsa `src/data/script.md` kullanılır); gerekiyorsa telaffuzlar `src/data/pronunciation.json` dosyasına eklenir.
+2. **Tek Komutluk Boru Hattı (Taslak Öncelikli veya `--render` Fabrika):**
    ```bash
-   npm run produce
-   # Farklı ses/hız için: npm run produce -- src/data/script.md --voice tr-TR-AhmetNeural --rate +4%
-   # Yalnızca ses + WordBoundary transkript için: npm run voice -- src/data/script.md
+   make produce   # (veya: npm run produce) -> inbox/ en yeni dosya -> taslaklar + typecheck
+   make promote   # Onay sonrası taslakları aktif src/data/chapters/ içine alır
+   make factory   # (veya: npm run produce -- --render) -> Tam otomatik MP4 render
    ```
-   Bu komut sırasıyla `generate_voice.py` (`public/audio/kayit.wav` + %0 ASR hatalı `WordBoundary` `transcript.json`), `plan_timeline.py --split-by-script` (`src/data/timeline_draft.json` ve `src/data/chapters_draft/*.json`) ve `npm run typecheck` adımlarını çalıştırır; aktif `src/data/chapters/` dosyalarının üzerine yazmaz ve uzun render başlatmaz.
-3. **Kullanıcı Onayı, Önizleme & Render:** Taslak özeti onaylandıktan sonra `src/data/chapters/` içine taşınır, `npm run dev` ile önizlenir ve `npm run build:chapter` / `npm run build:chapters` ile render alınır.
+   Varsayılan `produce` komutu `src/data/timeline_draft.json` ve `src/data/chapters_draft/*.json` üretip durur; aktif `src/data/chapters/` dosyalarını ezmez ve `--render` verilmedikçe uzun render başlatmaz.
+3. **Önizleme & Tekil Bölüm Render:** `make dev` ile Studio'da önizlenir; tek bölüm için `make chapter ID=<ChapterId> OUT=out/test_01.mp4` çalıştırılır.
 
 ### B. Harici Ses Kaydından Üretim Akışı (Mikrofon / ElevenLabs)
 1. **Ham Ses Ekleme:** Ham kayıt `public/audio/` altına eklenir (orijinal dosya değiştirilmez).

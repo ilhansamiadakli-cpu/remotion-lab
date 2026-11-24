@@ -104,19 +104,27 @@ Büyük ses/video dosyaları `.gitignore` ile depo dışında tutulduğundan ilk
 .venv/bin/python scripts/generate_ambient.py
 ```
 
-### 3. Tek Komutluk Otomatik Üretim (`script.md` + `edge-tts`)
+### 3. Tek Komutluk Otomatik Üretim (`src/data/inbox/` + `Makefile` + `edge-tts`)
 
-Anlatım metnini `## Bölüm 1: ...` başlıklarıyla `src/data/script.md` dosyasına yazdıktan sonra ücretsiz `edge-tts` sentezini, `WordBoundary` kelime zaman damgalarını (%0 Whisper ASR hatası), 3–5 sn bölüm taslaklarını (`src/data/chapters_draft/`) ve TypeScript doğrulamasını tek komutta çalıştırabilirsin:
+Anlatım metnini `## Bölüm 1: ...` başlıklarıyla `src/data/inbox/` klasörüne herhangi bir `.md` veya `.txt` dosyası olarak bırakabilir (boşsa `src/data/script.md` kullanılır) ve `make` veya `npm` ile boru hattını başlatabilirsin:
 
 ```bash
-# Tam taslak boru hatti: generate_voice.py -> plan_timeline.py (--split-by-script) -> typecheck
-npm run produce
+# Kullanilabilir tum Makefile hedeflerini listeler
+make help
 
-# Ozel betik, farkli ses (ornegin tr-TR-EmelNeural) veya konusma hizi ile:
-npm run produce -- src/data/script.md --voice tr-TR-AhmetNeural --rate +4%
+# [Onerilen] inbox/ icindeki en yeni .md/.txt -> ses + WordBoundary + taslaklar + typecheck
+make produce
+# npm esdegeri: npm run produce
 
-# Yalnizca ses (kayit.wav) ve WordBoundary transcript.json uretmek icin:
-npm run voice -- src/data/script.md --speak-headings
+# Onaylanan taslaklari aktif src/data/chapters/ icine terfi ettirir
+make promote
+
+# [Tam Fabrika Modu] Ses + taslaklar + aktif terfi + ChaptersVideo MP4 render
+make factory
+# npm esdegeri: npm run produce -- --render
+
+# Farkli ses veya hiz ile:
+make produce VOICE=tr-TR-EmelNeural RATE=+4%
 ```
 
 Teknik terimlerin Türkçe seslendirmede doğal okunması `src/data/pronunciation.json` üzerinden yönetilir; ekranda ve `transcript.json` içinde daima orijinal temiz yazımlar (`MySQL 8.0`, `3NF`, `@Transactional`, `Foreign Key`, `GitHub`) korunur.
