@@ -8,7 +8,7 @@ Bu dosya, `remotion-lab` deposunda çalışan tüm yapay zekâ ajanları için b
 
 **Amaç:** Veri güdümlü (JSON-driven), karanlık/minimalist mühendislik estetiğine sahip 3–5 dakikalık teknik proje sunumu ve devlog video motoru.
 
-**Teknoloji Yığını:** Remotion `4.0.546` · React `19` · TypeScript `7` (`strict: true`) · Tailwind CSS `v4` (`remotion.config.ts`) · Python `.venv` (`faster-whisper`, `ffmpeg`, `numpy`).
+**Teknoloji Yığını:** Remotion `4.0.546` · React `19` · TypeScript `7` (`strict: true`) · Tailwind CSS `v4` (`remotion.config.ts`) · Python `.venv` (`edge-tts`, `faster-whisper`, `ffmpeg`, `numpy`, `pillow`).
 
 ```text
 remotion-lab/
@@ -40,19 +40,23 @@ remotion-lab/
 │   │   ├── DotMatrixBg.tsx       # dotMatrix
 │   │   └── RadialGlowBg.tsx      # radialGlow
 │   ├── data/
+│   │   ├── script.md             # Bölüm başlıklarıyla (## Bölüm 1: ...) ayrılmış Markdown anlatım betiği
+│   │   ├── pronunciation.json    # edge-tts Türkçe teknik terim okunuş haritası (ekran yazımını kirletmez)
 │   │   ├── timeline.json         # MainVideo aktif tekil zaman çizelgesi
 │   │   ├── chapters/             # YALNIZCA aktif üretilen videonun bölüm JSON'ları (ChaptersVideo + Chapter-*)
-│   │   ├── chapters_draft/       # --split-chapters ile üretilen onay öncesi taslak bölümler
+│   │   ├── chapters_draft/       # --split-chapters / --split-by-script onay öncesi taslak bölümler
 │   │   ├── examples/             # Vitrin, pilot ve bileşen test JSON'ları (ChaptersVideo'ya karışmaz)
 │   │   ├── timeline_draft.json   # plan_timeline.py tarafından üretilen onay öncesi tekil taslak
-│   │   ├── transcript.json       # faster-whisper kelime zaman damgalı Türkçe transkript
+│   │   ├── transcript.json       # edge-tts WordBoundary veya faster-whisper kelime zaman damgalı transkript
 │   │   └── glossary.json         # Türkçe Whisper ASR & teknik terim düzeltme sözlüğü
 │   └── scenes/
 │       └── DemoScene.tsx         # Yalnızca tarihsel referans (60 FPS); yeni çalışmalarda baz alınmaz
 ├── scripts/
+│   ├── generate_voice.py         # script.md -> edge-tts (WordBoundary) + pronunciation.json -> kayit.wav & transcript.json
+│   ├── pipeline.py               # Tek komutluk taslak üretim boru hattı (`npm run produce`: voice -> plan -> typecheck)
 │   ├── enhance_audio.py          # 2-pass -14 LUFS mastering + akıllı duraksama kesici -> kayit_temiz.wav
 │   ├── transcribe.py             # faster-whisper + PyAV 19+ ffmpeg fallback -> transcript.json
-│   ├── plan_timeline.py          # glossary.json + 3–5 sn beat planlayıcı + highlightAtSecs + --split-chapters
+│   ├── plan_timeline.py          # glossary.json + 3–5 sn beat planlayıcı + highlightAtSecs + --split-chapters / --split-by-script
 │   ├── generate_ambient.py       # 24 sn kesintisiz karanlık ambient pad -> public/audio/ambient.mp3
 │   └── generate_sfx.py           # public/sfx/{whoosh,pop,tick,thud}.wav üretici
 ├── public/
@@ -118,7 +122,18 @@ remotion-lab/
 
 ## 4. Standart İş Akışları
 
-### A. Yeni Video / 5 Dakikalık Bölüm Üretim Akışı
+### A. Metinden Tek Komutla Üretim Akışı (`script.md` + `edge-tts` — Önerilen)
+1. **Anlatım Betiği:** Anlatım metni `## Bölüm 1: ...` başlıklarıyla `src/data/script.md` içine yazılır; gerekiyorsa yeni teknik terim telaffuzları `src/data/pronunciation.json` dosyasına eklenir.
+2. **Tek Komutluk Boru Hattı (Taslak Öncelikli):**
+   ```bash
+   npm run produce
+   # Farklı ses/hız için: npm run produce -- src/data/script.md --voice tr-TR-AhmetNeural --rate +4%
+   # Yalnızca ses + WordBoundary transkript için: npm run voice -- src/data/script.md
+   ```
+   Bu komut sırasıyla `generate_voice.py` (`public/audio/kayit.wav` + %0 ASR hatalı `WordBoundary` `transcript.json`), `plan_timeline.py --split-by-script` (`src/data/timeline_draft.json` ve `src/data/chapters_draft/*.json`) ve `npm run typecheck` adımlarını çalıştırır; aktif `src/data/chapters/` dosyalarının üzerine yazmaz ve uzun render başlatmaz.
+3. **Kullanıcı Onayı, Önizleme & Render:** Taslak özeti onaylandıktan sonra `src/data/chapters/` içine taşınır, `npm run dev` ile önizlenir ve `npm run build:chapter` / `npm run build:chapters` ile render alınır.
+
+### B. Harici Ses Kaydından Üretim Akışı (Mikrofon / ElevenLabs)
 1. **Ham Ses Ekleme:** Ham kayıt `public/audio/` altına eklenir (orijinal dosya değiştirilmez).
 2. **Ses İyileştirme & Duraksama Kesimi:**
    ```bash
@@ -150,7 +165,7 @@ remotion-lab/
    - Tekil ana video: `npm run build`
    - Tüm aktif bölümlerin birleşimi (yalnızca kullanıcı onayıyla): `npm run build:chapters`
 
-### B. Motor / Bileşen Yükseltme Akışı (Yalnızca Açık Kullanıcı İzniyle)
+### C. Motor / Bileşen Yükseltme Akışı (Yalnızca Açık Kullanıcı İzniyle)
 1. Tüm renk/font/hareket sabitlerini `src/theme.ts` üzerinden al, `secToFrames` ve `MOTION.*` kullan.
 2. Kademeli elemanlarda sıfır düzen sıçraması (`visibility: hidden`) uygula.
 3. Bileşeni `src/components/index.ts` ve `src/engine/types.ts` kayıt defterlerine ekle.

@@ -775,6 +775,84 @@ def write_split_chapters(
     return written
 
 
+def write_script_chapters(
+    transcript: dict[str, Any],
+    glossary_rules: list[tuple[re.Pattern[str], str]],
+    chapters_dir: Path,
+    fps: int = 30,
+) -> list[Path]:
+    """
+    `generate_voice.py` tarafından `transcript.json` içine yazılan `chapters` sınırlarına göre
+    her `## Bölüm` başlığını kendi bağımsız bölüm JSON dosyasına (audioOffsetSec ile) böler.
+    """
+    script_chapters = transcript.get("chapters") or []
+    if not script_chapters:
+        return []
+
+    chapters_dir.mkdir(parents=True, exist_ok=True)
+    all_segments = transcript.get("segments") or []
+    source_audio = transcript.get("source") or ""
+    written: list[Path] = []
+
+    for ch in script_chapters:
+        ch_idx = int(ch.get("index") or (len(written) + 1))
+        ch_title = str(ch.get("title") or f"Bölüm {ch_idx:02d}")
+        ch_slug = str(ch.get("slug") or f"bolum_{ch_idx:02d}")
+        ch_start = round(float(ch.get("startSec") or 0.0), 3)
+        ch_end = round(float(ch.get("endSec") or ch_start), 3)
+        ch_dur = round(max(1.0, ch_end - ch_start), 3)
+
+        # Bu bölüme ait cümle segmentlerini yerel 0.0 saniyesine kaydır
+        rel_segments: list[dict[str, Any]] = []
+        for seg in all_segments:
+            s0 = float(seg.get("startSec", 0.0))
+            if s0 >= ch_start - 0.05 and s0 < ch_end - 0.02:
+                rel_words = []
+                for w in seg.get("words") or []:
+                    rel_words.append(
+                        {
+                            "word": w["word"],
+                            "startSec": round(max(0.0, float(w["startSec"]) - ch_start), 3),
+                            "endSec": round(min(ch_dur, max(0.0, float(w["endSec"]) - ch_start)), 3),
+                            "probability": w.get("probability", 1.0),
+                        }
+                    )
+                rel_segments.append(
+                    {
+                        "id": len(rel_segments),
+                        "startSec": round(max(0.0, s0 - ch_start), 3),
+                        "endSec": round(min(ch_dur, max(0.0, float(seg.get("endSec", s0)) - ch_start)), 3),
+                        "text": seg["text"],
+                        "words": rel_words,
+                    }
+                )
+
+        sub_transcript = {
+            "source": source_audio,
+            "language": transcript.get("language", "tr"),
+            "durationSec": ch_dur,
+            "segments": rel_segments,
+        }
+        ch_spec = build_timeline_draft(sub_transcript, glossary_rules, fps=fps)
+        ch_spec["meta"]["title"] = ch_title
+        if ch_start > 0:
+            ch_spec["audioOffsetSec"] = ch_start
+
+        short_label = f"{ch_idx:02d} · {ch_title.upper()[:28]}"
+        for b_idx, beat in enumerate(ch_spec["beats"], start=1):
+            beat["id"] = f"ch{ch_idx:02d}-{b_idx:02d}-{beat['component'].lower()}"
+            beat["chapterLabel"] = short_label
+
+        out_file = chapters_dir / f"{ch_idx:02d}_{ch_slug}.json"
+        out_file.write_text(
+            json.dumps(ch_spec, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        written.append(out_file)
+
+    return written
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="transcript.json + glossary.json ile 3–5 sn kuralına uygun timeline_draft.json üretir."
@@ -790,9 +868,14 @@ def parse_args() -> argparse.Namespace:
         help="Belirtilirse (ör. 60) taslağı ayrıca o uzunlukta bölüm JSON'larına böler",
     )
     parser.add_argument(
+        "--split-by-script",
+        action="store_true",
+        help="transcript.json içindeki script.md bölüm sınırlarına göre bölüm JSON'ları üretir",
+    )
+    parser.add_argument(
         "--chapters-dir",
         default=str(ROOT_DIR / "src" / "data" / "chapters_draft"),
-        help="--split-chapters çıktı klasörü",
+        help="--split-chapters / --split-by-script çıktı klasörü",
     )
     return parser.parse_args()
 
@@ -834,8 +917,14 @@ def main() -> int:
         )
     print(f"[plan] Taslak kaydedildi: {out_path}")
 
-    if args.split_chapters > 0:
-        files = write_split_chapters(draft, args.split_chapters, Path(args.chapters_dir).resolve())
+    chapters_dir = Path(args.chapters_dir).resolve()
+    if args.split_by_script and transcript.get("chapters"):
+        files = write_script_chapters(transcript, glossary_rules, chapters_dir, fps=args.fps)
+        print(f"[plan] {len(files)} betik bölümü üretildi -> {args.chapters_dir}")
+        for f in files:
+            print(f"       - {f.name}")
+    elif args.split_chapters > 0:
+        files = write_split_chapters(draft, args.split_chapters, chapters_dir)
         print(f"[plan] {len(files)} bölüm dosyası üretildi -> {args.chapters_dir}")
         for f in files:
             print(f"       - {f.name}")

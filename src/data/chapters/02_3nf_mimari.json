@@ -243,8 +243,8 @@
         "footerNote": "MySQL 8.0 • 13 Tablolu 3NF ER Diyagramı",
         "visual": {
           "type": "media",
-          "src": "schema_preview.png",
-          "title": "otel-3nf-er-schema.png",
+          "src": "otel-3nf-er-diagram.png",
+          "title": "otel-3nf-er-diagram.png",
           "badge": "3NF ŞEMA",
           "zoomPan": true
         }

@@ -131,7 +131,7 @@
         "footerNote": "MySQL 8.0 • Spring Boot • 3NF ER Diyagramı",
         "visual": {
           "type": "media",
-          "src": "schema_preview.png",
+          "src": "otel-3nf-er-diagram.png",
           "title": "otel-3nf-er-diagram.png",
           "badge": "ER DİYAGRAMI",
           "zoomPan": true

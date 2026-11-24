@@ -1,0 +1,29 @@
+# remotion-lab Python Ses & Zaman Çizelgesi Bağımlılıkları
+
+# Kurulum:
+
+#   python3 -m venv .venv
+
+#   source .venv/bin/activate
+
+#   pip install -r requirements.txt
+
+#
+
+# Not: Sistem genelinde FFmpeg kurulu olmalıdır (macOS: brew install ffmpeg)
+
+
+
+# Ses çözümleme ve kelime bazlı zaman damgası (scripts/transcribe.py)
+
+faster-whisper>=1.0.0
+
+
+
+# Ses sentezi, ambient/SFX üretimi ve sinyal işleme
+
+# (scripts/enhance_audio.py, scripts/generate_ambient.py, scripts/generate_sfx.py)
+
+numpy>=1.26.0
+
+scipy>=1.11.0

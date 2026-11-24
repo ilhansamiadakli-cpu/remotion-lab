@@ -1,6 +1,6 @@
 # remotion-lab
 
-`remotion-lab`, ses kayıtlarından kelime zaman damgalı transkripsiyon üreten ve JSON tabanlı sahne tanımları (timeline/chapter specs) üzerinden 1080p 30 FPS teknik proje sunumları ve mühendislik videoları derleyen veri güdümlü (data-driven) bir Remotion video motorudur.
+`remotion-lab`, Markdown betiklerinden (`edge-tts` + `WordBoundary`) veya harici ses kayıtlarından (`faster-whisper`) kelime zaman damgalı transkripsiyon üreten ve JSON tabanlı sahne tanımları (`TimelineSpec`) üzerinden 1080p 30 FPS teknik proje sunumları derleyen veri güdümlü (data-driven) bir Remotion video motorudur.
 
 ![remotion-lab preview](docs/demo.gif)
 
@@ -12,21 +12,25 @@ Motor katmanı ile içerik/veri katmanı kesin sınırlarla ayrılmıştır. Yen
 
 ```text
 +-----------------------------------------------------------------------------+
-|  SES VE PLANLAMA HATTI (scripts/ · Python .venv + ffmpeg + faster-whisper)  |
+|  SES VE PLANLAMA HATTI (scripts/ · Python .venv + ffmpeg + edge-tts/whisper)|
 |                                                                             |
-|  public/audio/*.mp3 -> enhance_audio.py -> transcribe.py -> plan_timeline.py|
-|                               |                  |                 |        |
-|                         kayit_temiz.wav   transcript.json   glossary.json   |
-+-------------------------------+------------------+-----------------+--------+
-                                |                                    |
-                                v                                    v
+|  [A] src/data/script.md -> generate_voice.py (edge-tts + WordBoundary)      |
+|          + pronunciation.json  -> public/audio/kayit.wav + transcript.json  |
+|  [B] public/audio/*.mp3 -> enhance_audio.py -> transcribe.py (whisper)      |
+|                                                                             |
+|  pipeline.py (`npm run produce`): voice -> plan_timeline.py -> typecheck    |
++-------------------------------------+---------------------------------------+
+                                      |
+                                      v
 +-----------------------------------------------------------------------------+
 |  VERI VE ICERIK KATMANI (Degistirilebilir Katman)                           |
 |                                                                             |
-|  src/data/timeline.json            -> MainVideo kompozisyonu                |
-|  src/data/chapters/*.json          -> ChaptersVideo + dinamik Chapter-*     |
-|  src/data/examples/*.json          -> Vitrin ve bilesen test senaryolari    |
-|  public/{audio,media,sfx}/         -> Statik ses, gorsel ve SFX varliklari  |
+|  src/data/script.md & pronunciation.json -> Metin betigi ve TTS okunuslari  |
+|  src/data/timeline.json                  -> MainVideo kompozisyonu          |
+|  src/data/chapters/*.json                -> ChaptersVideo + Chapter-*       |
+|  src/data/chapters_draft/*.json          -> Onay oncesi otomatik taslaklar  |
+|  src/data/examples/*.json                -> Vitrin ve bilesen testleri      |
+|  public/{audio,media,sfx}/               -> Statik ses, gorsel ve SFX       |
 +-------------------------------------+---------------------------------------+
                                       |
                                       |  Discriminated Union (TimelineSpec)
@@ -88,7 +92,7 @@ Motor katmanı ile içerik/veri katmanı kesin sınırlarla ayrılmıştır. Yen
 npm install
 
 python3 -m venv .venv
-.venv/bin/pip install faster-whisper numpy
+.venv/bin/pip install edge-tts faster-whisper numpy pillow
 ```
 
 ### 2. Yerel Ses Efektleri ve Ambiyans Üretimi
@@ -100,9 +104,26 @@ Büyük ses/video dosyaları `.gitignore` ile depo dışında tutulduğundan ilk
 .venv/bin/python scripts/generate_ambient.py
 ```
 
-### 3. Ses İşleme, Transkripsiyon ve Taslak Planlama
+### 3. Tek Komutluk Otomatik Üretim (`script.md` + `edge-tts`)
 
-Ham ses kaydını `public/audio/` klasörüne yerleştirdikten sonra:
+Anlatım metnini `## Bölüm 1: ...` başlıklarıyla `src/data/script.md` dosyasına yazdıktan sonra ücretsiz `edge-tts` sentezini, `WordBoundary` kelime zaman damgalarını (%0 Whisper ASR hatası), 3–5 sn bölüm taslaklarını (`src/data/chapters_draft/`) ve TypeScript doğrulamasını tek komutta çalıştırabilirsin:
+
+```bash
+# Tam taslak boru hatti: generate_voice.py -> plan_timeline.py (--split-by-script) -> typecheck
+npm run produce
+
+# Ozel betik, farkli ses (ornegin tr-TR-EmelNeural) veya konusma hizi ile:
+npm run produce -- src/data/script.md --voice tr-TR-AhmetNeural --rate +4%
+
+# Yalnizca ses (kayit.wav) ve WordBoundary transcript.json uretmek icin:
+npm run voice -- src/data/script.md --speak-headings
+```
+
+Teknik terimlerin Türkçe seslendirmede doğal okunması `src/data/pronunciation.json` üzerinden yönetilir; ekranda ve `transcript.json` içinde daima orijinal temiz yazımlar (`MySQL 8.0`, `3NF`, `@Transactional`, `Foreign Key`, `GitHub`) korunur.
+
+### 4. Harici Ses Kaydından Üretim (Mikrofon / ElevenLabs)
+
+Dışarıdan hazır ses kaydını `public/audio/` klasörüne yerleştirdiğinde klasik akış aynen çalışır:
 
 ```bash
 # 2-pass -14 LUFS ses iyilestirme + duraksama kesici -> public/audio/kayit_temiz.wav
@@ -120,7 +141,7 @@ npm run plan
 .venv/bin/python scripts/plan_timeline.py --split-chapters 60 --chapters-dir src/data/chapters_draft
 ```
 
-### 4. Doğrulama, Önizleme ve Render
+### 5. Doğrulama, Önizleme ve Render
 
 ```bash
 # Zorunlu TypeScript ve JSON sozlesme kontrolu

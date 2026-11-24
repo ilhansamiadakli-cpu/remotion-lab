@@ -11,7 +11,9 @@
     "build:demo": "remotion render DemoScene out/demo.mp4",
     "enhance": ".venv/bin/python scripts/enhance_audio.py",
     "transcribe": ".venv/bin/python scripts/transcribe.py",
+    "voice": ".venv/bin/python scripts/generate_voice.py",
     "plan": ".venv/bin/python scripts/plan_timeline.py",
+    "produce": ".venv/bin/python scripts/pipeline.py",
     "typecheck": "tsc --noEmit",
     "upgrade": "remotion upgrade"
   },
