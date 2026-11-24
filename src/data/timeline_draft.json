@@ -1,0 +1,308 @@
+{
+  "meta": {
+    "title": "Otomatik Sahne Taslağı (Draft v3)",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 41.12
+  },
+  "audio": "kayit_temiz.wav",
+  "audioVolume": 1,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "draft-01-highlightertext",
+      "startSec": 0.0,
+      "endSec": 4.81,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "VURGU · SAHNE 01",
+        "text": "Çoğu kişi evde yaptığı kahvenin neden kafelerdeki gibi tadı olmadığını merak eder.",
+        "highlights": [
+          "kafelerdeki gibi"
+        ],
+        "highlightAtSecs": [
+          2.04
+        ]
+      }
+    },
+    {
+      "id": "draft-02-comparisoncard",
+      "startSec": 4.81,
+      "endSec": 9.18,
+      "component": "ComparisonCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "KARŞILAŞTIRMA · SAHNE 02",
+        "title": "Yanlış Yaklaşım vs Doğru Yöntem",
+        "leftTitle": "Eski / Hatalı Yaklaşım",
+        "leftBadge": "HATALI",
+        "leftItems": [
+          "Kontrolsüz ve tutarsız uygulama",
+          "Beklenmeyen kalite kaybı"
+        ],
+        "rightTitle": "Önerilen Doğru Yaklaşım",
+        "rightBadge": "DOĞRU",
+        "rightItems": [
+          "Aslında mesele makine değil 3 temel değişkendedir. Birincisi su sıcaklığı.",
+          "Ölçülebilir ve tekrarlanabilir sonuç"
+        ]
+      }
+    },
+    {
+      "id": "draft-03-highlightertext",
+      "startSec": 9.18,
+      "endSec": 12.54,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 03",
+        "text": "Kaynar suyu doğrudan kahvenin üzerine döktüğünüzde çekirdeği",
+        "highlights": [
+          "kahvenin üzerine"
+        ],
+        "highlightAtSecs": [
+          1.14
+        ]
+      }
+    },
+    {
+      "id": "draft-04-nodeflow",
+      "startSec": 12.54,
+      "endSec": 15.58,
+      "component": "NodeFlow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "AKIŞ · SAHNE 04",
+        "title": "Süreç Bağlantısı",
+        "nodes": [
+          {
+            "badge": "01",
+            "label": "yakarsınız",
+            "highlighted": false
+          },
+          {
+            "badge": "02",
+            "label": "ortaya sadece acı bir tat çı",
+            "highlighted": true
+          }
+        ],
+        "caption": "yakarsınız ve ortaya sadece acı bir tat çıkar."
+      }
+    },
+    {
+      "id": "draft-05-metricbanner",
+      "startSec": 15.58,
+      "endSec": 18.66,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "sfx": "thud",
+      "sfxVolume": 0.16,
+      "props": {
+        "frameless": true,
+        "badge": "BÖLÜM 05",
+        "value": "92 ILE 94 DERECE",
+        "label": "KRİTİK PARAMETRE",
+        "subtext": "İdeal sıcaklık 92 ile 94 derece arasında."
+      }
+    },
+    {
+      "id": "draft-06-nodeflow",
+      "startSec": 18.66,
+      "endSec": 21.7,
+      "component": "NodeFlow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "AKIŞ · SAHNE 06",
+        "title": "Süreç Bağlantısı",
+        "nodes": [
+          {
+            "badge": "01",
+            "label": "İkincisi oran",
+            "highlighted": false
+          },
+          {
+            "badge": "02",
+            "label": "demleme akışı.",
+            "highlighted": true
+          }
+        ],
+        "caption": "İkincisi oran ve demleme akışı."
+      }
+    },
+    {
+      "id": "draft-07-metricbanner",
+      "startSec": 21.7,
+      "endSec": 24.7,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "sfx": "thud",
+      "sfxVolume": 0.16,
+      "props": {
+        "frameless": true,
+        "badge": "BÖLÜM 07",
+        "value": "18 GRAM",
+        "label": "KRİTİK PARAMETRE",
+        "subtext": "18 gram taze öğütülmüş kahveye 300 ml"
+      }
+    },
+    {
+      "id": "draft-08-nodeflow",
+      "startSec": 24.7,
+      "endSec": 28.32,
+      "component": "NodeFlow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "AKIŞ · SAHNE 08",
+        "title": "Süreç Bağlantısı",
+        "nodes": [
+          {
+            "badge": "01",
+            "label": "su kullanmak en dengeli sonu",
+            "highlighted": false
+          },
+          {
+            "badge": "02",
+            "label": "Sonuç",
+            "highlighted": true
+          }
+        ],
+        "caption": "su kullanmak en dengeli sonucu verir. Üçüncüsü ise sabır."
+      }
+    },
+    {
+      "id": "draft-09-stepcard",
+      "startSec": 28.32,
+      "endSec": 31.36,
+      "component": "StepCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "tick",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "UYGULAMA ADIMLARI",
+        "title": "Adım Adım Akış",
+        "activeStepIndex": 0,
+        "steps": [
+          {
+            "title": "1. Önce az bir suyla 30 saniye",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          },
+          {
+            "title": "2. Kontrollü ilerleme",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          },
+          {
+            "title": "3. Temiz kapanış",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          }
+        ]
+      }
+    },
+    {
+      "id": "draft-10-stepcard",
+      "startSec": 31.36,
+      "endSec": 33.88,
+      "component": "StepCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "tick",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "UYGULAMA ADIMLARI",
+        "title": "Adım Adım Akış",
+        "activeStepIndex": 1,
+        "steps": [
+          {
+            "title": "1. ön ıslatma yapıp gazın çıkmasını bekler.",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          },
+          {
+            "title": "2. Kontrollü ilerleme",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          },
+          {
+            "title": "3. Temiz kapanış",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          }
+        ]
+      }
+    },
+    {
+      "id": "draft-11-stepcard",
+      "startSec": 33.88,
+      "endSec": 37.24,
+      "component": "StepCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "tick",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "UYGULAMA ADIMLARI",
+        "title": "Adım Adım Akış",
+        "activeStepIndex": 2,
+        "steps": [
+          {
+            "title": "1. Ardından dairesel hareketlerle demlemeyi tamamlarsanız",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          },
+          {
+            "title": "2. Kontrollü ilerleme",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          },
+          {
+            "title": "3. Temiz kapanış",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          }
+        ]
+      }
+    },
+    {
+      "id": "draft-12-highlightertext",
+      "startSec": 37.24,
+      "endSec": 41.12,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "focusBlur",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": true,
+        "eyebrow": "VURGU · SAHNE 12",
+        "text": "kahvenin gerçek aromasını fincanda net şekilde alırsınız.",
+        "highlights": [
+          "aromasını fincanda"
+        ],
+        "highlightAtSecs": [
+          0.35
+        ]
+      }
+    }
+  ]
+}

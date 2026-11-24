@@ -1,0 +1,328 @@
+{
+  "meta": {
+    "title": "Bölüm 04 · Trigger'lar, Stored Procedure ve Performans",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 50.8
+  },
+  "audio": "kayit.wav",
+  "audioOffsetSec": 168.55,
+  "audioVolume": 1,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "ch04-01-banner",
+      "startSec": 0,
+      "endSec": 4.95,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "04 · VERİTABANI MOTORU",
+      "sfx": "thud",
+      "sfxVolume": 0.22,
+      "props": {
+        "frameless": true,
+        "badge": "BÖLÜM 04 · VERİTABANI OTOMASYONU",
+        "value": "DB ENGINE",
+        "label": "TRIGGER, STORED PROCEDURE & PERFORMANS",
+        "subtext": "İş mantığının veritabanı çekirdeğinde hız ve bütünlükle buluşması."
+      }
+    },
+    {
+      "id": "ch04-02-business-logic-rule",
+      "startSec": 4.95,
+      "endSec": 9.3,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "04 · SAVUNMA DERİNLİĞİ",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "ÇOK KATMANLI GÜVENLİK",
+        "text": "İş mantığı yalnızca Java kodunda yaşamamalı; veritabanı da kendi bütünlüğünü korumalı.",
+        "highlights": ["yalnızca Java kodunda", "kendi bütünlüğünü korumalı"],
+        "highlightAtSecs": [1.54, 3.2]
+      }
+    },
+    {
+      "id": "ch04-03-two-layer-flow",
+      "startSec": 9.3,
+      "endSec": 13,
+      "component": "NodeFlow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "chapterLabel": "04 · ÇİFT KATMAN",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "ORTAK BÜTÜNLÜK MİMARİSİ",
+        "title": "Uygulama Katmanı + Veritabanı Motoru",
+        "nodes": [
+          {
+            "badge": "01 · JAVA",
+            "label": "Spring Boot",
+            "sublabel": "REST API, Validasyon & @Transactional"
+          },
+          {
+            "badge": "02 · MYSQL 8.0",
+            "label": "Veritabanı Çekirdeği",
+            "sublabel": "Trigger · Stored Procedure · İndeks",
+            "highlighted": true
+          }
+        ],
+        "edgeLabels": ["Bütünlük iki katmanda birden korunur"],
+        "caption": "Veritabanı pasif bir depo değil, aktif bir bütünlük koruyucusudur."
+      }
+    },
+    {
+      "id": "ch04-04-trigger-sp-card",
+      "startSec": 13,
+      "endSec": 17.3,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "04 · TRIGGER & SP",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "subtitle": "KRİTİK VERİTABANI YAPILARI",
+        "title": "Trigger & Stored Procedure",
+        "badge": "MYSQL 8.0",
+        "items": [
+          {
+            "label": "Stored Procedure",
+            "value": "Müsait oda aramasını doğrudan veritabanı motorunda filtreler",
+            "tag": "PERFORMANS",
+            "highlighted": true
+          },
+          {
+            "label": "Trigger (Tetikleyici)",
+            "value": "Durum değişiminde oda durumu ve logları otomatik günceller",
+            "tag": "OTOMASYON"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch04-05-sp-comparison",
+      "startSec": 17.3,
+      "endSec": 22.25,
+      "component": "ComparisonCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "04 · MÜSAİT ODA SORGUSU",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "AĞ VE BELLEK OPTİMİZASYONU",
+        "title": "Müsait Odaları Listeleme Yaklaşımı",
+        "leftTitle": "Uygulamada Filtreleme",
+        "leftBadge": "GEREKSİZ YÜK",
+        "leftItems": [
+          "Binlerce gereksiz satır ağdan Java'ya çekilir",
+          "Yüksek JVM bellek ve serileştirme maliyeti",
+          "Trafik arttıkça belirgin gecikme"
+        ],
+        "rightTitle": "MySQL Stored Procedure",
+        "rightBadge": "DOĞRUDAN DB",
+        "rightItems": [
+          "Filtreleme doğrudan MySQL motorunda çalışır",
+          "Yalnızca tarih aralığına uyan boş odalar döner",
+          "Minimum ağ trafiği ve yüksek hız"
+        ]
+      }
+    },
+    {
+      "id": "ch04-06-sp-code",
+      "startSec": 22.25,
+      "endSec": 27.15,
+      "component": "CodeWindow",
+      "background": "obsidianGrid",
+      "transition": "slideLeft",
+      "chapterLabel": "04 · SAKLI YORDAM",
+      "sfx": "tick",
+      "sfxVolume": 0.15,
+      "props": {
+        "language": "sql",
+        "title": "sp_musait_odalar.sql",
+        "code": "CREATE PROCEDURE sp_musait_odalar(IN p_giris DATE, IN p_cikis DATE)\nBEGIN\n  SELECT o.id, o.oda_no, ot.ad, ot.gecelik_fiyat\n  FROM odalar o JOIN oda_tipleri ot ON ot.id = o.tip_id\n  WHERE o.durum = 'AKTIF'\n    AND NOT EXISTS (\n      SELECT 1 FROM rezervasyonlar r\n      WHERE r.oda_id = o.id AND r.durum <> 'IPTAL'\n        AND r.giris_tarihi < p_cikis AND r.cikis_tarihi > p_giris\n    );\nEND;",
+        "focusSteps": [
+          {
+            "atSec": 0,
+            "lines": [1, 3, 4],
+            "caption": "Doğrudan MySQL içinde çalışan saklı yordam tarih aralığını parametre alır."
+          },
+          {
+            "atSec": 2.4,
+            "lines": [6, 7, 8, 9],
+            "caption": "NOT EXISTS ile çakışan rezervasyonlar elenir; sadece boş odalar döner."
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch04-07-filter-highlight",
+      "startSec": 27.15,
+      "endSec": 30.5,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "focusBlur",
+      "chapterLabel": "04 · BOŞ ODA FİLTRESİ",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "SAKLI YORDAM AVANTAJI",
+        "text": "Sadece tarih aralığına uyan boş odaları doğrudan MySQL içinde filtreliyoruz.",
+        "highlights": ["tarih aralığına uyan boş odaları"],
+        "highlightAtSecs": [0.65]
+      }
+    },
+    {
+      "id": "ch04-08-trigger-code",
+      "startSec": 30.5,
+      "endSec": 35.45,
+      "component": "CodeWindow",
+      "background": "obsidianGrid",
+      "transition": "slideLeft",
+      "chapterLabel": "04 · TETİKLEYİCİ (TRIGGER)",
+      "sfx": "tick",
+      "sfxVolume": 0.15,
+      "props": {
+        "language": "sql",
+        "title": "trg_rezervasyon_durum_audit.sql",
+        "code": "CREATE TRIGGER trg_rez_durum_guncelle\nAFTER UPDATE ON rezervasyonlar\nFOR EACH ROW\nBEGIN\n  IF OLD.durum <> NEW.durum THEN\n    UPDATE odalar SET durum = IF(NEW.durum='IPTAL','MUSAIT','DOLU')\n      WHERE id = NEW.oda_id;\n    INSERT INTO rezervasyon_log(rez_id, eski, yeni, zaman)\n      VALUES (NEW.id, OLD.durum, NEW.durum, NOW());\n  END IF;\nEND;",
+        "focusSteps": [
+          {
+            "atSec": 0,
+            "lines": [1, 2, 5],
+            "caption": "Rezervasyon durumu her değiştiğinde tetikleyici otomatik çalışır."
+          },
+          {
+            "atSec": 2.3,
+            "lines": [6, 7, 8, 9],
+            "caption": "Oda durumu ve denetim log kayıtları anında güncellenir."
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch04-09-trigger-flow",
+      "startSec": 35.45,
+      "endSec": 38.95,
+      "component": "NodeFlow",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "04 · OTOMATİK ZİNCİR",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "SIFIR UNUTULAN SORGU",
+        "title": "Tek Güncelleme → Otomatik Senkron",
+        "nodes": [
+          {
+            "badge": "01 · OLAY",
+            "label": "Durum Değişimi",
+            "sublabel": "UPDATE rezervasyonlar"
+          },
+          {
+            "badge": "02 · ODA",
+            "label": "Oda Durumu",
+            "sublabel": "MUSAIT / DOLU otomatik"
+          },
+          {
+            "badge": "03 · LOG",
+            "label": "Denetim Kaydı",
+            "sublabel": "Eski → Yeni tam iz",
+            "highlighted": true
+          }
+        ],
+        "edgeLabels": ["AFTER UPDATE", "Otomatik Audit"],
+        "caption": "Ek bir uygulama sorgusu unutulsa bile veritabanı tutarlılığı bozulmaz."
+      }
+    },
+    {
+      "id": "ch04-10-zero-human-error",
+      "startSec": 38.95,
+      "endSec": 42.35,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "04 · SIFIR İNSAN HATASI",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "OTOMATİK GÜVENCE",
+        "text": "Tetikleyiciler sayesinde insan hatasına veya unutulan bir sorguya yer kalmıyor.",
+        "highlights": ["insan hatasına", "unutulan bir sorguya"],
+        "highlightAtSecs": [0.3, 1.35]
+      }
+    },
+    {
+      "id": "ch04-11-index-diff",
+      "startSec": 42.35,
+      "endSec": 46.15,
+      "component": "CodeWindow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "chapterLabel": "04 · İNDEKS STRATEJİSİ",
+      "sfx": "tick",
+      "sfxVolume": 0.15,
+      "props": {
+        "language": "sql",
+        "title": "V4__composite_index.sql",
+        "code": "-- Önce: İndekssiz Full Table Scan (yüzlerce ms)\nSELECT * FROM rezervasyonlar WHERE oda_id = 204;\n-- Sonra: Doğru kolonlara bileşik B-Tree indeksi\nCREATE INDEX idx_rez_oda_tarih\n  ON rezervasyonlar (oda_id, giris_tarihi, cikis_tarihi);\nSELECT EXISTS(SELECT 1 FROM rezervasyonlar WHERE oda_id = 204);",
+        "diffLines": {
+          "remove": [1, 2],
+          "add": [3, 4, 5, 6]
+        },
+        "caption": "Doğru kolon sırasıyla oluşturulan bileşik indeks tam tablo taramasını bitirir."
+      }
+    },
+    {
+      "id": "ch04-12-benchmark-split",
+      "startSec": 46.15,
+      "endSec": 50.8,
+      "component": "SplitStage",
+      "background": "obsidianGrid",
+      "transition": "depthZoom",
+      "chapterLabel": "04 · PERFORMANS",
+      "sfx": "thud",
+      "sfxVolume": 0.2,
+      "props": {
+        "eyebrow": "MYSQL 8.0 · EXPLAIN ANALYZE",
+        "title": "Tek Haneli Milisaniyeler",
+        "subtitle": "Yüzlerce milisaniye süren sorgular bileşik indeksle milisaniye altına yaklaşır.",
+        "metric": {
+          "before": "420 ms",
+          "value": "6 ms",
+          "delta": "-98%",
+          "label": "P95 SORGU GECİKMESİ (INNODB)"
+        },
+        "points": [
+          {
+            "title": "Index Range Scan Devrede",
+            "detail": "B-Tree dal üstünden doğrudan hedef aralık okunur.",
+            "tag": "O(log n)",
+            "highlighted": true
+          }
+        ],
+        "footerNote": "MySQL 8.0 • Composite B-Tree Index • InnoDB Buffer Pool",
+        "visual": {
+          "type": "code",
+          "language": "sql",
+          "title": "explain_analyze.sql",
+          "code": "EXPLAIN ANALYZE\nSELECT 1 FROM rezervasyonlar\nWHERE oda_id = 204\n  AND giris_tarihi < '2026-08-18'\n  AND cikis_tarihi > '2026-08-14'\nLIMIT 1;\n-- -> Index range scan using idx_rez_oda_tarih\n--    (actual time=0.05..0.09 rows=1)",
+          "highlightLines": [4, 5, 7, 8]
+        }
+      }
+    }
+  ]
+}

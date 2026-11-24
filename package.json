@@ -1,0 +1,32 @@
+{
+  "name": "remotion-lab",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Veri güdümlü, modüler ve karanlık tema odaklı Remotion video motoru",
+  "scripts": {
+    "dev": "remotion studio",
+    "build": "remotion render MainVideo out/video.mp4",
+    "build:chapters": "remotion render ChaptersVideo out/chapters.mp4",
+    "build:chapter": "remotion render",
+    "build:demo": "remotion render DemoScene out/demo.mp4",
+    "enhance": ".venv/bin/python scripts/enhance_audio.py",
+    "transcribe": ".venv/bin/python scripts/transcribe.py",
+    "plan": ".venv/bin/python scripts/plan_timeline.py",
+    "typecheck": "tsc --noEmit",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.546",
+    "@remotion/google-fonts": "^4.0.546",
+    "@remotion/tailwind-v4": "^4.0.546",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "^4.0.546",
+    "tailwindcss": "^4.3.5"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}

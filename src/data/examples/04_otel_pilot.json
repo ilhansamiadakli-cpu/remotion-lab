@@ -1,0 +1,303 @@
+{
+  "meta": {
+    "title": "MySQL 8.0 & Spring Boot · Otel Rezervasyon Mimarisi (Pilot)",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 42
+  },
+  "audio": null,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "pilot-01-metric-opener",
+      "startSec": 0,
+      "endSec": 3.5,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "01 · MİMARİ ÖZET",
+      "sfx": "thud",
+      "sfxVolume": 0.22,
+      "props": {
+        "frameless": true,
+        "badge": "BÖLÜM 01 · VERİTABANI TASARIMI",
+        "value": "13 TABLO",
+        "label": "3NF İLİŞKİSEL MİMARİ",
+        "subtext": "MySQL 8.0 & Spring Boot ile yüksek eşzamanlılıkta sıfır çakışmalı otel rezervasyon sistemi."
+      }
+    },
+    {
+      "id": "pilot-02-rule-frameless",
+      "startSec": 3.5,
+      "endSec": 7.5,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "01 · TEMEL İŞ KURALI",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "KRİTİK VERİ BÜTÜNLÜĞÜ",
+        "text": "Aynı odanın çakışan tarihlerde rezerve edilmesi veritabanı düzeyinde engellenir.",
+        "highlights": ["çakışan tarihlerde", "veritabanı düzeyinde"],
+        "highlightAtSecs": [0.45, 1.65],
+        "caption": "Yalnızca uygulama katmanındaki kontrol race condition altında yetersiz kalır."
+      }
+    },
+    {
+      "id": "pilot-03-comparison-3nf",
+      "startSec": 7.5,
+      "endSec": 11.5,
+      "component": "ComparisonCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "02 · NORMALİZASYON",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "TASARIM KARARI",
+        "title": "Düz Tablo yerine 3NF İlişkisel Şema",
+        "leftTitle": "Tek Düz Tablo",
+        "leftBadge": "ESKİ / HATALI",
+        "leftItems": [
+          "Her rezervasyonda oda ve misafir verisi tekrarlanır",
+          "Güncelleme anomalileri ve tutarsız fiyatlar oluşur",
+          "Tarih kontrolü yalnızca uygulama koduna bırakılır"
+        ],
+        "rightTitle": "3NF İlişkisel Mimari",
+        "rightBadge": "3NF / DOĞRU",
+        "rightItems": [
+          "Oda, Misafir ve Rezervasyon tekil kaynakta tutulur",
+          "Foreign Key ve CHECK kısıtları bütünlüğü korur",
+          "InnoDB satır kilidi ve bileşik indeksle ölçeklenir"
+        ]
+      }
+    },
+    {
+      "id": "pilot-04-request-flow",
+      "startSec": 11.5,
+      "endSec": 16,
+      "component": "NodeFlow",
+      "background": "obsidianGrid",
+      "transition": "slideLeft",
+      "chapterLabel": "03 · İSTEK AKIŞI",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "EŞZAMANLI İSTEK BORU HATTI",
+        "title": "Spring Boot → MySQL 8.0 Kilit Akışı",
+        "nodes": [
+          {
+            "badge": "01 · API",
+            "label": "REST Controller",
+            "sublabel": "POST /api/v1/rezervasyonlar"
+          },
+          {
+            "badge": "02 · TX",
+            "label": "@Transactional",
+            "sublabel": "Pessimistic Write Lock"
+          },
+          {
+            "badge": "03 · DB",
+            "label": "MySQL 8.0 InnoDB",
+            "sublabel": "Satır kilidi + B-Tree kontrolü",
+            "highlighted": true
+          }
+        ],
+        "edgeLabels": ["DTO Validasyon", "SELECT FOR UPDATE"],
+        "caption": "Aynı odaya milisaniyeler içinde gelen iki istek sıraya alınarak çakışma sıfırlanır."
+      }
+    },
+    {
+      "id": "pilot-05-service-multistep",
+      "startSec": 16,
+      "endSec": 21,
+      "component": "CodeWindow",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "04 · SERVİS KATMANI",
+      "sfx": "tick",
+      "sfxVolume": 0.15,
+      "props": {
+        "language": "java",
+        "title": "RezervasyonService.java",
+        "code": "@Transactional\npublic Rezervasyon olustur(RezervasyonIstegi req) {\n  Oda oda = odaRepo.findByIdForUpdate(req.odaId());\n  boolean cakisiyor = rezRepo.existsOverlap(\n      oda.getId(), req.giris(), req.cikis());\n  if (cakisiyor) {\n    throw new OdaDoluException(HttpStatus.CONFLICT);\n  }\n  return rezRepo.save(Rezervasyon.yeni(oda, req));\n}",
+        "focusSteps": [
+          {
+            "atSec": 0,
+            "lines": [1, 3],
+            "caption": "1. Adım: Transaction açılır ve yalnızca ilgili oda satırı FOR UPDATE ile kilitlenir."
+          },
+          {
+            "atSec": 2.4,
+            "lines": [4, 5, 6, 7],
+            "caption": "2. Adım: Çakışma tespit edilirse kayıt engellenir ve HTTP 409 Conflict fırlatılır."
+          }
+        ]
+      }
+    },
+    {
+      "id": "pilot-06-index-diff",
+      "startSec": 21,
+      "endSec": 25.5,
+      "component": "CodeWindow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "chapterLabel": "05 · İNDEKS OPTİMİZASYONU",
+      "sfx": "tick",
+      "sfxVolume": 0.15,
+      "props": {
+        "language": "sql",
+        "title": "V4__overlap_index.sql",
+        "code": "-- Çakışma sorgusunu Full Table Scan'den kurtarma\nSELECT * FROM rezervasyon\nWHERE oda_id = ? AND durum = 'AKTIF';\nCREATE INDEX idx_rez_oda_tarih\n  ON rezervasyon (oda_id, giris_tarihi, cikis_tarihi);\nSELECT EXISTS(SELECT 1 FROM rezervasyon WHERE oda_id = ?);",
+        "diffLines": {
+          "remove": [2, 3],
+          "add": [4, 5, 6]
+        },
+        "caption": "Bileşik B-Tree indeksi + EXISTS ile tüm tabloyu taramak yerine dal üstünden kontrol."
+      }
+    },
+    {
+      "id": "pilot-07-split-benchmark",
+      "startSec": 25.5,
+      "endSec": 30,
+      "component": "SplitStage",
+      "background": "obsidianGrid",
+      "transition": "depthZoom",
+      "chapterLabel": "06 · BENCHMARK",
+      "sfx": "thud",
+      "sfxVolume": 0.2,
+      "props": {
+        "eyebrow": "MYSQL 8.0 · EXPLAIN ANALYZE",
+        "title": "Bileşik İndeks ile 52x Hızlanma",
+        "subtitle": "500.000 rezervasyon kaydı üzerinde gerçek P95 çakışma sorgusu ölçümü.",
+        "metric": {
+          "before": "420 ms",
+          "value": "8 ms",
+          "delta": "-98%",
+          "label": "P95 SORGU GECİKMESİ (INNODB)"
+        },
+        "points": [
+          {
+            "title": "Index Range Scan devrede",
+            "detail": "Gereksiz disk okuması sıfırlanır, sorgu bellekte kapanır.",
+            "tag": "O(log n)",
+            "highlighted": true
+          },
+          {
+            "title": "Kilit tutma süresi minimumda",
+            "detail": "Kısa süren transaction eşzamanlı trafikte darboğaz oluşturmaz.",
+            "tag": "LOCK"
+          }
+        ],
+        "footerNote": "MySQL 8.0.36 • InnoDB Buffer Pool • 500k synthetic rows",
+        "visual": {
+          "type": "code",
+          "language": "sql",
+          "title": "explain_analyze.sql",
+          "code": "EXPLAIN ANALYZE\nSELECT 1 FROM rezervasyon\nWHERE oda_id = 402\n  AND giris_tarihi < '2026-08-18'\n  AND cikis_tarihi > '2026-08-14'\nLIMIT 1;\n-- -> Index range scan using idx_rez_oda_tarih\n--    (actual time=0.04..0.08 rows=1)",
+          "highlightLines": [4, 5, 7, 8]
+        }
+      }
+    },
+    {
+      "id": "pilot-08-terminal-409",
+      "startSec": 30,
+      "endSec": 34.5,
+      "component": "TerminalTrace",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "07 · CANLI API TESTİ",
+      "sfx": "tick",
+      "sfxVolume": 0.14,
+      "props": {
+        "title": "zsh — api.otel-rezervasyon.local:8080",
+        "prompt": "mac@otel-api ~ %",
+        "command": "curl -i -X POST http://localhost:8080/api/v1/rezervasyonlar -H \"Content-Type: application/json\"",
+        "requestBody": "{ \"odaId\": 402, \"girisTarihi\": \"2026-08-15\", \"cikisTarihi\": \"2026-08-18\" }",
+        "statusCode": 409,
+        "statusText": "Conflict",
+        "latency": "11 ms",
+        "responseAtSec": 1.25,
+        "highlightResponseLines": [2, 3, 5],
+        "responseBody": "{\n  \"status\": 409,\n  \"code\": \"ODA_TARIH_CAKISMASI\",\n  \"odaId\": 402,\n  \"mesaj\": \"Oda 402 seçilen tarih aralığında (14–17 Ağu) zaten dolu.\",\n  \"timestamp\": \"2026-08-14T19:42:08Z\"\n}",
+        "caption": "Çakışan istek 11 ms içinde durdurulur ve istemciye açıklayıcı HTTP 409 döner."
+      }
+    },
+    {
+      "id": "pilot-09-split-er-schema",
+      "startSec": 34.5,
+      "endSec": 38.5,
+      "component": "SplitStage",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "08 · ER ŞEMASI",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "reverse": true,
+        "eyebrow": "3NF İLİŞKİSEL BÜTÜNLÜK",
+        "title": "Oda ve Rezervasyon İlişkisi",
+        "subtitle": "Her tablo tek sorumluluk taşır; tüm tarih ve oda bağları kısıtlarla kilitlidir.",
+        "points": [
+          {
+            "title": "1 : N Katı Foreign Key",
+            "detail": "Var olmayan bir odaya yetim rezervasyon açılması engellenir.",
+            "tag": "FK",
+            "highlighted": true
+          },
+          {
+            "title": "Temiz Genişletilebilirlik",
+            "detail": "Fiyatlandırma, sezon ve ödeme tabloları çekirdeği bozmadan eklenir.",
+            "tag": "3NF"
+          }
+        ],
+        "footerNote": "MediaWindow gömülü modda arka planı otomatik blur(6px) yapar",
+        "visual": {
+          "type": "media",
+          "src": "schema_preview.png",
+          "title": "otel-3nf-er.png",
+          "badge": "3NF ŞEMA",
+          "zoomPan": true
+        }
+      }
+    },
+    {
+      "id": "pilot-10-summary-steps",
+      "startSec": 38.5,
+      "endSec": 42,
+      "component": "StepCard",
+      "background": "dotMatrix",
+      "transition": "focusBlur",
+      "chapterLabel": "09 · MİMARİ ÖZET",
+      "sfx": "tick",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "ÜÇ KATMANLI GÜVENLİK",
+        "title": "Sıfır Çakışmalı Mimari Özeti",
+        "steps": [
+          {
+            "title": "1. 3NF İlişkisel Şema",
+            "detail": "13 tablo, Foreign Key ve tarih CHECK kısıtları.",
+            "duration": "MYSQL 8.0"
+          },
+          {
+            "title": "2. Row Lock + Bileşik İndeks",
+            "detail": "Pessimistic Write Lock ve 8 ms B-Tree aralık taraması.",
+            "duration": "INNODB"
+          },
+          {
+            "title": "3. Temiz REST Kontratı",
+            "detail": "Çakışmada HTTP 409 Conflict, başarıda HTTP 201 Created.",
+            "duration": "SPRING BOOT"
+          }
+        ]
+      }
+    }
+  ]
+}

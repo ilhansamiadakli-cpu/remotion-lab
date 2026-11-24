@@ -1,0 +1,185 @@
+{
+  "meta": {
+    "title": "Bölüm 05 · Kapanış ve Mimari Özet",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 28.04
+  },
+  "audio": "kayit.wav",
+  "audioOffsetSec": 219.35,
+  "audioVolume": 1,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "ch05-01-not-crud",
+      "startSec": 0,
+      "endSec": 4.7,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "05 · ÖZET",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "BÖLÜM 05 · KAPANIŞ",
+        "text": "Özetle bu proje sadece veri ekleyen ve silen standart bir CRUD uygulaması değil.",
+        "highlights": ["standart bir CRUD uygulaması değil"],
+        "highlightAtSecs": [3.45]
+      }
+    },
+    {
+      "id": "ch05-02-schema-recap-banner",
+      "startSec": 4.7,
+      "endSec": 8.65,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "05 · 13 TABLO · 3NF",
+      "sfx": "thud",
+      "sfxVolume": 0.22,
+      "props": {
+        "frameless": true,
+        "badge": "MİMARİ ÇEKİRDEK",
+        "value": "13 TABLO · 3NF",
+        "label": "TEMİZ ŞEMA VE SIKI KURALLAR",
+        "subtext": "İşlem bütünlüğü ve çakışma korumasıyla donatılmış üretim çekirdeği."
+      }
+    },
+    {
+      "id": "ch05-03-four-pillars",
+      "startSec": 8.65,
+      "endSec": 13.3,
+      "component": "StepCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "05 · TEMEL SÜTUNLAR",
+      "sfx": "tick",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "MİMARİ ÖZET",
+        "title": "Gerçek Bir Konaklama Sisteminin Çekirdeği",
+        "steps": [
+          {
+            "title": "13 Tablolu 3NF Şema",
+            "detail": "Tek sorumluluklu tablolar ve Foreign Key bütünlüğü.",
+            "duration": "3NF"
+          },
+          {
+            "title": "İşlem Bütünlüğü & Çakışma Koruması",
+            "detail": "@Transactional + InnoDB satır kilidi + HTTP 201 / 409.",
+            "duration": "ACID"
+          },
+          {
+            "title": "Trigger, Stored Procedure & İndeks",
+            "detail": "Otomatik audit log ve tek haneli milisaniye performans.",
+            "duration": "MYSQL 8.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch05-04-core-architecture",
+      "startSec": 13.3,
+      "endSec": 17.85,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "05 · ÇEKİRDEK MİMARİ",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "MÜHENDİSLİK ÇIKTISI",
+        "text": "Gerçek bir konaklama sisteminin çekirdeğini modelleyen, güvenilir bir mimari.",
+        "highlights": ["çekirdeğini modelleyen", "bir mimari"],
+        "highlightAtSecs": [2.1, 3.1]
+      }
+    },
+    {
+      "id": "ch05-05-sql-er-split",
+      "startSec": 17.85,
+      "endSec": 21.85,
+      "component": "SplitStage",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "chapterLabel": "05 · SQL & ER ŞEMASI",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "reverse": true,
+        "eyebrow": "AÇIK KAYNAK DOKÜMANTASYON",
+        "title": "SQL Şeması & ER Diyagramı",
+        "subtitle": "Tüm veritabanı DDL betikleri, ER diyagramı ve backend kodu tek repoda.",
+        "points": [
+          {
+            "title": "SQL DDL, Trigger & Stored Procedure",
+            "detail": "Tüm 13 tablo tanımı, kısıtlar ve bileşik indeks betikleri.",
+            "tag": "SQL",
+            "highlighted": true
+          },
+          {
+            "title": "Spring Boot Kaynak Kodları",
+            "detail": "Controller, @Transactional servis katmanı ve senaryo testleri.",
+            "tag": "JAVA"
+          }
+        ],
+        "footerNote": "MySQL 8.0 • Spring Boot • 3NF ER Diyagramı",
+        "visual": {
+          "type": "media",
+          "src": "schema_preview.png",
+          "title": "otel-3nf-er-diagram.png",
+          "badge": "ER DİYAGRAMI",
+          "zoomPan": true
+        }
+      }
+    },
+    {
+      "id": "ch05-06-github-repo",
+      "startSec": 21.85,
+      "endSec": 24.85,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "05 · GITHUB REPOSU",
+      "sfx": "tick",
+      "sfxVolume": 0.14,
+      "props": {
+        "subtitle": "KAYNAK KOD & DİYAGRAMLAR",
+        "title": "GitHub Reposu",
+        "badge": "OPEN SOURCE",
+        "body": "Tüm SQL şemasına, ER diyagramına ve kaynak kodlara GitHub reposu üzerinden ulaşabilirsiniz.",
+        "items": [
+          {
+            "label": "Repo İçeriği",
+            "value": "SQL Şeması · 3NF ER Diyagramı · Spring Boot API",
+            "tag": "GITHUB",
+            "highlighted": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch05-07-outro",
+      "startSec": 24.85,
+      "endSec": 28.04,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "05 · TEŞEKKÜRLER",
+      "sfx": "thud",
+      "sfxVolume": 0.22,
+      "props": {
+        "frameless": true,
+        "badge": "MYSQL 8.0 · SPRING BOOT · 3NF",
+        "value": "TEŞEKKÜRLER",
+        "label": "İZLEDİĞİNİZ İÇİN TEŞEKKÜRLER",
+        "subtext": "Otel Rezervasyon ve Konaklama Yönetim Sistemi"
+      }
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "title": "TerminalTrace · Canlı Spring Boot API Testi",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 10
+  },
+  "audio": null,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "tt-01-409-conflict",
+      "startSec": 0,
+      "endSec": 5,
+      "component": "TerminalTrace",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "01 · ÇAKIŞMA KORUMASI",
+      "sfx": "tick",
+      "sfxVolume": 0.14,
+      "props": {
+        "title": "zsh — api.otel-rezervasyon.local:8080",
+        "prompt": "mac@otel-api ~ %",
+        "command": "curl -i -X POST http://localhost:8080/api/v1/rezervasyonlar -H \"Content-Type: application/json\"",
+        "requestBody": "{ \"odaId\": 402, \"girisTarihi\": \"2026-08-15\", \"cikisTarihi\": \"2026-08-18\" }",
+        "statusCode": 409,
+        "statusText": "Conflict",
+        "latency": "11 ms",
+        "responseAtSec": 1.35,
+        "highlightResponseLines": [2, 3, 5],
+        "responseBody": "{\n  \"status\": 409,\n  \"code\": \"ODA_TARIH_CAKISMASI\",\n  \"odaId\": 402,\n  \"mesaj\": \"Oda 402 seçilen tarih aralığında (14–17 Ağu) zaten dolu.\",\n  \"timestamp\": \"2026-08-14T19:42:08Z\"\n}",
+        "caption": "Pessimistic Lock + bileşik indeks çakışmayı yakalar ve istemciye temiz HTTP 409 döndürür."
+      }
+    },
+    {
+      "id": "tt-02-split-201-created",
+      "startSec": 5,
+      "endSec": 10,
+      "component": "SplitStage",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "chapterLabel": "02 · BAŞARILI KAYIT",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "SPRING BOOT · REST API",
+        "title": "Atomik Rezervasyon Onayı",
+        "subtitle": "Uygun tarih aralığında transaction tek seferde commit edilir.",
+        "metric": {
+          "value": "201",
+          "delta": "8 ms",
+          "label": "HTTP CREATED · COMMITTED"
+        },
+        "points": [
+          {
+            "title": "Sıfır Çift Rezervasyon",
+            "detail": "Eşzamanlı gelen ikinci istek anında 409 Conflict alır.",
+            "tag": "ACID",
+            "highlighted": true
+          },
+          {
+            "title": "Standart Hata & Yanıt Şeması",
+            "detail": "Frontend ve mobil istemciler tek tip JSON kontratı tüketir.",
+            "tag": "REST"
+          }
+        ],
+        "footerNote": "TerminalTrace gömülü olarak SplitStage içinde de çalışır",
+        "visual": {
+          "type": "terminal",
+          "title": "zsh — POST /api/v1/rezervasyonlar",
+          "prompt": "mac@otel-api ~ %",
+          "command": "curl -X POST /api/v1/rezervasyonlar -d '{\"odaId\":402,\"giris\":\"2026-08-20\"}'",
+          "statusCode": 201,
+          "statusText": "Created",
+          "latency": "8 ms",
+          "responseAtSec": 1.25,
+          "highlightResponseLines": [2, 4],
+          "responseBody": "{\n  \"rezervasyonId\": 10842,\n  \"odaId\": 402,\n  \"durum\": \"ONAYLANDI\",\n  \"toplamTutar\": 14850.00\n}"
+        }
+      }
+    }
+  ]
+}

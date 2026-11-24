@@ -1,0 +1,345 @@
+{
+  "meta": {
+    "title": "Bölüm 02 · 13 Tablolu 3NF Mimari",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 56.85
+  },
+  "audio": "kayit.wav",
+  "audioOffsetSec": 49.95,
+  "audioVolume": 1,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "ch02-01-banner-3nf",
+      "startSec": 0,
+      "endSec": 4.95,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "02 · 3NF MİMARİ",
+      "sfx": "thud",
+      "sfxVolume": 0.22,
+      "props": {
+        "frameless": true,
+        "badge": "BÖLÜM 02 · VERİTABANI TASARIMI",
+        "value": "13 TABLO",
+        "label": "3NF İLİŞKİSEL MİMARİ",
+        "subtext": "Veri tekrarını sıfırlayan, tek sorumluluklu tablo tasarımı."
+      }
+    },
+    {
+      "id": "ch02-02-biggest-mistake",
+      "startSec": 4.95,
+      "endSec": 9.25,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "02 · EN BÜYÜK HATA",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "BAŞLANGIÇ HATASI",
+        "text": "Çoğu başlangıç projesinde yapılan en büyük hata, tüm bilgileri tek bir devasa tabloya yığmaktır.",
+        "highlights": ["en büyük hata", "tek bir devasa tabloya"],
+        "highlightAtSecs": [2.54, 3.6]
+      }
+    },
+    {
+      "id": "ch02-03-flat-table-sql",
+      "startSec": 9.25,
+      "endSec": 13.25,
+      "component": "CodeWindow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "chapterLabel": "02 · TEK DEVASA TABLO",
+      "sfx": "tick",
+      "sfxVolume": 0.15,
+      "props": {
+        "language": "sql",
+        "title": "anti_pattern_flat_table.sql",
+        "code": "-- Tüm alanların tek bir tabloya yığıldığı hatalı tasarım\nCREATE TABLE dev_rezervasyon (\n  id INT PRIMARY KEY,\n  musteri_adi VARCHAR(120), musteri_tel VARCHAR(20),\n  oda_no INT, oda_tipi VARCHAR(50), gecelik_fiyat DECIMAL,\n  odeme_tutar DECIMAL, odeme_durum VARCHAR(20)\n);",
+        "diffLines": {
+          "remove": [4, 5, 6]
+        },
+        "caption": "Farklı varlıklar tek satırda toplandığında şema kontrolsüz büyür."
+      }
+    },
+    {
+      "id": "ch02-04-all-side-by-side",
+      "startSec": 13.25,
+      "endSec": 18.2,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "02 · VERİ YIĞILMASI",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "subtitle": "ANTI-PATTERN · DÜZ TABLO",
+        "title": "Hepsi Yan Yana Tek Satırda",
+        "badge": "ANOMALİ RİSKİ",
+        "body": "Müşteri adı, oda tipi, fiyat ve ödeme bilgisi aynı tabloda yan yana durur.",
+        "items": [
+          {
+            "label": "Müşteri Bilgisi",
+            "value": "Her yeni rezervasyonda tekrar kopyalanır",
+            "tag": "TEKRAR"
+          },
+          {
+            "label": "Oda Tipi & Fiyat",
+            "value": "Fiyat değişiminde geçmiş kayıtlar bozulur",
+            "tag": "KRİTİK",
+            "highlighted": true
+          },
+          {
+            "label": "Ödeme Bilgisi",
+            "value": "İptal ve parçalı ödemelerde tutarsızlık üretir",
+            "tag": "RİSK"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch02-05-update-anomaly-sql",
+      "startSec": 18.2,
+      "endSec": 22.8,
+      "component": "CodeWindow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "chapterLabel": "02 · GÜNCELLEME ANOMALİSİ",
+      "sfx": "tick",
+      "sfxVolume": 0.15,
+      "props": {
+        "language": "sql",
+        "title": "update_anomaly.sql",
+        "code": "-- Kısa vadede kolay görünen fiyat güncellemesi\nUPDATE dev_rezervasyon\nSET gecelik_fiyat = 4200.00\nWHERE oda_tipi = 'DELUXE';\n-- SONUÇ: Geçmiş aylara ait tüm eski faturalar\n-- ve gelir raporları anında bozulur!",
+        "focusSteps": [
+          {
+            "atSec": 0,
+            "lines": [2, 3, 4],
+            "caption": "Kısa vadede tek bir UPDATE sorgusuyla kolay görünür..."
+          },
+          {
+            "atSec": 2.3,
+            "lines": [5, 6],
+            "caption": "Ancak eski faturalar bozulur ve veri tekrarı kontrolden çıkar."
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch02-06-invoices-break",
+      "startSec": 22.8,
+      "endSec": 26.2,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "02 · VERİ TEKRARI",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "NORMALİZASYON İHLALİ",
+        "text": "Bir oda fiyatını güncellediğinizde eski faturalar bozulur, veri tekrarı başlar.",
+        "highlights": ["eski faturalar bozulur", "veri tekrarı başlar"],
+        "highlightAtSecs": [0.15, 1.65]
+      }
+    },
+    {
+      "id": "ch02-07-comparison-3nf",
+      "startSec": 26.2,
+      "endSec": 31.15,
+      "component": "ComparisonCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "02 · 3NF KARŞILAŞTIRMA",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "TASARIM KARARI",
+        "title": "Tek Düz Tablo yerine 13 Tablolu 3NF",
+        "leftTitle": "Tek Devasa Tablo",
+        "leftBadge": "ESKİ / HATALI",
+        "leftItems": [
+          "Müşteri, oda ve fiyat verisi tekrarlanır",
+          "Fiyat güncellenince eski faturalar bozulur",
+          "İlişkisel bütünlük kontrolü yoktur"
+        ],
+        "rightTitle": "3NF İlişkisel Şema",
+        "rightBadge": "13 TABLO · 3NF",
+        "rightItems": [
+          "13 ayrı, tek sorumluluklu tablo",
+          "Fiyat geçmişi faturalardan tamamen izole",
+          "Foreign Key kısıtlarıyla sıkı koruma"
+        ]
+      }
+    },
+    {
+      "id": "ch02-08-domain-tables",
+      "startSec": 31.15,
+      "endSec": 35.95,
+      "component": "StepCard",
+      "background": "obsidianGrid",
+      "transition": "slideLeft",
+      "chapterLabel": "02 · TABLO AYRIMI",
+      "sfx": "tick",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "13 TABLOLU ÇEKİRDEK",
+        "title": "Net Sınırlarla Ayrılmış Modüller",
+        "steps": [
+          {
+            "title": "Müşteriler & Konaklama Kayıtları",
+            "detail": "Kimlik ve iletişim bilgileri tekil kaynakta tutulur.",
+            "duration": "MÜŞTERİ"
+          },
+          {
+            "title": "Odalar & Oda Tipleri",
+            "detail": "Fiziksel oda envanteri ve tarife tanımları ayrıştırılır.",
+            "duration": "ODA"
+          },
+          {
+            "title": "Rezervasyonlar, Ödemeler & Ekstra Hizmetler",
+            "detail": "Konaklama, finans hareketleri ve ek servisler bağımsızdır.",
+            "duration": "FİNANS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch02-09-er-split-stage",
+      "startSec": 35.95,
+      "endSec": 40.35,
+      "component": "SplitStage",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "02 · ER ŞEMASI",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "reverse": true,
+        "eyebrow": "3NF İLİŞKİSEL HARİTA",
+        "title": "Net Sınırlar, Temiz İlişkiler",
+        "subtitle": "Ödemeler ve ekstra hizmetler çekirdek rezervasyonu kirletmeden bağlanır.",
+        "points": [
+          {
+            "title": "Bağımsız Finans & Ekstra Kalemler",
+            "detail": "Oda servisi, ödeme ve indirimler ayrı tablolarda izlenir.",
+            "tag": "İZOLE",
+            "highlighted": true
+          },
+          {
+            "title": "Genişletilebilir Çekirdek",
+            "detail": "Yeni fiyat sezonu veya kampanya mevcut tabloları bozmaz.",
+            "tag": "3NF"
+          }
+        ],
+        "footerNote": "MySQL 8.0 • 13 Tablolu 3NF ER Diyagramı",
+        "visual": {
+          "type": "media",
+          "src": "schema_preview.png",
+          "title": "otel-3nf-er-schema.png",
+          "badge": "3NF ŞEMA",
+          "zoomPan": true
+        }
+      }
+    },
+    {
+      "id": "ch02-10-single-responsibility",
+      "startSec": 40.35,
+      "endSec": 43.4,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "02 · TEK SORUMLULUK",
+      "sfx": "thud",
+      "sfxVolume": 0.22,
+      "props": {
+        "frameless": true,
+        "badge": "TASARIM PRENSİBİ",
+        "value": "1 TABLO = 1 GÖREV",
+        "label": "HER TABLONUN TEK BİR SORUMLULUĞU VAR",
+        "subtext": "Temiz bakım, öngörülebilir sorgular ve sıfır veri tekrarı."
+      }
+    },
+    {
+      "id": "ch02-11-foreign-key-sql",
+      "startSec": 43.4,
+      "endSec": 48.2,
+      "component": "CodeWindow",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "02 · FOREIGN KEY",
+      "sfx": "tick",
+      "sfxVolume": 0.15,
+      "props": {
+        "language": "sql",
+        "title": "V1__foreign_key_constraints.sql",
+        "code": "CREATE TABLE rezervasyonlar (\n  id BIGINT PRIMARY KEY AUTO_INCREMENT,\n  musteri_id BIGINT NOT NULL,\n  oda_id BIGINT NOT NULL,\n  CONSTRAINT fk_rez_musteri FOREIGN KEY (musteri_id)\n    REFERENCES musteriler(id),\n  CONSTRAINT fk_rez_oda FOREIGN KEY (oda_id)\n    REFERENCES odalar(id) ON DELETE RESTRICT\n);",
+        "diffLines": {
+          "add": [5, 6, 7, 8]
+        },
+        "caption": "Yabancı anahtar (Foreign Key) kısıtları veritabanı seviyesinde zırh oluşturur."
+      }
+    },
+    {
+      "id": "ch02-12-fk-guard-flow",
+      "startSec": 48.2,
+      "endSec": 52.5,
+      "component": "NodeFlow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "chapterLabel": "02 · REFERANS BÜTÜNLÜĞÜ",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "REFERANS BÜTÜNLÜĞÜ ZİNCİRİ",
+        "title": "Yetim Kayıtlar Daha Girişte Engellenir",
+        "nodes": [
+          {
+            "badge": "01 · PK",
+            "label": "Odalar",
+            "sublabel": "PRIMARY KEY (id)"
+          },
+          {
+            "badge": "02 · FK",
+            "label": "Rezervasyonlar",
+            "sublabel": "Olmayan oda reddedilir"
+          },
+          {
+            "badge": "03 · FK",
+            "label": "Ödemeler",
+            "sublabel": "Karşılıksız ödeme reddedilir",
+            "highlighted": true
+          }
+        ],
+        "edgeLabels": ["FK(oda_id)", "FK(rez_id)"],
+        "caption": "Sistemde olmayan bir odaya rezervasyon veya karşılıksız ödeme kaydı açılamaz."
+      }
+    },
+    {
+      "id": "ch02-13-db-level-guard",
+      "startSec": 52.5,
+      "endSec": 56.85,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "02 · VERİTABANI SEVİYESİ",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "SIFIR YETİM KAYIT",
+        "text": "Geçersiz rezervasyon ve karşılıksız ödeme kayıtları daha veritabanı seviyesinde engelleniyor.",
+        "highlights": ["veritabanı seviyesinde engelleniyor"],
+        "highlightAtSecs": [1.85]
+      }
+    }
+  ]
+}

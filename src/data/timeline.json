@@ -1,0 +1,314 @@
+{
+  "meta": {
+    "title": "Evde Kafe Kalitesinde Kahve: 3 Temel Değişken",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 41.12
+  },
+  "audio": "kayit_temiz.wav",
+  "audioVolume": 1,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "beat-01-giris-sorusu",
+      "startSec": 0,
+      "endSec": 4.8,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "EVDE FİLTRE KAHVE · SORU",
+        "text": "Çoğu kişi evde yaptığı kahvenin neden kafelerdeki gibi tadı olmadığını merak eder.",
+        "highlights": ["evde yaptığı kahvenin", "kafelerdeki gibi tadı olmadığını"],
+        "caption": "Farkı belirleyen pahalı ekipmanlar değil, doğru kontrol edilen birkaç parametredir.",
+        "startFrame": 14,
+        "staggerFrames": 32
+      }
+    },
+    {
+      "id": "beat-02-uc-degisken-haritasi",
+      "startSec": 4.8,
+      "endSec": 7.8,
+      "component": "NodeFlow",
+      "background": "dotMatrix",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "MESELE MAKİNE DEĞİL",
+        "title": "3 Temel Değişken",
+        "startFrame": 0,
+        "nodes": [
+          {
+            "badge": "01",
+            "label": "Su Sıcaklığı",
+            "sublabel": "92°C – 94°C aralığı"
+          },
+          {
+            "badge": "02",
+            "label": "Oran & Akış",
+            "sublabel": "18g kahve / 300 ml su"
+          },
+          {
+            "badge": "03",
+            "label": "Sabır",
+            "sublabel": "Ön ıslatma + dairesel döküş",
+            "highlighted": true
+          }
+        ],
+        "edgeLabels": ["Denge", "Süreç"]
+      }
+    },
+    {
+      "id": "beat-03-birincisi-su-sicakligi",
+      "startSec": 7.8,
+      "endSec": 11.95,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "blurBackground": true,
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "subtitle": "BİRİNCİ DEĞİŞKEN",
+        "title": "Su Sıcaklığı",
+        "badge": "01 / 03",
+        "body": "Kaynar suyu doğrudan kahvenin üzerine dökmek en sık yapılan hatadır.",
+        "items": [
+          {
+            "label": "Kaynama Noktası",
+            "value": "100°C",
+            "tag": "ÇOK YÜKSEK",
+            "highlighted": true
+          },
+          {
+            "label": "Temas Yöntemi",
+            "value": "Doğrudan Döküş",
+            "tag": "RİSK"
+          }
+        ],
+        "footer": "Aşırı ısı, çekirdekteki hassas aromatik bileşikleri hızla yakar."
+      }
+    },
+    {
+      "id": "beat-04-kaynar-su-etkisi",
+      "startSec": 11.95,
+      "endSec": 15.4,
+      "component": "NodeFlow",
+      "background": "dotMatrix",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "NEDEN — SONUÇ",
+        "title": "Kaynar Su Çekirdeği Yakar",
+        "startFrame": 2,
+        "nodes": [
+          {
+            "badge": "HATA",
+            "label": "100°C Kaynar Su",
+            "sublabel": "Doğrudan kahve yatağına temas"
+          },
+          {
+            "badge": "SONUÇ",
+            "label": "Acı ve Yanık Tat",
+            "sublabel": "Aromalar bastırılır, sertlik öne çıkar",
+            "highlighted": true
+          }
+        ],
+        "edgeLabels": ["Aşırı Ekstraksiyon"],
+        "caption": "Kaynar su yalnızca acı bileşenleri öne çıkarır."
+      }
+    },
+    {
+      "id": "beat-05-ideal-sicaklik",
+      "startSec": 15.4,
+      "endSec": 18.95,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "HEDEF ISI ARALIĞI",
+        "text": "İdeal sıcaklık 92 ile 94 derece arasındadır.",
+        "highlights": ["92 ile 94 derece"],
+        "caption": "Su kaynadıktan sonra ~30 saniye beklemek bu ideal aralığı yakalamanızı sağlar.",
+        "startFrame": 14
+      }
+    },
+    {
+      "id": "beat-06-ikincisi-oran-ve-akis",
+      "startSec": 18.95,
+      "endSec": 23,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "blurBackground": true,
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "İKİNCİ DEĞİŞKEN",
+        "title": "Oran ve Demleme Akışı",
+        "badge": "02 / 03",
+        "body": "Kahve miktarı ile su hacmi arasındaki denge gövde ve berraklığı doğrudan belirler.",
+        "items": [
+          {
+            "label": "Altın Oran",
+            "value": "1 : 16.6",
+            "tag": "STANDART",
+            "highlighted": true
+          },
+          {
+            "label": "Öğütüm Tazeliği",
+            "value": "18g Taze Öğütülmüş",
+            "tag": "KRİTİK"
+          }
+        ]
+      }
+    },
+    {
+      "id": "beat-07-18g-300ml-akisi",
+      "startSec": 23,
+      "endSec": 27.45,
+      "component": "NodeFlow",
+      "background": "obsidianGrid",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "ALTIN ORAN · 1 : 16.6",
+        "title": "En Dengeli Demleme Sonucu",
+        "startFrame": 2,
+        "nodes": [
+          {
+            "badge": "01 · DOZ",
+            "label": "18g Kahve",
+            "sublabel": "Taze öğütülmüş"
+          },
+          {
+            "badge": "02 · HACİM",
+            "label": "300 ml Su",
+            "sublabel": "92–94°C ideal sıcaklıkta"
+          },
+          {
+            "badge": "03 · SONUÇ",
+            "label": "Dengeli Fincan",
+            "sublabel": "Temiz gövde ve parlak aroma",
+            "highlighted": true
+          }
+        ],
+        "edgeLabels": ["1:16.6 Oran", "Ekstraksiyon"],
+        "caption": "18g taze öğütülmüş kahveye 300 ml su en dengeli sonucu verir."
+      }
+    },
+    {
+      "id": "beat-08-ucuncusu-sabir",
+      "startSec": 27.45,
+      "endSec": 30.6,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "blurBackground": true,
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "subtitle": "ÜÇÜNCÜ DEĞİŞKEN",
+        "title": "Sabır ve Kontrollü Akış",
+        "badge": "03 / 03",
+        "body": "Suyu tek seferde dökmek yerine kahvenin gazını bırakmasına ve eşit demlenmesine zaman tanıyın.",
+        "items": [
+          {
+            "label": "1. Aşama",
+            "value": "Az su ile 30 sn ön ıslatma",
+            "tag": "BLOOM",
+            "highlighted": true
+          },
+          {
+            "label": "2. Aşama",
+            "value": "Yavaş dairesel döküş",
+            "tag": "AKIŞ"
+          }
+        ]
+      }
+    },
+    {
+      "id": "beat-09-on-islatma-adimi",
+      "startSec": 30.6,
+      "endSec": 33.9,
+      "component": "StepCard",
+      "background": "obsidianGrid",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "DEMLEME PROTOKOLÜ",
+        "title": "Sabırlı Demleme Adımları",
+        "badge": "ADIM 1 / 3",
+        "activeStepIndex": 0,
+        "steps": [
+          {
+            "title": "1. Ön Islatma (30 sn)",
+            "detail": "Az bir suyla kahveyi ıslatıp CO₂ gazının çıkmasını bekleyin.",
+            "duration": "00:30"
+          },
+          {
+            "title": "2. Dairesel Döküş",
+            "detail": "Merkezden dışa doğru yavaş ve kontrollü hareketlerle demleyin.",
+            "duration": "01:45"
+          },
+          {
+            "title": "3. Temiz Fincan",
+            "detail": "Kahvenin gerçek aroması berrak şekilde fincana geçer.",
+            "duration": "02:45"
+          }
+        ]
+      }
+    },
+    {
+      "id": "beat-10-dairesel-dokus-adimi",
+      "startSec": 33.9,
+      "endSec": 37.25,
+      "component": "StepCard",
+      "background": "dotMatrix",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "DEMLEME PROTOKOLÜ",
+        "title": "Sabırlı Demleme Adımları",
+        "badge": "ADIM 2 / 3",
+        "activeStepIndex": 1,
+        "steps": [
+          {
+            "title": "1. Ön Islatma (30 sn)",
+            "detail": "Az bir suyla kahveyi ıslatıp CO₂ gazının çıkmasını bekleyin.",
+            "duration": "00:30"
+          },
+          {
+            "title": "2. Dairesel Döküş",
+            "detail": "Merkezden dışa doğru yavaş ve kontrollü hareketlerle demleyin.",
+            "duration": "01:45"
+          },
+          {
+            "title": "3. Temiz Fincan",
+            "detail": "Kahvenin gerçek aroması berrak şekilde fincana geçer.",
+            "duration": "02:45"
+          }
+        ]
+      }
+    },
+    {
+      "id": "beat-11-gercek-aroma-kapanis",
+      "startSec": 37.25,
+      "endSec": 41.12,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "SONUÇ · KAFE KALİTESİNDE FİNCAN",
+        "text": "Kahvenin gerçek aromasını fincanda net şekilde alırsınız.",
+        "highlights": ["gerçek aromasını", "net şekilde"],
+        "caption": "92–94°C Su • 18g / 300 ml Oran • 30 sn Ön Islatma & Dairesel Döküş",
+        "startFrame": 12,
+        "staggerFrames": 24
+      }
+    }
+  ]
+}

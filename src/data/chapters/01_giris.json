@@ -1,0 +1,311 @@
+{
+  "meta": {
+    "title": "Bölüm 01 · Giriş ve Temel Problem",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 49.95
+  },
+  "audio": "kayit.wav",
+  "audioVolume": 1,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "ch01-01-intro-banner",
+      "startSec": 0,
+      "endSec": 3.55,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "01 · GİRİŞ",
+      "sfx": "thud",
+      "sfxVolume": 0.22,
+      "props": {
+        "frameless": true,
+        "badge": "BÖLÜM 01 · GİRİŞ",
+        "value": "BÖLÜM 01",
+        "label": "GİRİŞ VE TEMEL PROBLEM",
+        "subtext": "Otel Rezervasyon ve Konaklama Yönetim Sistemi"
+      }
+    },
+    {
+      "id": "ch01-02-surface-illusion",
+      "startSec": 3.55,
+      "endSec": 8.4,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "01 · DIŞARIDAN BAKIŞ",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "İLK İZLENİM",
+        "text": "Bir otel rezervasyon sistemi dışarıdan bakıldığında basit bir kayıt ekranı gibi görünür.",
+        "highlights": ["otel rezervasyon sistemi", "basit bir kayıt ekranı"],
+        "highlightAtSecs": [0.51, 3.59]
+      }
+    },
+    {
+      "id": "ch01-03-surface-flow",
+      "startSec": 8.4,
+      "endSec": 13,
+      "component": "NodeFlow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "chapterLabel": "01 · KULLANICI AKIŞI",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "YÜZEYDEKİ AKIŞ",
+        "title": "Dışarıdan Sadece 3 Basit Adım",
+        "nodes": [
+          {
+            "badge": "01 · GİRİŞ",
+            "label": "Müşteri Gelir",
+            "sublabel": "Oda arayışı başlar"
+          },
+          {
+            "badge": "02 · TAKVİM",
+            "label": "Tarih Seçer",
+            "sublabel": "Giriş / çıkış aralığı"
+          },
+          {
+            "badge": "03 · KAYIT",
+            "label": "Odayı Tutar",
+            "sublabel": "Tek tıkla rezervasyon",
+            "highlighted": true
+          }
+        ],
+        "edgeLabels": ["Tarih Aralığı", "Onay"],
+        "caption": "Kullanıcı açısından sade; ancak arka planda eşzamanlılık ve finans bütünlüğü çalışır."
+      }
+    },
+    {
+      "id": "ch01-04-under-the-hood",
+      "startSec": 13,
+      "endSec": 17.5,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "01 · İŞİN MUTFAĞI",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "PERDE ARKASI",
+        "text": "Ama işin mutfağına indiğinizde asıl mesele ekran tasarımı değil...",
+        "highlights": ["işin mutfağına", "ekran tasarımı değil"],
+        "highlightAtSecs": [0.6, 3.22]
+      }
+    },
+    {
+      "id": "ch01-05-data-consistency",
+      "startSec": 17.5,
+      "endSec": 20.6,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "01 · TEMEL MESELE",
+      "sfx": "thud",
+      "sfxVolume": 0.22,
+      "props": {
+        "frameless": true,
+        "badge": "ASIL MÜHENDİSLİK PROBLEMİ",
+        "value": "VERİ TUTARLILIĞI",
+        "label": "EKRAN TASARIMI DEĞİL, MİMARİ DİSİPLİN",
+        "subtext": "Gerçek bir sistemde güvenilirlik, veritabanı çekirdeğinde kurulur."
+      }
+    },
+    {
+      "id": "ch01-06-double-booking-problem",
+      "startSec": 20.6,
+      "endSec": 25.1,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "01 · PROBLEM 01",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "subtitle": "PROBLEM 01 · ÇİFTE REZERVASYON",
+        "title": "Aynı Oda, Aynı Tarihler",
+        "badge": "RACE CONDITION",
+        "body": "Aynı odanın aynı tarihlerde iki farklı kişiye satılmasını nasıl engellersiniz?",
+        "items": [
+          {
+            "label": "Kritik Risk",
+            "value": "Eşzamanlı çift satış (Overbooking)",
+            "tag": "RİSK",
+            "highlighted": true
+          },
+          {
+            "label": "Mühendislik Hedefi",
+            "value": "Veritabanı seviyesinde atomik tarih çakışma koruması",
+            "tag": "ACID"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch01-07-cancellation-question",
+      "startSec": 25.1,
+      "endSec": 29.1,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "focusBlur",
+      "chapterLabel": "01 · PROBLEM 02",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "PROBLEM 02 · İPTAL SENARYOSU",
+        "text": "Ya da bir rezervasyon iptal edildiğinde tüm kayıtlar nasıl senkron kalır?",
+        "highlights": ["rezervasyon iptal edildiğinde", "senkron kalır"],
+        "highlightAtSecs": [1.02, 2.7]
+      }
+    },
+    {
+      "id": "ch01-08-cancellation-chain",
+      "startSec": 29.1,
+      "endSec": 33.4,
+      "component": "NodeFlow",
+      "background": "obsidianGrid",
+      "transition": "slideLeft",
+      "chapterLabel": "01 · İLİŞKİLİ GÜNCELLEME",
+      "sfx": "tick",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "BİRBİRİNE KARIŞMADAN GÜNCELLEME",
+        "title": "İptal Anında 3 Kritik Kayıt",
+        "nodes": [
+          {
+            "badge": "01 · FİNANS",
+            "label": "Ödeme & İade",
+            "sublabel": "Fatura kaydı bozulmaz"
+          },
+          {
+            "badge": "02 · ENVANTER",
+            "label": "Oda Durumu",
+            "sublabel": "Otomatik müsait olur"
+          },
+          {
+            "badge": "03 · TARİHÇE",
+            "label": "Fiyat Geçmişi",
+            "sublabel": "Eski tutarlar korunur",
+            "highlighted": true
+          }
+        ],
+        "edgeLabels": ["Tutarlı Güncelle", "İzole Tut"],
+        "caption": "Ödeme, oda durumu ve fiyat geçmişi tek bir tutarlı işlem altında yönetilir."
+      }
+    },
+    {
+      "id": "ch01-09-project-focus",
+      "startSec": 33.4,
+      "endSec": 37.3,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "01 · ÇÖZÜM ODAĞI",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "PROJE AMACI",
+        "text": "Bu projede tam olarak bu problemlere odaklandım.",
+        "highlights": ["tam olarak", "bu problemlere odaklandım"],
+        "highlightAtSecs": [1.14, 1.82]
+      }
+    },
+    {
+      "id": "ch01-10-tech-stack",
+      "startSec": 37.3,
+      "endSec": 41.45,
+      "component": "SplitStage",
+      "background": "obsidianGrid",
+      "transition": "slideLeft",
+      "chapterLabel": "01 · TEKNOLOJİ YIĞINI",
+      "sfx": "tick",
+      "sfxVolume": 0.15,
+      "props": {
+        "eyebrow": "TEKNOLOJİ YIĞINI",
+        "title": "MySQL 8.0 & Spring Boot",
+        "subtitle": "İlişkisel veritabanı disiplini ve modern backend servis mimarisi.",
+        "points": [
+          {
+            "title": "MySQL 8.0 (InnoDB)",
+            "detail": "Satır kilitleme, Foreign Key kısıtları, Trigger ve Stored Procedure.",
+            "tag": "DB",
+            "highlighted": true
+          },
+          {
+            "title": "Spring Boot API",
+            "detail": "@Transactional işlem sınırları ve deterministik HTTP yanıtları.",
+            "tag": "JAVA"
+          }
+        ],
+        "visual": {
+          "type": "code",
+          "language": "bash",
+          "title": "architecture.env",
+          "code": "DB_ENGINE=MySQL 8.0 (InnoDB)\nBACKEND=Spring Boot 3 (Java)\nNORMAL_FORM=3NF (13 Tables)\nLOCK_STRATEGY=SELECT FOR UPDATE\nSTATUS_CONTRACT=201 Created / 409 Conflict",
+          "highlightLines": [1, 2]
+        }
+      }
+    },
+    {
+      "id": "ch01-11-13-tables-3nf",
+      "startSec": 41.45,
+      "endSec": 45.95,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "01 · 13 TABLO · 3NF",
+      "sfx": "thud",
+      "sfxVolume": 0.22,
+      "props": {
+        "frameless": true,
+        "badge": "İLİŞKİSEL ÇEKİRDEK",
+        "value": "13 TABLO · 3NF",
+        "label": "3. NORMAL FORM KURALLARINA UYGUN",
+        "subtext": "Sıfır veri tekrarı ve veritabanı düzeyinde garanti edilen tutarlılık."
+      }
+    },
+    {
+      "id": "ch01-12-system-overview",
+      "startSec": 45.95,
+      "endSec": 49.95,
+      "component": "StepCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "01 · SİSTEM ÖZETİ",
+      "sfx": "tick",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "SİSTEM MİMARİSİ",
+        "title": "Otel Rezervasyon ve Konaklama Yönetimi",
+        "steps": [
+          {
+            "title": "1. 13 Tablolu 3NF Şema",
+            "detail": "Tek sorumluluklu tablolar ve katı Foreign Key bütünlüğü.",
+            "duration": "3NF"
+          },
+          {
+            "title": "2. Eşzamanlılık & Satır Kilidi",
+            "detail": "@Transactional ve InnoDB kilidi ile sıfır çifte rezervasyon.",
+            "duration": "ACID"
+          },
+          {
+            "title": "3. Trigger, Stored Procedure & İndeks",
+            "detail": "Otomatik veri bütünlüğü ve tek haneli milisaniye sorgular.",
+            "duration": "MYSQL 8.0"
+          }
+        ]
+      }
+    }
+  ]
+}

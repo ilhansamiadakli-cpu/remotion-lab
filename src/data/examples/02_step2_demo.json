@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "title": "Spring Boot & MySQL 8.0 · Adım 2 Modül Testi",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 18
+  },
+  "audio": null,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "s2-01-code-multistep",
+      "startSec": 0,
+      "endSec": 5,
+      "component": "CodeWindow",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "01 · SPRING BOOT LOCK",
+      "sfx": "tick",
+      "sfxVolume": 0.16,
+      "props": {
+        "language": "java",
+        "title": "RezervasyonService.java",
+        "code": "@Transactional\npublic Rezervasyon olustur(RezervasyonIstegi req) {\n  Oda oda = odaRepo.findByIdForUpdate(req.odaId());\n  boolean cakisiyor = rezRepo.existsOverlap(\n      oda.getId(), req.giris(), req.cikis());\n  if (cakisiyor) {\n    throw new OdaDoluException(HttpStatus.CONFLICT);\n  }\n  return rezRepo.save(Rezervasyon.yeni(oda, req));\n}",
+        "focusSteps": [
+          {
+            "atSec": 0,
+            "lines": [1, 3],
+            "caption": "1. Adım: @Transactional + Pessimistic Write Lock ile ilgili oda satırı kilitlenir."
+          },
+          {
+            "atSec": 2.4,
+            "lines": [4, 5, 6, 7],
+            "caption": "2. Adım: Tarih çakışması varsa işlem kesilir ve 409 Conflict döndürülür."
+          }
+        ]
+      }
+    },
+    {
+      "id": "s2-02-code-diff",
+      "startSec": 5,
+      "endSec": 9.5,
+      "component": "CodeWindow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "chapterLabel": "02 · MYSQL 8.0 DIFF",
+      "sfx": "tick",
+      "sfxVolume": 0.16,
+      "props": {
+        "language": "sql",
+        "title": "V4__overlap_index.sql",
+        "code": "-- Çakışma kontrol sorgusu optimizasyonu\nSELECT * FROM rezervasyon\nWHERE oda_id = ? AND durum = 'AKTIF';\nCREATE INDEX idx_rez_oda_tarih\n  ON rezervasyon (oda_id, giris_tarihi, cikis_tarihi);\nSELECT EXISTS(SELECT 1 FROM rezervasyon WHERE oda_id = ?);",
+        "diffLines": {
+          "remove": [2, 3],
+          "add": [4, 5, 6]
+        },
+        "caption": "Full Table Scan yerine bileşik B-Tree indeks + EXISTS ile milisaniyelik kontrol."
+      }
+    },
+    {
+      "id": "s2-03-split-code-metric",
+      "startSec": 9.5,
+      "endSec": 14,
+      "component": "SplitStage",
+      "background": "obsidianGrid",
+      "transition": "depthZoom",
+      "chapterLabel": "03 · PERFORMANS ETKİSİ",
+      "sfx": "whoosh",
+      "sfxVolume": 0.15,
+      "props": {
+        "eyebrow": "MYSQL 8.0 · EXPLAIN ANALYZE",
+        "title": "Bileşik İndeks ile 52x Hızlanma",
+        "subtitle": "500.000 satırlık rezervasyon tablosunda çakışma sorgusu gerçek ölçümü.",
+        "metric": {
+          "before": "420 ms",
+          "value": "8 ms",
+          "delta": "-98%",
+          "label": "P95 SORGU GECİKMESİ (INNODB)"
+        },
+        "points": [
+          {
+            "title": "Index Range Scan aktif",
+            "detail": "Disk okuması yerine bellek içi B-Tree dalında anında eşleşme.",
+            "tag": "O(log n)",
+            "highlighted": true
+          },
+          {
+            "title": "Kilit bekleme süresi minimize",
+            "detail": "Transaction daha hızlı kapandığı için eşzamanlı istek kuyruğu erir.",
+            "tag": "LOCK"
+          }
+        ],
+        "footerNote": "MySQL 8.0.36 • InnoDB Buffer Pool • 500k synthetic rows",
+        "visual": {
+          "type": "code",
+          "language": "sql",
+          "title": "explain_analyze.sql",
+          "code": "EXPLAIN ANALYZE\nSELECT 1 FROM rezervasyon\nWHERE oda_id = 402\n  AND giris_tarihi < '2026-08-18'\n  AND cikis_tarihi > '2026-08-14'\nLIMIT 1;\n-- -> Index range scan using idx_rez_oda_tarih\n--    (actual time=0.04..0.08 rows=1)",
+          "highlightLines": [4, 5, 7, 8]
+        }
+      }
+    },
+    {
+      "id": "s2-04-split-media-reverse",
+      "startSec": 14,
+      "endSec": 18,
+      "component": "SplitStage",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "04 · 3NF İLİŞKİSEL AKIŞ",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "reverse": true,
+        "eyebrow": "ASİMETRİK 40 / 60 SAHNE",
+        "title": "İlişkisel Şema Bütünlüğü",
+        "subtitle": "Oda ve Rezervasyon tabloları tekil yabancı anahtar ve tarih kuralıyla kilitlenir.",
+        "points": [
+          {
+            "title": "1 : N Katı Foreign Key",
+            "detail": "Geçersiz OdaID ile yetim kayıt açılması imkânsızdır.",
+            "tag": "FK",
+            "highlighted": true
+          },
+          {
+            "title": "Çift Katmanlı Güvenlik",
+            "detail": "Spring Boot @Transactional + MySQL CHECK kısıtı birlikte çalışır.",
+            "tag": "3NF"
+          }
+        ],
+        "footerNote": "MediaWindow gömülü modda arka plan otomatik blur(6px) olur",
+        "visual": {
+          "type": "media",
+          "src": "schema_preview.png",
+          "title": "otel-3nf-er.png",
+          "badge": "3NF ŞEMA",
+          "zoomPan": true
+        }
+      }
+    }
+  ]
+}

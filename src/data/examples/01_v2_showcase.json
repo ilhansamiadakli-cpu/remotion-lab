@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "title": "MySQL 8.0 & Spring Boot · Mimari İmza Testi",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 18
+  },
+  "audio": null,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "v21-01-metric-frameless",
+      "startSec": 0,
+      "endSec": 3.5,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "01 · MİMARİ ÖZET",
+      "sfx": "whoosh",
+      "sfxVolume": 0.16,
+      "props": {
+        "frameless": true,
+        "badge": "BÖLÜM 01 · VERİTABANI",
+        "value": "13 TABLO",
+        "label": "3NF İLİŞKİSEL MİMARİ",
+        "subtext": "Monokrom Obsidian zemin, sıcak mühendislik kehribarı ve kartsız tipografi imzası."
+      }
+    },
+    {
+      "id": "v21-02-highlighter-frameless",
+      "startSec": 3.5,
+      "endSec": 7.0,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "01 · İŞ KURALI",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "VERİ BÜTÜNLÜĞÜ KURALI",
+        "text": "Aynı odanın çakışan tarihlerde rezerve edilmesi veritabanı düzeyinde engellenir.",
+        "highlights": ["çakışan tarihlerde", "veritabanı düzeyinde"],
+        "caption": "Kartsız (frameless) tipografi modu, kart yorgunluğunu kırarak metne nefes alanı açar."
+      }
+    },
+    {
+      "id": "v21-03-code-cad",
+      "startSec": 7.0,
+      "endSec": 11.0,
+      "component": "CodeWindow",
+      "background": "obsidianGrid",
+      "transition": "slideLeft",
+      "chapterLabel": "02 · MYSQL 8.0 ŞEMA",
+      "sfx": "tick",
+      "sfxVolume": 0.16,
+      "props": {
+        "language": "sql",
+        "title": "V2__create_rezervasyon.sql",
+        "highlightLines": [4, 5, 6],
+        "code": "CREATE TABLE rezervasyon (\n  rezervasyon_id BIGINT AUTO_INCREMENT PRIMARY KEY,\n  oda_id BIGINT NOT NULL,\n  giris_tarihi DATE NOT NULL,\n  cikis_tarihi DATE NOT NULL,\n  CONSTRAINT chk_tarih CHECK (cikis_tarihi > giris_tarihi),\n  CONSTRAINT fk_rez_oda FOREIGN KEY (oda_id) REFERENCES oda(oda_id)\n) ENGINE=InnoDB;",
+        "caption": "CAD köşe nişangâhları, 12px keskin çerçeve ve sıcak kehribar SQL vurgusu."
+      }
+    },
+    {
+      "id": "v21-04-comparison-cad",
+      "startSec": 11.0,
+      "endSec": 14.5,
+      "component": "ComparisonCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "03 · MİMARİ KARŞILAŞTIRMA",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "NORMALİZASYON FARKI",
+        "title": "Düz Tablo yerine 3NF İlişkisel Mimari",
+        "leftTitle": "Tek Düz Tablo",
+        "leftBadge": "ESKİ / HATALI",
+        "leftItems": [
+          "Her rezervasyonda oda ve müşteri bilgileri tekrarlanır",
+          "Güncelleme anomalileri ve tutarsız kayıtlar oluşur",
+          "Tarih kontrolü yalnızca uygulama katmanına bırakılır"
+        ],
+        "rightTitle": "3NF İlişkisel Mimari",
+        "rightBadge": "3NF / DOĞRU",
+        "rightItems": [
+          "Her varlık tek gerçek kaynak (SSOT) olarak tutulur",
+          "Foreign Key ve CHECK kısıtları bütünlüğü korur",
+          "InnoDB indeksleriyle yüksek eşzamanlılıkta kararlı kalır"
+        ]
+      }
+    },
+    {
+      "id": "v21-05-media-blur",
+      "startSec": 14.5,
+      "endSec": 18.0,
+      "component": "MediaWindow",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "04 · ER ŞEMASI",
+      "sfx": "whoosh",
+      "sfxVolume": 0.15,
+      "props": {
+        "src": "schema_preview.png",
+        "title": "otel-3nf-schema.png",
+        "badge": "ER ÖNİZLEME",
+        "zoomPan": true,
+        "caption": "Sürekli arka plan katmanı sahne geçişinde sıfırlanmadan yumuşakça blur(6px) olur."
+      }
+    }
+  ]
+}
