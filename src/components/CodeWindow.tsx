@@ -457,7 +457,7 @@ export const CodeWindow: React.FC<CodeWindowProps> = ({
             barColor = COLORS.success;
             barWeight = diffReveal;
           } else if (highlightWeight > 0.01) {
-            rowBg = `rgba(245, 158, 11, ${0.11 * highlightWeight})`;
+            rowBg = `rgba(var(--rl-accentRgb, 245, 158, 11), ${0.11 * highlightWeight})`;
             barColor = COLORS.accent;
             barWeight = highlightWeight;
           }

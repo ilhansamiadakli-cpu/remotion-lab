@@ -1,0 +1,20 @@
+{
+  "activeTheme": "obsidianAmber",
+  "timing": {
+    "speechLeadPaddingSec": 0.25,
+    "speechTailPaddingSec": 0.45,
+    "minSceneDurationSec": 3.5,
+    "maxSceneDurationSec": 6.0,
+    "animationStartOffsetSec": 0.15
+  },
+  "transitions": {
+    "defaultType": "fade-slide",
+    "durationFrames": 18,
+    "springDamping": 16,
+    "springStiffness": 110
+  },
+  "previewRender": {
+    "scale": 0.5,
+    "crf": 28
+  }
+}

@@ -4,9 +4,9 @@
     "fps": 30,
     "width": 1920,
     "height": 1080,
-    "durationSec": 41.12
+    "durationSec": 231.408
   },
-  "audio": "kayit_temiz.wav",
+  "audio": "doom_goldsrc.wav",
   "audioVolume": 1,
   "bgMusic": "audio/ambient.mp3",
   "bgMusicVolume": 0.06,
@@ -16,7 +16,7 @@
     {
       "id": "draft-01-highlightertext",
       "startSec": 0.0,
-      "endSec": 4.81,
+      "endSec": 2.67,
       "component": "HighlighterText",
       "background": "obsidianGrid",
       "transition": "focusBlur",
@@ -25,26 +25,329 @@
       "props": {
         "frameless": true,
         "eyebrow": "VURGU · SAHNE 01",
-        "text": "Çoğu kişi evde yaptığı kahvenin neden kafelerdeki gibi tadı olmadığını merak eder.",
+        "text": "Bugün sıradan bir tarayıcı sekmesi bile",
         "highlights": [
-          "kafelerdeki gibi"
+          "tarayıcı sekmesi"
         ],
         "highlightAtSecs": [
-          2.04
+          1.43
         ]
       }
     },
     {
-      "id": "draft-02-comparisoncard",
-      "startSec": 4.81,
-      "endSec": 9.18,
-      "component": "ComparisonCard",
+      "id": "draft-02-glasscard",
+      "startSec": 2.67,
+      "endSec": 5.71,
+      "component": "GlassCard",
       "background": "dotMatrix",
       "transition": "editorial",
       "sfx": "pop",
       "sfxVolume": 0.13,
       "props": {
-        "eyebrow": "KARŞILAŞTIRMA · SAHNE 02",
+        "subtitle": "ODAK KARTI · 02",
+        "title": "yüzlerce megabayt bellek tüketiyor",
+        "badge": "SAHNE 02",
+        "body": "yüzlerce megabayt bellek tüketiyor.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-03-highlightertext",
+      "startSec": 5.71,
+      "endSec": 9.45,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 03",
+        "text": "Oysa 1993 yılında Doom ve birkaç yıl sonra",
+        "highlights": [
+          "1993 yılında",
+          "Doom"
+        ],
+        "highlightAtSecs": [
+          0.67,
+          2.32
+        ]
+      }
+    },
+    {
+      "id": "draft-04-glasscard",
+      "startSec": 9.45,
+      "endSec": 12.6,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 04",
+        "title": "Half-Life motoru GoldSrc ",
+        "badge": "SAHNE 04",
+        "body": "Half-Life motoru GoldSrc , yalnızca 4 MB RAM",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-05-splitstage",
+      "startSec": 12.6,
+      "endSec": 16.45,
+      "component": "SplitStage",
+      "background": "obsidianGrid",
+      "transition": "depthZoom",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "ANALİZ · SAHNE 05",
+        "title": "Teknik Etki ve Ölçüm",
+        "subtitle": "ve 33 MHz hızında tek çekirdekli bir 486DX",
+        "metric": {
+          "before": "420 ms",
+          "value": "8 ms",
+          "delta": "-98%",
+          "label": "PERFORMANS KAZANIMI"
+        },
+        "points": [
+          {
+            "title": "Ölçülebilir İyileşme",
+            "detail": "ve 33 MHz hızında tek çekirdekli bir 486DX",
+            "tag": "BENCHMARK",
+            "highlighted": true
+          }
+        ],
+        "visual": {
+          "type": "code",
+          "language": "sql",
+          "title": "explain.sql",
+          "code": "EXPLAIN ANALYZE\nSELECT 1 FROM tablo\nWHERE kosul = 1\nLIMIT 1;",
+          "highlightLines": [
+            2,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "id": "draft-06-highlightertext",
+      "startSec": 16.45,
+      "endSec": 20.19,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 06",
+        "text": "CPU üzerinde gerçek zamanlı 3D dünyalar çiziyordu.",
+        "highlights": [
+          "zamanlı"
+        ],
+        "highlightAtSecs": [
+          1.35
+        ]
+      }
+    },
+    {
+      "id": "draft-07-splitstage",
+      "startSec": 20.19,
+      "endSec": 23.23,
+      "component": "SplitStage",
+      "background": "obsidianGrid",
+      "transition": "depthZoom",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "ANALİZ · SAHNE 07",
+        "title": "Teknik Etki ve Ölçüm",
+        "subtitle": "Üstelik ortada donanımsal bir",
+        "metric": {
+          "before": "420 ms",
+          "value": "8 ms",
+          "delta": "-98%",
+          "label": "PERFORMANS KAZANIMI"
+        },
+        "points": [
+          {
+            "title": "Ölçülebilir İyileşme",
+            "detail": "Üstelik ortada donanımsal bir",
+            "tag": "BENCHMARK",
+            "highlighted": true
+          }
+        ],
+        "visual": {
+          "type": "code",
+          "language": "sql",
+          "title": "explain.sql",
+          "code": "EXPLAIN ANALYZE\nSELECT 1 FROM tablo\nWHERE kosul = 1\nLIMIT 1;",
+          "highlightLines": [
+            2,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "id": "draft-08-highlightertext",
+      "startSec": 23.23,
+      "endSec": 26.27,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 08",
+        "text": "GPU ve megabaytlarca VRAM yoktu.",
+        "highlights": [
+          "VRAM yoktu"
+        ],
+        "highlightAtSecs": [
+          1.46
+        ]
+      }
+    },
+    {
+      "id": "draft-09-glasscard",
+      "startSec": 26.27,
+      "endSec": 29.44,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 09",
+        "title": "Akıcı bir oyun için",
+        "badge": "SAHNE 09",
+        "body": "Akıcı bir oyun için elinizdeki tüm kare bütçesi sadece",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-10-splitstage",
+      "startSec": 29.44,
+      "endSec": 32.66,
+      "component": "SplitStage",
+      "background": "dotMatrix",
+      "transition": "depthZoom",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "ANALİZ · SAHNE 10",
+        "title": "Teknik Etki ve Ölçüm",
+        "subtitle": "16.6 milisaniyeydi.",
+        "metric": {
+          "before": "420 ms",
+          "value": "8 ms",
+          "delta": "-98%",
+          "label": "PERFORMANS KAZANIMI"
+        },
+        "points": [
+          {
+            "title": "Ölçülebilir İyileşme",
+            "detail": "16.6 milisaniyeydi.",
+            "tag": "BENCHMARK",
+            "highlighted": true
+          }
+        ],
+        "visual": {
+          "type": "code",
+          "language": "sql",
+          "title": "explain.sql",
+          "code": "EXPLAIN ANALYZE\nSELECT 1 FROM tablo\nWHERE kosul = 1\nLIMIT 1;",
+          "highlightLines": [
+            2,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "id": "draft-11-highlightertext",
+      "startSec": 32.66,
+      "endSec": 36.0,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 11",
+        "text": "Modern motorların vazgeçilmezi olan Z-Buffer",
+        "highlights": [
+          "vazgeçilmezi olan"
+        ],
+        "highlightAtSecs": [
+          1.78
+        ]
+      }
+    },
+    {
+      "id": "draft-12-glasscard",
+      "startSec": 36.0,
+      "endSec": 39.04,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 12",
+        "title": "tekniği bu donanımda tamamen",
+        "badge": "SAHNE 12",
+        "body": "tekniği bu donanımda tamamen imkânsızdı.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-13-comparisoncard",
+      "startSec": 39.04,
+      "endSec": 42.71,
+      "component": "ComparisonCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "KARŞILAŞTIRMA · SAHNE 13",
         "title": "Yanlış Yaklaşım vs Doğru Yöntem",
         "leftTitle": "Eski / Hatalı Yaklaşım",
         "leftBadge": "HATALI",
@@ -55,136 +358,94 @@
         "rightTitle": "Önerilen Doğru Yaklaşım",
         "rightBadge": "DOĞRU",
         "rightItems": [
-          "Aslında mesele makine değil 3 temel değişkendedir. Birincisi su sıcaklığı.",
+          "Çünkü her piksel için derinlik karşılaştırması yapmak,",
           "Ölçülebilir ve tekrarlanabilir sonuç"
         ]
       }
     },
     {
-      "id": "draft-03-highlightertext",
-      "startSec": 9.18,
-      "endSec": 12.54,
+      "id": "draft-14-highlightertext",
+      "startSec": 42.71,
+      "endSec": 46.85,
       "component": "HighlighterText",
-      "background": "obsidianGrid",
+      "background": "dotMatrix",
       "transition": "editorial",
       "sfx": "pop",
       "sfxVolume": 0.13,
       "props": {
         "frameless": false,
-        "eyebrow": "VURGU · SAHNE 03",
-        "text": "Kaynar suyu doğrudan kahvenin üzerine döktüğünüzde çekirdeği",
+        "eyebrow": "VURGU · SAHNE 14",
+        "text": "hem kısıtlı bellek bant genişliğini boğuyor hem de duvarların arkasında",
         "highlights": [
-          "kahvenin üzerine"
+          "genişliğini boğuyor"
         ],
         "highlightAtSecs": [
-          1.14
+          1.45
         ]
       }
     },
     {
-      "id": "draft-04-nodeflow",
-      "startSec": 12.54,
-      "endSec": 15.58,
-      "component": "NodeFlow",
-      "background": "dotMatrix",
-      "transition": "slideLeft",
+      "id": "draft-15-glasscard",
+      "startSec": 46.85,
+      "endSec": 51.11,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
       "sfx": "pop",
       "sfxVolume": 0.13,
       "props": {
-        "eyebrow": "AKIŞ · SAHNE 04",
-        "title": "Süreç Bağlantısı",
-        "nodes": [
+        "subtitle": "ODAK KARTI · 15",
+        "title": "kalan görünmez yüzeyleri boşuna",
+        "badge": "SAHNE 15",
+        "body": "kalan görünmez yüzeyleri boşuna hesaplayarak CPU 'yu kilitliyordu.",
+        "items": [
           {
-            "badge": "01",
-            "label": "yakarsınız",
-            "highlighted": false
-          },
-          {
-            "badge": "02",
-            "label": "ortaya sadece acı bir tat çı",
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
             "highlighted": true
           }
-        ],
-        "caption": "yakarsınız ve ortaya sadece acı bir tat çıkar."
-      }
+        ]
+      },
+      "blurBackground": true
     },
     {
-      "id": "draft-05-metricbanner",
-      "startSec": 15.58,
-      "endSec": 18.66,
-      "component": "MetricBanner",
-      "background": "radialGlow",
-      "transition": "depthZoom",
-      "sfx": "thud",
-      "sfxVolume": 0.16,
-      "props": {
-        "frameless": true,
-        "badge": "BÖLÜM 05",
-        "value": "92 ILE 94 DERECE",
-        "label": "KRİTİK PARAMETRE",
-        "subtext": "İdeal sıcaklık 92 ile 94 derece arasında."
-      }
-    },
-    {
-      "id": "draft-06-nodeflow",
-      "startSec": 18.66,
-      "endSec": 21.7,
-      "component": "NodeFlow",
+      "id": "draft-16-highlightertext",
+      "startSec": 51.11,
+      "endSec": 55.64,
+      "component": "HighlighterText",
       "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 16",
+        "text": "John Carmack bu darboğazı aşmak için kuralı kökten değiştirdi:",
+        "highlights": [
+          "aşmak için"
+        ],
+        "highlightAtSecs": [
+          2.25
+        ]
+      }
+    },
+    {
+      "id": "draft-17-nodeflow",
+      "startSec": 55.64,
+      "endSec": 60.33,
+      "component": "NodeFlow",
+      "background": "obsidianGrid",
       "transition": "slideLeft",
       "sfx": "pop",
       "sfxVolume": 0.13,
       "props": {
-        "eyebrow": "AKIŞ · SAHNE 06",
+        "eyebrow": "AKIŞ · SAHNE 17",
         "title": "Süreç Bağlantısı",
         "nodes": [
           {
             "badge": "01",
-            "label": "İkincisi oran",
-            "highlighted": false
-          },
-          {
-            "badge": "02",
-            "label": "demleme akışı.",
-            "highlighted": true
-          }
-        ],
-        "caption": "İkincisi oran ve demleme akışı."
-      }
-    },
-    {
-      "id": "draft-07-metricbanner",
-      "startSec": 21.7,
-      "endSec": 24.7,
-      "component": "MetricBanner",
-      "background": "radialGlow",
-      "transition": "depthZoom",
-      "sfx": "thud",
-      "sfxVolume": 0.16,
-      "props": {
-        "frameless": true,
-        "badge": "BÖLÜM 07",
-        "value": "18 GRAM",
-        "label": "KRİTİK PARAMETRE",
-        "subtext": "18 gram taze öğütülmüş kahveye 300 ml"
-      }
-    },
-    {
-      "id": "draft-08-nodeflow",
-      "startSec": 24.7,
-      "endSec": 28.32,
-      "component": "NodeFlow",
-      "background": "dotMatrix",
-      "transition": "slideLeft",
-      "sfx": "pop",
-      "sfxVolume": 0.13,
-      "props": {
-        "eyebrow": "AKIŞ · SAHNE 08",
-        "title": "Süreç Bağlantısı",
-        "nodes": [
-          {
-            "badge": "01",
-            "label": "su kullanmak en dengeli sonu",
+            "label": "pahalı hesapları çalışma anı",
             "highlighted": false
           },
           {
@@ -193,13 +454,80 @@
             "highlighted": true
           }
         ],
-        "caption": "su kullanmak en dengeli sonucu verir. Üçüncüsü ise sabır."
+        "caption": "pahalı hesapları çalışma anından çıkarıp harita derleme anına taşıdı."
       }
     },
     {
-      "id": "draft-09-stepcard",
-      "startSec": 28.32,
-      "endSec": 31.36,
+      "id": "draft-18-highlightertext",
+      "startSec": 60.33,
+      "endSec": 64.28,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 18",
+        "text": "Bu devrimin ilk sütunu BSP , yani",
+        "highlights": [
+          "sütunu BSP"
+        ],
+        "highlightAtSecs": [
+          2.02
+        ]
+      }
+    },
+    {
+      "id": "draft-19-glasscard",
+      "startSec": 64.28,
+      "endSec": 67.71,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 19",
+        "title": "Binary Space Partitioning ağaçlarıydı",
+        "badge": "SAHNE 19",
+        "body": "Binary Space Partitioning ağaçlarıydı.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-20-highlightertext",
+      "startSec": 67.71,
+      "endSec": 70.95,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 20",
+        "text": "Harita henüz oyuncunun bilgisayarına ulaşmadan, offline",
+        "highlights": [
+          "bilgisayarına ulaşmadan"
+        ],
+        "highlightAtSecs": [
+          1.52
+        ]
+      }
+    },
+    {
+      "id": "draft-21-stepcard",
+      "startSec": 70.95,
+      "endSec": 74.07,
       "component": "StepCard",
       "background": "obsidianGrid",
       "transition": "editorial",
@@ -211,7 +539,7 @@
         "activeStepIndex": 0,
         "steps": [
           {
-            "title": "1. Önce az bir suyla 30 saniye",
+            "title": "1. derleme aşamasında tüm duvarlar ve yüzeyler",
             "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
           },
           {
@@ -226,83 +554,1118 @@
       }
     },
     {
-      "id": "draft-10-stepcard",
-      "startSec": 31.36,
-      "endSec": 33.88,
-      "component": "StepCard",
-      "background": "dotMatrix",
-      "transition": "editorial",
-      "sfx": "tick",
-      "sfxVolume": 0.13,
-      "props": {
-        "eyebrow": "UYGULAMA ADIMLARI",
-        "title": "Adım Adım Akış",
-        "activeStepIndex": 1,
-        "steps": [
-          {
-            "title": "1. ön ıslatma yapıp gazın çıkmasını bekler.",
-            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
-          },
-          {
-            "title": "2. Kontrollü ilerleme",
-            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
-          },
-          {
-            "title": "3. Temiz kapanış",
-            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
-          }
-        ]
-      }
-    },
-    {
-      "id": "draft-11-stepcard",
-      "startSec": 33.88,
-      "endSec": 37.24,
-      "component": "StepCard",
-      "background": "obsidianGrid",
-      "transition": "editorial",
-      "sfx": "tick",
-      "sfxVolume": 0.13,
-      "props": {
-        "eyebrow": "UYGULAMA ADIMLARI",
-        "title": "Adım Adım Akış",
-        "activeStepIndex": 2,
-        "steps": [
-          {
-            "title": "1. Ardından dairesel hareketlerle demlemeyi tamamlarsanız",
-            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
-          },
-          {
-            "title": "2. Kontrollü ilerleme",
-            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
-          },
-          {
-            "title": "3. Temiz kapanış",
-            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
-          }
-        ]
-      }
-    },
-    {
-      "id": "draft-12-highlightertext",
-      "startSec": 37.24,
-      "endSec": 41.12,
+      "id": "draft-22-highlightertext",
+      "startSec": 74.07,
+      "endSec": 77.75,
       "component": "HighlighterText",
       "background": "dotMatrix",
-      "transition": "focusBlur",
+      "transition": "editorial",
       "sfx": "pop",
       "sfxVolume": 0.13,
       "props": {
-        "frameless": true,
-        "eyebrow": "VURGU · SAHNE 12",
-        "text": "kahvenin gerçek aromasını fincanda net şekilde alırsınız.",
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 22",
+        "text": "düzlemlerle özyinelemeli olarak ikiye bölünür.",
         "highlights": [
-          "aromasını fincanda"
+          "olarak ikiye"
         ],
         "highlightAtSecs": [
-          0.35
+          1.11
         ]
       }
+    },
+    {
+      "id": "draft-23-glasscard",
+      "startSec": 77.75,
+      "endSec": 80.79,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 23",
+        "title": "Ortaya haritanın tüm geometrisini",
+        "badge": "SAHNE 23",
+        "body": "Ortaya haritanın tüm geometrisini dışbükey odacıklara",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-24-nodeflow",
+      "startSec": 80.79,
+      "endSec": 83.82,
+      "component": "NodeFlow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "AKIŞ · SAHNE 24",
+        "title": "Süreç Bağlantısı",
+        "nodes": [
+          {
+            "badge": "01",
+            "label": "ayıran statik bir ikili ağaç",
+            "highlighted": false
+          },
+          {
+            "badge": "02",
+            "label": "Sonuç",
+            "highlighted": true
+          }
+        ],
+        "caption": "ayıran statik bir ikili ağaç çıkar."
+      }
+    },
+    {
+      "id": "draft-25-highlightertext",
+      "startSec": 83.82,
+      "endSec": 86.98,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 25",
+        "text": "Oyun çalışırken motor her karede binlerce poligonu",
+        "highlights": [
+          "karede binlerce"
+        ],
+        "highlightAtSecs": [
+          1.65
+        ]
+      }
+    },
+    {
+      "id": "draft-26-glasscard",
+      "startSec": 86.98,
+      "endSec": 89.71,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 26",
+        "title": "sıralamak zorunda kalmaz",
+        "badge": "SAHNE 26",
+        "body": "sıralamak zorunda kalmaz.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-27-comparisoncard",
+      "startSec": 89.71,
+      "endSec": 92.2,
+      "component": "ComparisonCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "KARŞILAŞTIRMA · SAHNE 27",
+        "title": "Yanlış Yaklaşım vs Doğru Yöntem",
+        "leftTitle": "Eski / Hatalı Yaklaşım",
+        "leftBadge": "HATALI",
+        "leftItems": [
+          "Kontrolsüz ve tutarsız uygulama",
+          "Beklenmeyen kalite kaybı"
+        ],
+        "rightTitle": "Önerilen Doğru Yaklaşım",
+        "rightBadge": "DOĞRU",
+        "rightItems": [
+          "Kamera koordinatı kök düğümdeki düzleme karşı tek",
+          "Ölçülebilir ve tekrarlanabilir sonuç"
+        ]
+      }
+    },
+    {
+      "id": "draft-28-highlightertext",
+      "startSec": 92.2,
+      "endSec": 94.79,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 28",
+        "text": "bir işaret testiyle kontrol edilir.",
+        "highlights": [
+          "kontrol edilir"
+        ],
+        "highlightAtSecs": [
+          1.11
+        ]
+      }
+    },
+    {
+      "id": "draft-29-glasscard",
+      "startSec": 94.79,
+      "endSec": 97.96,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 29",
+        "title": "Kamera düzlemin önündeyse önce",
+        "badge": "SAHNE 29",
+        "body": "Kamera düzlemin önündeyse önce ön dal,",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-30-stepcard",
+      "startSec": 97.96,
+      "endSec": 102.87,
+      "component": "StepCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "tick",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "UYGULAMA ADIMLARI",
+        "title": "Adım Adım Akış",
+        "activeStepIndex": 0,
+        "steps": [
+          {
+            "title": "1. ardından arka dal gezilir",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          },
+          {
+            "title": "2. Böylece tüm sahne önden arkaya",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          }
+        ]
+      }
+    },
+    {
+      "id": "draft-31-highlightertext",
+      "startSec": 102.87,
+      "endSec": 105.91,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 31",
+        "text": "kesin bir derinlik sırasıyla taranır.",
+        "highlights": [
+          "sırasıyla taranır"
+        ],
+        "highlightAtSecs": [
+          0.91
+        ]
+      }
+    },
+    {
+      "id": "draft-32-mediawindow",
+      "startSec": 105.91,
+      "endSec": 109.64,
+      "component": "MediaWindow",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "src": "schema_preview.png",
+        "title": "ekran-32.png",
+        "badge": "ÖRNEK GÖRSEL",
+        "zoomPan": true,
+        "caption": "Ekranda bir piksel dolduğu anda arkasındaki hiçbir duvar bir daha"
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-33-highlightertext",
+      "startSec": 109.64,
+      "endSec": 112.68,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 33",
+        "text": "çizilmez; Z-Buffer olmadan mükemmel gizleme",
+        "highlights": [
+          "olmadan mükemmel"
+        ],
+        "highlightAtSecs": [
+          1.54
+        ]
+      }
+    },
+    {
+      "id": "draft-34-glasscard",
+      "startSec": 112.68,
+      "endSec": 114.99,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 34",
+        "title": "ve sıfır overdraw sağlanır",
+        "badge": "SAHNE 34",
+        "body": "ve sıfır overdraw sağlanır.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-35-highlightertext",
+      "startSec": 114.99,
+      "endSec": 117.7,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 35",
+        "text": "Quake ve Half-Life 'ın",
+        "highlights": [
+          "Half-Life"
+        ],
+        "highlightAtSecs": [
+          1.48
+        ]
+      }
+    },
+    {
+      "id": "draft-36-glasscard",
+      "startSec": 117.7,
+      "endSec": 120.74,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 36",
+        "title": "kullandığı GoldSrc motoruyla tam",
+        "badge": "SAHNE 36",
+        "body": "kullandığı GoldSrc motoruyla tam 3D",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-37-comparisoncard",
+      "startSec": 120.74,
+      "endSec": 124.57,
+      "component": "ComparisonCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "KARŞILAŞTIRMA · SAHNE 37",
+        "title": "Yanlış Yaklaşım vs Doğru Yöntem",
+        "leftTitle": "Eski / Hatalı Yaklaşım",
+        "leftBadge": "HATALI",
+        "leftItems": [
+          "Kontrolsüz ve tutarsız uygulama",
+          "Beklenmeyen kalite kaybı"
+        ],
+        "rightTitle": "Önerilen Doğru Yaklaşım",
+        "rightBadge": "DOĞRU",
+        "rightItems": [
+          "koridorlara geçildiğinde BSP tek başına yeterli değildi.",
+          "Ölçülebilir ve tekrarlanabilir sonuç"
+        ]
+      }
+    },
+    {
+      "id": "draft-38-highlightertext",
+      "startSec": 124.57,
+      "endSec": 127.61,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 38",
+        "text": "Çünkü kamera bir odadayken duvarın arkasındaki elli",
+        "highlights": [
+          "duvarın arkasındaki"
+        ],
+        "highlightAtSecs": [
+          1.62
+        ]
+      }
+    },
+    {
+      "id": "draft-39-glasscard",
+      "startSec": 127.61,
+      "endSec": 131.14,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 39",
+        "title": "odanın düğümlerini dolaşmak hâlâ",
+        "badge": "SAHNE 39",
+        "body": "odanın düğümlerini dolaşmak hâlâ CPU zamanını harcıyordu.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-40-highlightertext",
+      "startSec": 131.14,
+      "endSec": 134.3,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 40",
+        "text": "Çözüm PVS , yani Potentially",
+        "highlights": [
+          "yani Potentially"
+        ],
+        "highlightAtSecs": [
+          2.07
+        ]
+      }
+    },
+    {
+      "id": "draft-41-glasscard",
+      "startSec": 134.3,
+      "endSec": 136.76,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 41",
+        "title": "Visible Set oldu",
+        "badge": "SAHNE 41",
+        "body": "Visible Set oldu.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-42-highlightertext",
+      "startSec": 136.76,
+      "endSec": 140.07,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 42",
+        "text": "Derleyici haritadaki her oda çifti arasında ışık geçiren bir",
+        "highlights": [
+          "çifti arasında"
+        ],
+        "highlightAtSecs": [
+          1.35
+        ]
+      }
+    },
+    {
+      "id": "draft-43-nodeflow",
+      "startSec": 140.07,
+      "endSec": 143.75,
+      "component": "NodeFlow",
+      "background": "obsidianGrid",
+      "transition": "slideLeft",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "AKIŞ · SAHNE 43",
+        "title": "Süreç Bağlantısı",
+        "nodes": [
+          {
+            "badge": "01",
+            "label": "görüş hattı olup olmadığını ",
+            "highlighted": false
+          },
+          {
+            "badge": "02",
+            "label": "sonucu",
+            "highlighted": true
+          }
+        ],
+        "caption": "görüş hattı olup olmadığını önceden hesaplar ve sonucu"
+      }
+    },
+    {
+      "id": "draft-44-highlightertext",
+      "startSec": 143.75,
+      "endSec": 146.79,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 44",
+        "text": "sıkıştırılmış bir bit matrisine gömer.",
+        "highlights": [
+          "matrisine gömer"
+        ],
+        "highlightAtSecs": [
+          0.89
+        ]
+      }
+    },
+    {
+      "id": "draft-45-glasscard",
+      "startSec": 146.79,
+      "endSec": 150.61,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 45",
+        "title": "Oyuncu bir odaya girdiğinde",
+        "badge": "SAHNE 45",
+        "body": "Oyuncu bir odaya girdiğinde motor sadece tek bir bit vektörünü açar;",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-46-highlightertext",
+      "startSec": 150.61,
+      "endSec": 154.62,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 46",
+        "text": "sıfır olan tüm görünmez odalar tek hamlede elenir.",
+        "highlights": [
+          "odalar tek"
+        ],
+        "highlightAtSecs": [
+          1.4
+        ]
+      }
+    },
+    {
+      "id": "draft-47-glasscard",
+      "startSec": 154.62,
+      "endSec": 157.66,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 47",
+        "title": "Aynı felsefe aydınlatmada da",
+        "badge": "SAHNE 47",
+        "body": "Aynı felsefe aydınlatmada da uygulandı.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-48-comparisoncard",
+      "startSec": 157.66,
+      "endSec": 160.96,
+      "component": "ComparisonCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "KARŞILAŞTIRMA · SAHNE 48",
+        "title": "Yanlış Yaklaşım vs Doğru Yöntem",
+        "leftTitle": "Eski / Hatalı Yaklaşım",
+        "leftBadge": "HATALI",
+        "leftItems": [
+          "Kontrolsüz ve tutarsız uygulama",
+          "Beklenmeyen kalite kaybı"
+        ],
+        "rightTitle": "Önerilen Doğru Yaklaşım",
+        "rightBadge": "DOĞRU",
+        "rightItems": [
+          "Gerçek zamanlı gölge hesaplamak yerine Radiosity",
+          "Ölçülebilir ve tekrarlanabilir sonuç"
+        ]
+      }
+    },
+    {
+      "id": "draft-49-highlightertext",
+      "startSec": 160.96,
+      "endSec": 165.34,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 49",
+        "text": "algoritmasıyla yumuşak ışıklar önceden Lightmap dokularına pişirildi.",
+        "highlights": [
+          "önceden Lightmap"
+        ],
+        "highlightAtSecs": [
+          1.84
+        ]
+      }
+    },
+    {
+      "id": "draft-50-glasscard",
+      "startSec": 165.34,
+      "endSec": 168.99,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 50",
+        "title": "Çalışma anında CPU sadece",
+        "badge": "SAHNE 50",
+        "body": "Çalışma anında CPU sadece hazır ışığı yüzey",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-51-highlightertext",
+      "startSec": 168.99,
+      "endSec": 172.94,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 51",
+        "text": "dokusuyla çarparak sinematik atmosferi bedavaya getirdi.",
+        "highlights": [
+          "atmosferi bedavaya"
+        ],
+        "highlightAtSecs": [
+          1.65
+        ]
+      }
+    },
+    {
+      "id": "draft-52-splitstage",
+      "startSec": 172.94,
+      "endSec": 176.41,
+      "component": "SplitStage",
+      "background": "dotMatrix",
+      "transition": "depthZoom",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "ANALİZ · SAHNE 52",
+        "title": "Teknik Etki ve Ölçüm",
+        "subtitle": "Ancak hız yalnızca grafikle bitmez;",
+        "metric": {
+          "before": "420 ms",
+          "value": "8 ms",
+          "delta": "-98%",
+          "label": "PERFORMANS KAZANIMI"
+        },
+        "points": [
+          {
+            "title": "Ölçülebilir İyileşme",
+            "detail": "Ancak hız yalnızca grafikle bitmez;",
+            "tag": "BENCHMARK",
+            "highlighted": true
+          }
+        ],
+        "visual": {
+          "type": "code",
+          "language": "sql",
+          "title": "explain.sql",
+          "code": "EXPLAIN ANALYZE\nSELECT 1 FROM tablo\nWHERE kosul = 1\nLIMIT 1;",
+          "highlightLines": [
+            2,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "id": "draft-53-highlightertext",
+      "startSec": 176.41,
+      "endSec": 179.51,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 53",
+        "text": "asıl sessiz katil bellek parçalanmasıdır.",
+        "highlights": [
+          "katil bellek"
+        ],
+        "highlightAtSecs": [
+          0.84
+        ]
+      }
+    },
+    {
+      "id": "draft-54-glasscard",
+      "startSec": 179.51,
+      "endSec": 183.91,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 54",
+        "title": "4 MB RAM içinde",
+        "badge": "SAHNE 54",
+        "body": "4 MB RAM içinde her nesne için standart C malloc ve free",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-55-highlightertext",
+      "startSec": 183.91,
+      "endSec": 188.04,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 55",
+        "text": "çağrıları yaparsanız, bellek delik deşik olur ve kare süreleri aniden sıçrar.",
+        "highlights": [
+          "olur"
+        ],
+        "highlightAtSecs": [
+          2.49
+        ]
+      }
+    },
+    {
+      "id": "draft-56-glasscard",
+      "startSec": 188.04,
+      "endSec": 192.19,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 56",
+        "title": "Doom bunu kendi Zone",
+        "badge": "SAHNE 56",
+        "body": "Doom bunu kendi Zone bellek yöneticisi Z_Malloc",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-57-highlightertext",
+      "startSec": 192.19,
+      "endSec": 195.76,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 57",
+        "text": "ile, Quake ve GoldSrc ise doğrusal Hunk arena mimarisiyle çözdü.",
+        "highlights": [
+          "Hunk arena"
+        ],
+        "highlightAtSecs": [
+          2.09
+        ]
+      }
+    },
+    {
+      "id": "draft-58-glasscard",
+      "startSec": 195.76,
+      "endSec": 198.8,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 58",
+        "title": "Motor açılışta tüm",
+        "badge": "SAHNE 58",
+        "body": "Motor açılışta tüm",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-59-highlightertext",
+      "startSec": 198.8,
+      "endSec": 201.62,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 59",
+        "text": "boş RAM 'i tek bir blok halinde ayırır.",
+        "highlights": [
+          "halinde ayırır"
+        ],
+        "highlightAtSecs": [
+          0.51
+        ]
+      }
+    },
+    {
+      "id": "draft-60-glasscard",
+      "startSec": 201.62,
+      "endSec": 204.76,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 60",
+        "title": "Harita yüklenirken veriler sadece",
+        "badge": "SAHNE 60",
+        "body": "Harita yüklenirken veriler sadece tek",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-61-highlightertext",
+      "startSec": 204.76,
+      "endSec": 207.93,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 61",
+        "text": "bir pointer ileri kaydırılarak peş peşe yazılır.",
+        "highlights": [
+          "kaydırılarak peş"
+        ],
+        "highlightAtSecs": [
+          0.92
+        ]
+      }
+    },
+    {
+      "id": "draft-62-glasscard",
+      "startSec": 207.93,
+      "endSec": 210.53,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 62",
+        "title": "Bölüm bittiğinde binlerce ayrı",
+        "badge": "SAHNE 62",
+        "body": "Bölüm bittiğinde binlerce ayrı",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-63-comparisoncard",
+      "startSec": 210.53,
+      "endSec": 213.57,
+      "component": "ComparisonCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "KARŞILAŞTIRMA · SAHNE 63",
+        "title": "Yanlış Yaklaşım vs Doğru Yöntem",
+        "leftTitle": "Eski / Hatalı Yaklaşım",
+        "leftBadge": "HATALI",
+        "leftItems": [
+          "Kontrolsüz ve tutarsız uygulama",
+          "Beklenmeyen kalite kaybı"
+        ],
+        "rightTitle": "Önerilen Doğru Yaklaşım",
+        "rightBadge": "DOĞRU",
+        "rightItems": [
+          "free çağrısı yapmak yerine, tek bir pointer",
+          "Ölçülebilir ve tekrarlanabilir sonuç"
+        ]
+      }
+    },
+    {
+      "id": "draft-64-stepcard",
+      "startSec": 213.57,
+      "endSec": 217.36,
+      "component": "StepCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "tick",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "UYGULAMA ADIMLARI",
+        "title": "Adım Adım Akış",
+        "activeStepIndex": 0,
+        "steps": [
+          {
+            "title": "1. başlangıç adresine sıfırlanır ve tüm bellek mikrosaniy",
+            "detail": "başlangıç adresine sıfırlanır ve tüm bellek mikrosaniyeler içinde tertemiz olur."
+          },
+          {
+            "title": "2. Kontrollü ilerleme",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          },
+          {
+            "title": "3. Temiz kapanış",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          }
+        ]
+      }
+    },
+    {
+      "id": "draft-65-highlightertext",
+      "startSec": 217.36,
+      "endSec": 221.99,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 65",
+        "text": "İşletim sistemine bağımlı olmayan bu deterministik saf",
+        "highlights": [
+          "bağımlı olmayan"
+        ],
+        "highlightAtSecs": [
+          2.19
+        ]
+      }
+    },
+    {
+      "id": "draft-66-glasscard",
+      "startSec": 221.99,
+      "endSec": 225.57,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 66",
+        "title": "C mimarisi o kadar",
+        "badge": "SAHNE 66",
+        "body": "C mimarisi o kadar sağlamdı ki, bugün Xash3D motoruyla",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
+    },
+    {
+      "id": "draft-67-highlightertext",
+      "startSec": 225.57,
+      "endSec": 228.61,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 67",
+        "text": "WebAssembly 'e derlenip doğrudan tarayıcıda bile",
+        "highlights": [
+          "doğrudan tarayıcıda"
+        ],
+        "highlightAtSecs": [
+          1.82
+        ]
+      }
+    },
+    {
+      "id": "draft-68-glasscard",
+      "startSec": 228.61,
+      "endSec": 231.408,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 68",
+        "title": "akıcı şekilde çalışabiliyor",
+        "badge": "SAHNE 68",
+        "body": "akıcı şekilde çalışabiliyor.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true
     }
   ]
 }

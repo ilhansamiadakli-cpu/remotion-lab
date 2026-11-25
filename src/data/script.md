@@ -1,39 +1,33 @@
-# Otel Rezervasyon ve Konaklama Yönetim Sistemi
+# Sistem Arkeolojisi: Doom ve Half-Life (GoldSrc) Nasıl 4 MB RAM ve 33 MHz CPU İle 3D Dünya Çizdi?
 
-## Bölüm 1: Giriş ve Temel Problem
+## Bölüm 1: Donanım Darboğazı ve Z-Buffer İmkânsızlığı
 
-Bir otel rezervasyon sistemi dışarıdan bakıldığında basit bir kayıt ekranı gibi görünür. Müşteri gelir, tarih seçer, odayı tutar. Ama işin mutfağına indiğinizde asıl mesele ekran tasarımı değil, veri tutarlılığıdır.
+Bugün sıradan bir tarayıcı sekmesi bile yüzlerce megabayt bellek tüketiyor. Oysa 1993 yılında Doom ve birkaç yıl sonra Half-Life motoru GoldSrc, yalnızca 4 MB RAM ve 33 MHz hızında tek çekirdekli bir 486DX CPU üzerinde gerçek zamanlı 3D dünyalar çiziyordu.
 
-Aynı odanın aynı tarihlerde iki farklı kişiye satılmasını nasıl engellersiniz? Ya da bir rezervasyon iptal edildiğinde ödeme, oda durumu ve fiyat geçmişi birbirine karışmadan nasıl güncellenir?
+Üstelik ortada donanımsal bir GPU ve megabaytlarca VRAM yoktu. Akıcı bir oyun için elinizdeki tüm kare bütçesi sadece 16.6 milisaniyeydi. Modern motorların vazgeçilmezi olan Z-Buffer tekniği bu donanımda tamamen imkânsızdı.
 
-Bu projede tam olarak bu problemlere odaklandım. MySQL 8.0 ve Spring Boot kullanarak, 13 tablodan oluşan, tamamen 3NF kurallarına uygun bir Otel Rezervasyon ve Konaklama Yönetim Sistemi tasarladım.
+Çünkü her piksel için derinlik karşılaştırması yapmak, hem kısıtlı bellek bant genişliğini boğuyor hem de duvarların arkasında kalan görünmez yüzeyleri boşuna hesaplayarak CPU'yu kilitliyordu. John Carmack bu darboğazı aşmak için kuralı kökten değiştirdi: pahalı hesapları çalışma anından çıkarıp harita derleme anına taşıdı.
 
-## Bölüm 2: 13 Tablolu 3NF Mimari
+## Bölüm 2: BSP Ağaçları ve Derleme Anında Düzlem Bölünmesi
 
-Çoğu başlangıç projesinde yapılan en büyük hata, tüm bilgileri tek bir devasa rezervasyon tablosuna yığmaktır. Müşteri adı, oda tipi, fiyat, ödeme bilgisi hepsi yan yana durur. Kısa vadede kolay görünür ama bir oda fiyatını güncellediğinizde eski faturalar bozulur, veri tekrarı başlar.
+Bu devrimin ilk sütunu BSP, yani Binary Space Partitioning ağaçlarıydı. Harita henüz oyuncunun bilgisayarına ulaşmadan, offline derleme aşamasında tüm duvarlar ve yüzeyler düzlemlerle özyinelemeli olarak ikiye bölünür.
 
-Biz bu sistemi en baştan 3NF disipliniyle 13 ayrı tabloya böldük. Müşteriler, odalar, oda tipleri, rezervasyonlar, ödemeler ve ekstra hizmetler birbirinden net sınırlarla ayrıldı. Her tablonun tek bir sorumluluğu var.
+Ortaya haritanın tüm geometrisini dışbükey odacıklara ayıran statik bir ikili ağaç çıkar. Oyun çalışırken motor her karede binlerce poligonu sıralamak zorunda kalmaz.
 
-Yabancı anahtarlar yani Foreign Key kısıtlamaları sayesinde, sistemde olmayan bir odaya rezervasyon düşmesi ya da karşılığı olmayan bir ödeme kaydı oluşması daha veritabanı seviyesinde engelleniyor.
+Kamera koordinatı kök düğümdeki düzleme karşı tek bir işaret testiyle kontrol edilir. Kamera düzlemin önündeyse önce ön dal, ardından arka dal gezilir. Böylece tüm sahne önden arkaya kesin bir derinlik sırasıyla taranır. Ekranda bir piksel dolduğu anda arkasındaki hiçbir duvar bir daha çizilmez; Z-Buffer olmadan mükemmel gizleme ve sıfır overdraw sağlanır.
 
-## Bölüm 3: Eşzamanlılık, Transaction ve Çakışma Yönetimi
+## Bölüm 3: PVS Görünürlük Matrisi ve Lightmap Pişirme
 
-Peki sistemin gerçek sınavı ne zaman başlar? Aynı saniyede iki farklı kullanıcı son kalan 204 numaralı odayı ayırtmaya çalıştığında.
+Quake ve Half-Life'ın kullandığı GoldSrc motoruyla tam 3D koridorlara geçildiğinde BSP tek başına yeterli değildi. Çünkü kamera bir odadayken duvarın arkasındaki elli odanın düğümlerini dolaşmak hâlâ CPU zamanını harcıyordu.
 
-Eğer bu kontrolü sadece uygulama tarafında basit bir if bloğuyla yaparsanız, iki istek aynı anda geçer ve çifte rezervasyon hatası oluşur.
+Çözüm PVS, yani Potentially Visible Set oldu. Derleyici haritadaki her oda çifti arasında ışık geçiren bir görüş hattı olup olmadığını önceden hesaplar ve sonucu sıkıştırılmış bir bit matrisine gömer.
 
-Bunu çözmek için Spring Boot tarafında @Transactional yapısını ve MySQL InnoDB satır kilitleme mekanizmasını devreye aldık. Bir rezervasyon isteği geldiğinde önce tarih çakışması veritabanı seviyesinde kilitlenerek kontrol ediliyor. İlk gelen istek 201 Created yanıtıyla işlemi güvenle tamamlarken, milisaniyeler sonra gelen ikinci istek doğrudan 409 Conflict hatasıyla geri çevriliyor. Ya tüm adımlar eksiksiz tamamlanıyor ya da en ufak bir hatada sistem kendini tamamen geri sarıyor.
+Oyuncu bir odaya girdiğinde motor sadece tek bir bit vektörünü açar; sıfır olan tüm görünmez odalar tek hamlede elenir. Aynı felsefe aydınlatmada da uygulandı. Gerçek zamanlı gölge hesaplamak yerine Radiosity algoritmasıyla yumuşak ışıklar önceden Lightmap dokularına pişirildi. Çalışma anında CPU sadece hazır ışığı yüzey dokusuyla çarparak sinematik atmosferi bedavaya getirdi.
 
-## Bölüm 4: Trigger'lar, Stored Procedure ve Performans
+## Bölüm 4: Zone, Hunk Bellek Yöneticisi ve WebAssembly Mirası
 
-İş mantığının sadece Java kodunda yaşamaması, veritabanının da kendi bütünlüğünü koruması gerekiyor. Bu yüzden kritik noktalarda Trigger ve Stored Procedure yapıları kurduk.
+Ancak hız yalnızca grafikle bitmez; asıl sessiz katil bellek parçalanmasıdır. 4 MB RAM içinde her nesne için standart C malloc ve free çağrıları yaparsanız, bellek delik deşik olur ve kare süreleri aniden sıçrar.
 
-Örneğin müsait odaları listelerken uygulama tarafına binlerce gereksiz satır çekmek yerine, doğrudan MySQL içinde çalışan saklı yordamlarla sadece tarih aralığına uyan boş odaları filtreliyoruz.
+Doom bunu kendi Zone bellek yöneticisi Z_Malloc ile, Quake ve GoldSrc ise doğrusal Hunk arena mimarisiyle çözdü. Motor açılışta tüm boş RAM'i tek bir blok halinde ayırır. Harita yüklenirken veriler sadece tek bir pointer ileri kaydırılarak peş peşe yazılır.
 
-Ayrıca rezervasyon durumu değiştiğinde oda durumunu veya log kayıtlarını otomatik güncelleyen tetikleyiciler sayesinde, insan hatasına veya unutulan bir sorguya yer kalmıyor. Doğru kolonlara eklenen indekslerle birlikte, normalde yüzlerce milisaniye süren sorgular tek haneli milisaniyelere iniyor.
-
-## Bölüm 5: Kapanış
-
-Özetle bu proje, sadece veri ekleyen ve silen standart bir CRUD uygulaması değil. 13 tablolu temiz şeması, 3NF kuralları, işlem bütünlüğü ve çakışma korumasıyla gerçek bir konaklama sisteminin çekirdeğini modelleyen bir mimari.
-
-Tüm SQL şemasına, ER diyagramına ve kaynak kodlara GitHub reposu üzerinden ulaşabilirsiniz. İzlediğiniz için teşekkürler.
+Bölüm bittiğinde binlerce ayrı free çağrısı yapmak yerine, tek bir pointer başlangıç adresine sıfırlanır ve tüm bellek mikrosaniyeler içinde tertemiz olur. İşletim sistemine bağımlı olmayan bu deterministik saf C mimarisi o kadar sağlamdı ki, bugün Xash3D motoruyla WebAssembly'e derlenip doğrudan tarayıcıda bile akıcı şekilde çalışabiliyor.

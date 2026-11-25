@@ -1,6 +1,6 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
-import { COLORS } from "../theme";
+import { COLORS, useActiveTheme } from "../theme";
 
 export interface BackgroundProps {
   /** Odak kartı veya medya penceresi açıkken arka plana uygulanacak alan derinliği bulanıklığı (px) */
@@ -27,6 +27,7 @@ export const ObsidianGridBg: React.FC<BackgroundProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const theme = useActiveTheme();
   const t = frame / fps;
 
   // Sürekli ve organik paralaks akışı (global `frame` üzerinden)
@@ -59,8 +60,8 @@ export const ObsidianGridBg: React.FC<BackgroundProps> = ({
             position: "absolute",
             inset: -120,
             backgroundImage: `
-              linear-gradient(to right, rgba(230, 237, 243, 0.036) 1px, transparent 1px),
-              linear-gradient(to bottom, rgba(230, 237, 243, 0.036) 1px, transparent 1px)
+              linear-gradient(to right, ${COLORS.gridLine} 1px, transparent 1px),
+              linear-gradient(to bottom, ${COLORS.gridLine} 1px, transparent 1px)
             `,
             backgroundSize: "56px 56px",
             backgroundPosition: `${driftX}px ${driftY}px`,
@@ -71,7 +72,7 @@ export const ObsidianGridBg: React.FC<BackgroundProps> = ({
           }}
         />
 
-        {/* Merkezde çok kısık sıcak kehribar atmosferik ışık */}
+        {/* Merkezde temaya uyumlu atmosferik ışık */}
         <div
           style={{
             position: "absolute",
@@ -80,7 +81,7 @@ export const ObsidianGridBg: React.FC<BackgroundProps> = ({
             width: 1180,
             height: 620,
             transform: "translate(-50%, -50%)",
-            background: `radial-gradient(ellipse at center, rgba(245, 158, 11, ${glowPulse}) 0%, transparent 66%)`,
+            background: `radial-gradient(ellipse at center, rgba(${theme.colors.accentRgb}, ${glowPulse}) 0%, transparent 66%)`,
             pointerEvents: "none",
           }}
         />
@@ -91,7 +92,7 @@ export const ObsidianGridBg: React.FC<BackgroundProps> = ({
             position: "absolute",
             inset: 0,
             background: `radial-gradient(ellipse 84% 84% at 50% 50%, transparent 50%, ${COLORS.canvasDeep} 100%)`,
-            opacity: 0.65,
+            opacity: theme.isLight ? 0.38 : 0.65,
           }}
         />
       </AbsoluteFill>

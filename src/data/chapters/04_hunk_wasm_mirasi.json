@@ -1,0 +1,325 @@
+{
+  "meta": {
+    "title": "Bölüm 04 · Zone, Hunk Bellek Yöneticisi ve WebAssembly Mirası",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 57.944
+  },
+  "audio": "doom_goldsrc.wav",
+  "audioOffsetSec": 173.464,
+  "audioVolume": 1,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "ch04-01-silent-killer",
+      "startSec": 0,
+      "endSec": 4.95,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "04 · BELLEK MİMARİSİ",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "BÖLÜM 04 · BELLEK YÖNETİMİ",
+        "text": "Ancak hız yalnızca grafikle bitmez; asıl sessiz katil bellek parçalanmasıdır.",
+        "highlights": ["sessiz katil", "bellek parçalanmasıdır"],
+        "highlightAtSecs": [3.04, 4.15]
+      }
+    },
+    {
+      "id": "ch04-02-fragmentation-banner",
+      "startSec": 4.95,
+      "endSec": 9.85,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "04 · FRAGMENTATION",
+      "sfx": "thud",
+      "sfxVolume": 0.22,
+      "props": {
+        "frameless": true,
+        "badge": "4 MB RAM İÇİNDE GİZLİ TEHLİKE",
+        "value": "FRAGMENTATION",
+        "label": "BELLEK PARÇALANMASI VE KARE SIÇRAMASI",
+        "subtext": "Rastgele malloc ve free çağrıları kısıtlı RAM'i dakikalar içinde delik deşik eder."
+      }
+    },
+    {
+      "id": "ch04-03-malloc-vs-hunk",
+      "startSec": 9.85,
+      "endSec": 14.8,
+      "component": "ComparisonCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "04 · MALLOC vs HUNK",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "BELLEK TAHSİS STRATEJİSİ",
+        "title": "Standart malloc/free vs. Zone / Hunk Arena",
+        "leftTitle": "Standart C malloc/free",
+        "leftBadge": "DELİK DEŞİK RAM",
+        "leftItems": [
+          "Her nesne için OS heap arama maliyeti",
+          "4 MB RAM küçük boşluklara bölünür",
+          "Öngörülemez kare süresi sıçramaları"
+        ],
+        "rightTitle": "Z_Malloc & Hunk Arena",
+        "rightBadge": "DOĞRUSAL O(1)",
+        "rightItems": [
+          "Açılışta tüm RAM tek blokta ayrılır",
+          "Tahsis = tek pointer toplama işlemi",
+          "Bölüm sonu temizlik = 1 pointer sıfırlama"
+        ]
+      }
+    },
+    {
+      "id": "ch04-04-zone-hunk-card",
+      "startSec": 14.8,
+      "endSec": 19.75,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "04 · Z_MALLOC & HUNK",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "subtitle": "ÖZEL BELLEK YÖNETİCİLERİ",
+        "title": "Doom Z_Malloc & GoldSrc Hunk",
+        "badge": "ARENA ALLOCATOR",
+        "items": [
+          {
+            "label": "Doom · Z_Malloc (Zone)",
+            "value": "Yaşam ömrü etiketleriyle (PU_LEVEL) bölüm bazlı toplu temizlik",
+            "tag": "DOOM",
+            "highlighted": true
+          },
+          {
+            "label": "Quake & GoldSrc · Hunk",
+            "value": "Doğrusal arena (bump allocator) — sıfır parçalanma, deterministik hız",
+            "tag": "GOLDSRC"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch04-05-arena-flow",
+      "startSec": 19.75,
+      "endSec": 24.45,
+      "component": "NodeFlow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "chapterLabel": "04 · TEK BLOK ARENA",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "DOĞRUSAL BELLEK YAŞAM DÖNGÜSÜ",
+        "title": "Tek Blok Rezerve → Pointer Kaydır → Sıfırla",
+        "nodes": [
+          {
+            "badge": "01 · INIT",
+            "label": "Tek Büyük Blok",
+            "sublabel": "malloc(4 MB) × 1 kez"
+          },
+          {
+            "badge": "02 · LOAD",
+            "label": "Pointer İleri Kayar",
+            "sublabel": "hunk_low += size"
+          },
+          {
+            "badge": "03 · UNLOAD",
+            "label": "Tek Satırda Temizlik",
+            "sublabel": "hunk_low = mark (O(1))",
+            "highlighted": true
+          }
+        ],
+        "edgeLabels": ["Harita yükleme", "Bölüm sonu"],
+        "caption": "İşletim sistemi heap'i oyun boyunca bir daha asla rahatsız edilmez."
+      }
+    },
+    {
+      "id": "ch04-06-hunk-alloc-code",
+      "startSec": 24.45,
+      "endSec": 29.4,
+      "component": "CodeWindow",
+      "background": "obsidianGrid",
+      "transition": "slideLeft",
+      "chapterLabel": "04 · HUNK_ALLOC KODU",
+      "sfx": "tick",
+      "sfxVolume": 0.15,
+      "props": {
+        "language": "java",
+        "title": "zone_hunk.c",
+        "code": "// Acilista tum bos RAM tek blokta alinir (sadece 1 kez!)\nbyte *hunk_base = malloc(4 * 1024 * 1024);\nint   hunk_low_used = 0;\n\nvoid *Hunk_Alloc(int size) {\n  size = (size + 15) & ~15;          // 16-byte hizalama\n  void *ptr = hunk_base + hunk_low_used;\n  hunk_low_used += size;             // Sadece 1 pointer kaydir!\n  return ptr;\n}",
+        "focusSteps": [
+          {
+            "atSec": 0,
+            "lines": [2, 3],
+            "caption": "Motor açılışta tüm boş RAM'i tek bir blok halinde ayırır."
+          },
+          {
+            "atSec": 2.35,
+            "lines": [6, 7, 8],
+            "caption": "Harita yüklenirken veriler tek bir pointer ileri kaydırılarak peş peşe yazılır."
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch04-07-bump-pointer-text",
+      "startSec": 29.4,
+      "endSec": 34.35,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "focusBlur",
+      "chapterLabel": "04 · POİNTER KAYDIRMA",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "BUMP ALLOCATOR",
+        "text": "Harita yüklenirken veriler sadece tek bir pointer ileri kaydırılarak peş peşe yazılır.",
+        "highlights": ["tek bir pointer", "peş peşe yazılır"],
+        "highlightAtSecs": [0.65, 2.75]
+      }
+    },
+    {
+      "id": "ch04-08-cleanup-diff",
+      "startSec": 34.35,
+      "endSec": 39.3,
+      "component": "CodeWindow",
+      "background": "obsidianGrid",
+      "transition": "slideLeft",
+      "chapterLabel": "04 · TEK POİNTER SIFIRLAMA",
+      "sfx": "tick",
+      "sfxVolume": 0.15,
+      "props": {
+        "language": "java",
+        "title": "level_cleanup.c",
+        "code": "// ESKI: Bolum sonunda binlerce ayri free() cagrisi\nfor (int i = 0; i < entityCount; i++) free(entities[i]);\nfor (int i = 0; i < texCount;    i++) free(textures[i]);\n// GOLDSRC HUNK: Tek pointer sifirlamasi -> O(1) mikrosaniye!\nvoid Hunk_FreeToLowMark(int mark) {\n  hunk_low_used = mark; // Tum harita aninda tertemiz!\n}",
+        "diffLines": {
+          "remove": [1, 2, 3],
+          "add": [4, 5, 6, 7]
+        },
+        "caption": "Binlerce ayrı free() yerine tek bir tamsayı atamasıyla tüm bellek temizlenir."
+      }
+    },
+    {
+      "id": "ch04-09-o1-cleanup-split",
+      "startSec": 39.3,
+      "endSec": 43.9,
+      "component": "SplitStage",
+      "background": "dotMatrix",
+      "transition": "depthZoom",
+      "chapterLabel": "04 · O(1) TEMİZLİK",
+      "sfx": "thud",
+      "sfxVolume": 0.2,
+      "props": {
+        "eyebrow": "DETERMİNİSTİK BELLEK",
+        "title": "Mikrosaniyede Tertemiz RAM",
+        "subtitle": "Bölüm değişiminde bellek sızıntısı ihtimali mimari olarak sıfırlanır.",
+        "metric": {
+          "before": "O(N) free",
+          "value": "O(1)",
+          "delta": "< 1 µs",
+          "label": "BÖLÜM SONU BELLEK TEMİZLİĞİ"
+        },
+        "points": [
+          {
+            "title": "Sıfır Bellek Sızıntısı",
+            "detail": "Tek pointer başlangıca döndüğü için unutulan nesne kalmaz.",
+            "tag": "Z_MALLOC",
+            "highlighted": true
+          }
+        ],
+        "visual": {
+          "type": "code",
+          "language": "java",
+          "title": "z_malloc_tags.c",
+          "code": "// Doom Z_Malloc seviye etiketiyle toplu temizlik\nvoid *wall = Z_Malloc(4096, PU_LEVEL, NULL);\n// Bolum bittiginde tek cagri:\nZ_FreeTags(PU_LEVEL, PU_LEVEL);\n// Parcalanma: %0  |  Temizlik: < 0.01 ms",
+          "highlightLines": [2, 4]
+        }
+      }
+    },
+    {
+      "id": "ch04-10-pure-c-legacy",
+      "startSec": 43.9,
+      "endSec": 48.35,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "04 · SAF C MİRASI",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "30 YILLIK TAŞINABİLİRLİK",
+        "text": "İşletim sistemine bağımlı olmayan bu deterministik saf C mimarisi o kadar sağlamdı ki...",
+        "highlights": ["deterministik saf C mimarisi"],
+        "highlightAtSecs": [3.1]
+      }
+    },
+    {
+      "id": "ch04-11-xash3d-wasm-terminal",
+      "startSec": 48.35,
+      "endSec": 53.3,
+      "component": "TerminalTrace",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "04 · XASH3D · WASM",
+      "sfx": "tick",
+      "sfxVolume": 0.14,
+      "props": {
+        "title": "zsh — Xash3D FWGS → WebAssembly",
+        "prompt": "dev@archeology ~ %",
+        "command": "emcc xash3d_engine.c -O3 -s WASM=1 -s TOTAL_MEMORY=64MB -o xash3d.wasm",
+        "requestBody": "TARGET: Browser WebAssembly (Deterministic Linear Memory)",
+        "statusCode": 200,
+        "statusText": "WASM READY",
+        "latency": "60 FPS",
+        "responseAtSec": 1.35,
+        "highlightResponseLines": [2, 3, 4],
+        "responseBody": "{\n  \"engine\": \"Xash3D (GoldSrc Compatible)\",\n  \"runtime\": \"Browser WebAssembly (WASM)\",\n  \"frameTime\": \"4.2 ms · 60 FPS\"\n}",
+        "caption": "1990'ların saf C çekirdeği bugün Xash3D ile doğrudan tarayıcıda 60 FPS çalışıyor."
+      }
+    },
+    {
+      "id": "ch04-12-final-summary",
+      "startSec": 53.3,
+      "endSec": 57.944,
+      "component": "StepCard",
+      "background": "obsidianGrid",
+      "transition": "depthZoom",
+      "chapterLabel": "04 · MİMARİ ÖZET",
+      "sfx": "thud",
+      "sfxVolume": 0.18,
+      "props": {
+        "eyebrow": "SİSTEM ARKEOLOJİSİ ÖZETİ",
+        "title": "4 MB RAM İle 3D Çizmenin 4 Sütunu",
+        "steps": [
+          {
+            "title": "1. Offline BSP Ağacı",
+            "detail": "Önden arkaya kesin çizim, sıfır Z-Buffer ve sıfır overdraw.",
+            "duration": "BSP"
+          },
+          {
+            "title": "2. PVS + Radiosity Lightmap",
+            "detail": "Bit vektörüyle oda eleme ve önceden pişirilmiş ışık.",
+            "duration": "PVS"
+          },
+          {
+            "title": "3. Zone / Hunk + Saf C → WASM",
+            "detail": "O(1) doğrusal bellek ve Xash3D ile tarayıcıda 60 FPS.",
+            "duration": "WASM"
+          }
+        ]
+      }
+    }
+  ]
+}

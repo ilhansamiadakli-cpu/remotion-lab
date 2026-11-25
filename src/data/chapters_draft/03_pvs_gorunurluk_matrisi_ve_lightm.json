@@ -1,0 +1,406 @@
+{
+  "meta": {
+    "title": "Bölüm 3: PVS Görünürlük Matrisi ve Lightmap Pişirme",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 57.928
+  },
+  "audio": "doom_goldsrc.wav",
+  "audioVolume": 1,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "ch03-01-highlightertext",
+      "startSec": 0.0,
+      "endSec": 4.89,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "VURGU · SAHNE 01",
+        "text": "Quake ve Half-Life 'ın kullandığı GoldSrc motoruyla tam 3D",
+        "highlights": [
+          "kullandığı GoldSrc"
+        ],
+        "highlightAtSecs": [
+          2.16
+        ]
+      },
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    },
+    {
+      "id": "ch03-02-comparisoncard",
+      "startSec": 4.89,
+      "endSec": 9.04,
+      "component": "ComparisonCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "KARŞILAŞTIRMA · SAHNE 02",
+        "title": "Yanlış Yaklaşım vs Doğru Yöntem",
+        "leftTitle": "Eski / Hatalı Yaklaşım",
+        "leftBadge": "HATALI",
+        "leftItems": [
+          "Kontrolsüz ve tutarsız uygulama",
+          "Beklenmeyen kalite kaybı"
+        ],
+        "rightTitle": "Önerilen Doğru Yaklaşım",
+        "rightBadge": "DOĞRU",
+        "rightItems": [
+          "koridorlara geçildiğinde BSP tek başına yeterli değildi.",
+          "Ölçülebilir ve tekrarlanabilir sonuç"
+        ]
+      },
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    },
+    {
+      "id": "ch03-03-highlightertext",
+      "startSec": 9.04,
+      "endSec": 12.08,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 03",
+        "text": "Çünkü kamera bir odadayken duvarın arkasındaki elli",
+        "highlights": [
+          "duvarın arkasındaki"
+        ],
+        "highlightAtSecs": [
+          1.61
+        ]
+      },
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    },
+    {
+      "id": "ch03-04-glasscard",
+      "startSec": 12.08,
+      "endSec": 15.6,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 04",
+        "title": "odanın düğümlerini dolaşmak hâlâ",
+        "badge": "SAHNE 04",
+        "body": "odanın düğümlerini dolaşmak hâlâ CPU zamanını harcıyordu.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    },
+    {
+      "id": "ch03-05-highlightertext",
+      "startSec": 15.6,
+      "endSec": 18.77,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 05",
+        "text": "Çözüm PVS , yani Potentially",
+        "highlights": [
+          "yani Potentially"
+        ],
+        "highlightAtSecs": [
+          2.08
+        ]
+      },
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    },
+    {
+      "id": "ch03-06-glasscard",
+      "startSec": 18.77,
+      "endSec": 21.23,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 06",
+        "title": "Visible Set oldu",
+        "badge": "SAHNE 06",
+        "body": "Visible Set oldu.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    },
+    {
+      "id": "ch03-07-highlightertext",
+      "startSec": 21.23,
+      "endSec": 24.54,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 07",
+        "text": "Derleyici haritadaki her oda çifti arasında ışık geçiren bir",
+        "highlights": [
+          "çifti arasında"
+        ],
+        "highlightAtSecs": [
+          1.34
+        ]
+      },
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    },
+    {
+      "id": "ch03-08-nodeflow",
+      "startSec": 24.54,
+      "endSec": 28.21,
+      "component": "NodeFlow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "AKIŞ · SAHNE 08",
+        "title": "Süreç Bağlantısı",
+        "nodes": [
+          {
+            "badge": "01",
+            "label": "görüş hattı olup olmadığını ",
+            "highlighted": false
+          },
+          {
+            "badge": "02",
+            "label": "sonucu",
+            "highlighted": true
+          }
+        ],
+        "caption": "görüş hattı olup olmadığını önceden hesaplar ve sonucu"
+      },
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    },
+    {
+      "id": "ch03-09-highlightertext",
+      "startSec": 28.21,
+      "endSec": 31.25,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 09",
+        "text": "sıkıştırılmış bir bit matrisine gömer.",
+        "highlights": [
+          "matrisine gömer"
+        ],
+        "highlightAtSecs": [
+          0.89
+        ]
+      },
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    },
+    {
+      "id": "ch03-10-glasscard",
+      "startSec": 31.25,
+      "endSec": 35.08,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 10",
+        "title": "Oyuncu bir odaya girdiğinde",
+        "badge": "SAHNE 10",
+        "body": "Oyuncu bir odaya girdiğinde motor sadece tek bir bit vektörünü açar;",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    },
+    {
+      "id": "ch03-11-highlightertext",
+      "startSec": 35.08,
+      "endSec": 39.09,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 11",
+        "text": "sıfır olan tüm görünmez odalar tek hamlede elenir.",
+        "highlights": [
+          "odalar tek"
+        ],
+        "highlightAtSecs": [
+          1.4
+        ]
+      },
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    },
+    {
+      "id": "ch03-12-glasscard",
+      "startSec": 39.09,
+      "endSec": 42.13,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 12",
+        "title": "Aynı felsefe aydınlatmada da",
+        "badge": "SAHNE 12",
+        "body": "Aynı felsefe aydınlatmada da uygulandı.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    },
+    {
+      "id": "ch03-13-comparisoncard",
+      "startSec": 42.13,
+      "endSec": 45.42,
+      "component": "ComparisonCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "KARŞILAŞTIRMA · SAHNE 13",
+        "title": "Yanlış Yaklaşım vs Doğru Yöntem",
+        "leftTitle": "Eski / Hatalı Yaklaşım",
+        "leftBadge": "HATALI",
+        "leftItems": [
+          "Kontrolsüz ve tutarsız uygulama",
+          "Beklenmeyen kalite kaybı"
+        ],
+        "rightTitle": "Önerilen Doğru Yaklaşım",
+        "rightBadge": "DOĞRU",
+        "rightItems": [
+          "Gerçek zamanlı gölge hesaplamak yerine Radiosity",
+          "Ölçülebilir ve tekrarlanabilir sonuç"
+        ]
+      },
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    },
+    {
+      "id": "ch03-14-highlightertext",
+      "startSec": 45.42,
+      "endSec": 49.81,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 14",
+        "text": "algoritmasıyla yumuşak ışıklar önceden Lightmap dokularına pişirildi.",
+        "highlights": [
+          "önceden Lightmap"
+        ],
+        "highlightAtSecs": [
+          1.84
+        ]
+      },
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    },
+    {
+      "id": "ch03-15-glasscard",
+      "startSec": 49.81,
+      "endSec": 53.45,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 15",
+        "title": "Çalışma anında CPU sadece",
+        "badge": "SAHNE 15",
+        "body": "Çalışma anında CPU sadece hazır ışığı yüzey",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    },
+    {
+      "id": "ch03-16-highlightertext",
+      "startSec": 53.45,
+      "endSec": 57.928,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "focusBlur",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": true,
+        "eyebrow": "VURGU · SAHNE 16",
+        "text": "dokusuyla çarparak sinematik atmosferi bedavaya getirdi.",
+        "highlights": [
+          "atmosferi bedavaya"
+        ],
+        "highlightAtSecs": [
+          1.65
+        ]
+      },
+      "chapterLabel": "03 · BÖLÜM 3: PVS GÖRÜNÜRLÜK MATR"
+    }
+  ],
+  "audioOffsetSec": 115.536
+}

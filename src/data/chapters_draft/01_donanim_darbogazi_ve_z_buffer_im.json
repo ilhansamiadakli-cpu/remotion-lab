@@ -1,0 +1,500 @@
+{
+  "meta": {
+    "title": "Bölüm 1: Donanım Darboğazı ve Z-Buffer İmkânsızlığı",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 60.872
+  },
+  "audio": "doom_goldsrc.wav",
+  "audioVolume": 1,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "ch01-01-highlightertext",
+      "startSec": 0.0,
+      "endSec": 2.67,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "VURGU · SAHNE 01",
+        "text": "Bugün sıradan bir tarayıcı sekmesi bile",
+        "highlights": [
+          "tarayıcı sekmesi"
+        ],
+        "highlightAtSecs": [
+          1.43
+        ]
+      },
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-02-glasscard",
+      "startSec": 2.67,
+      "endSec": 5.71,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 02",
+        "title": "yüzlerce megabayt bellek tüketiyor",
+        "badge": "SAHNE 02",
+        "body": "yüzlerce megabayt bellek tüketiyor.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-03-highlightertext",
+      "startSec": 5.71,
+      "endSec": 9.45,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 03",
+        "text": "Oysa 1993 yılında Doom ve birkaç yıl sonra",
+        "highlights": [
+          "1993 yılında",
+          "Doom"
+        ],
+        "highlightAtSecs": [
+          0.67,
+          2.32
+        ]
+      },
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-04-glasscard",
+      "startSec": 9.45,
+      "endSec": 12.6,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 04",
+        "title": "Half-Life motoru GoldSrc ",
+        "badge": "SAHNE 04",
+        "body": "Half-Life motoru GoldSrc , yalnızca 4 MB RAM",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-05-splitstage",
+      "startSec": 12.6,
+      "endSec": 16.45,
+      "component": "SplitStage",
+      "background": "obsidianGrid",
+      "transition": "depthZoom",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "ANALİZ · SAHNE 05",
+        "title": "Teknik Etki ve Ölçüm",
+        "subtitle": "ve 33 MHz hızında tek çekirdekli bir 486DX",
+        "metric": {
+          "before": "420 ms",
+          "value": "8 ms",
+          "delta": "-98%",
+          "label": "PERFORMANS KAZANIMI"
+        },
+        "points": [
+          {
+            "title": "Ölçülebilir İyileşme",
+            "detail": "ve 33 MHz hızında tek çekirdekli bir 486DX",
+            "tag": "BENCHMARK",
+            "highlighted": true
+          }
+        ],
+        "visual": {
+          "type": "code",
+          "language": "sql",
+          "title": "explain.sql",
+          "code": "EXPLAIN ANALYZE\nSELECT 1 FROM tablo\nWHERE kosul = 1\nLIMIT 1;",
+          "highlightLines": [
+            2,
+            3
+          ]
+        }
+      },
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-06-highlightertext",
+      "startSec": 16.45,
+      "endSec": 20.19,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 06",
+        "text": "CPU üzerinde gerçek zamanlı 3D dünyalar çiziyordu.",
+        "highlights": [
+          "zamanlı"
+        ],
+        "highlightAtSecs": [
+          1.35
+        ]
+      },
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-07-splitstage",
+      "startSec": 20.19,
+      "endSec": 23.23,
+      "component": "SplitStage",
+      "background": "obsidianGrid",
+      "transition": "depthZoom",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "ANALİZ · SAHNE 07",
+        "title": "Teknik Etki ve Ölçüm",
+        "subtitle": "Üstelik ortada donanımsal bir",
+        "metric": {
+          "before": "420 ms",
+          "value": "8 ms",
+          "delta": "-98%",
+          "label": "PERFORMANS KAZANIMI"
+        },
+        "points": [
+          {
+            "title": "Ölçülebilir İyileşme",
+            "detail": "Üstelik ortada donanımsal bir",
+            "tag": "BENCHMARK",
+            "highlighted": true
+          }
+        ],
+        "visual": {
+          "type": "code",
+          "language": "sql",
+          "title": "explain.sql",
+          "code": "EXPLAIN ANALYZE\nSELECT 1 FROM tablo\nWHERE kosul = 1\nLIMIT 1;",
+          "highlightLines": [
+            2,
+            3
+          ]
+        }
+      },
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-08-highlightertext",
+      "startSec": 23.23,
+      "endSec": 26.27,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 08",
+        "text": "GPU ve megabaytlarca VRAM yoktu.",
+        "highlights": [
+          "VRAM yoktu"
+        ],
+        "highlightAtSecs": [
+          1.46
+        ]
+      },
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-09-glasscard",
+      "startSec": 26.27,
+      "endSec": 29.44,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 09",
+        "title": "Akıcı bir oyun için",
+        "badge": "SAHNE 09",
+        "body": "Akıcı bir oyun için elinizdeki tüm kare bütçesi sadece",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-10-splitstage",
+      "startSec": 29.44,
+      "endSec": 32.66,
+      "component": "SplitStage",
+      "background": "dotMatrix",
+      "transition": "depthZoom",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "ANALİZ · SAHNE 10",
+        "title": "Teknik Etki ve Ölçüm",
+        "subtitle": "16.6 milisaniyeydi.",
+        "metric": {
+          "before": "420 ms",
+          "value": "8 ms",
+          "delta": "-98%",
+          "label": "PERFORMANS KAZANIMI"
+        },
+        "points": [
+          {
+            "title": "Ölçülebilir İyileşme",
+            "detail": "16.6 milisaniyeydi.",
+            "tag": "BENCHMARK",
+            "highlighted": true
+          }
+        ],
+        "visual": {
+          "type": "code",
+          "language": "sql",
+          "title": "explain.sql",
+          "code": "EXPLAIN ANALYZE\nSELECT 1 FROM tablo\nWHERE kosul = 1\nLIMIT 1;",
+          "highlightLines": [
+            2,
+            3
+          ]
+        }
+      },
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-11-highlightertext",
+      "startSec": 32.66,
+      "endSec": 36.0,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 11",
+        "text": "Modern motorların vazgeçilmezi olan Z-Buffer",
+        "highlights": [
+          "vazgeçilmezi olan"
+        ],
+        "highlightAtSecs": [
+          1.78
+        ]
+      },
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-12-glasscard",
+      "startSec": 36.0,
+      "endSec": 39.04,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 12",
+        "title": "tekniği bu donanımda tamamen",
+        "badge": "SAHNE 12",
+        "body": "tekniği bu donanımda tamamen imkânsızdı.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-13-comparisoncard",
+      "startSec": 39.04,
+      "endSec": 42.71,
+      "component": "ComparisonCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "KARŞILAŞTIRMA · SAHNE 13",
+        "title": "Yanlış Yaklaşım vs Doğru Yöntem",
+        "leftTitle": "Eski / Hatalı Yaklaşım",
+        "leftBadge": "HATALI",
+        "leftItems": [
+          "Kontrolsüz ve tutarsız uygulama",
+          "Beklenmeyen kalite kaybı"
+        ],
+        "rightTitle": "Önerilen Doğru Yaklaşım",
+        "rightBadge": "DOĞRU",
+        "rightItems": [
+          "Çünkü her piksel için derinlik karşılaştırması yapmak,",
+          "Ölçülebilir ve tekrarlanabilir sonuç"
+        ]
+      },
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-14-highlightertext",
+      "startSec": 42.71,
+      "endSec": 46.85,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 14",
+        "text": "hem kısıtlı bellek bant genişliğini boğuyor hem de duvarların arkasında",
+        "highlights": [
+          "genişliğini boğuyor"
+        ],
+        "highlightAtSecs": [
+          1.45
+        ]
+      },
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-15-glasscard",
+      "startSec": 46.85,
+      "endSec": 51.11,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 15",
+        "title": "kalan görünmez yüzeyleri boşuna",
+        "badge": "SAHNE 15",
+        "body": "kalan görünmez yüzeyleri boşuna hesaplayarak CPU 'yu kilitliyordu.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-16-highlightertext",
+      "startSec": 51.11,
+      "endSec": 55.27,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 16",
+        "text": "John Carmack bu darboğazı aşmak için kuralı kökten değiştirdi:",
+        "highlights": [
+          "aşmak için"
+        ],
+        "highlightAtSecs": [
+          2.25
+        ]
+      },
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-17-nodeflow",
+      "startSec": 55.27,
+      "endSec": 58.31,
+      "component": "NodeFlow",
+      "background": "obsidianGrid",
+      "transition": "slideLeft",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "AKIŞ · SAHNE 17",
+        "title": "Süreç Bağlantısı",
+        "nodes": [
+          {
+            "badge": "01",
+            "label": "pahalı hesapları çalışma anı",
+            "highlighted": false
+          },
+          {
+            "badge": "02",
+            "label": "Sonuç",
+            "highlighted": true
+          }
+        ],
+        "caption": "pahalı hesapları çalışma anından çıkarıp harita"
+      },
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    },
+    {
+      "id": "ch01-18-highlightertext",
+      "startSec": 58.31,
+      "endSec": 60.872,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "focusBlur",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": true,
+        "eyebrow": "VURGU · SAHNE 18",
+        "text": "derleme anına taşıdı.",
+        "highlights": [
+          "anına taşıdı"
+        ],
+        "highlightAtSecs": [
+          0.43
+        ]
+      },
+      "chapterLabel": "01 · BÖLÜM 1: DONANIM DARBOĞAZI V"
+    }
+  ]
+}

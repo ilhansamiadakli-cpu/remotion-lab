@@ -11,14 +11,18 @@ import {
 } from "remotion";
 import { BACKGROUNDS, type BackgroundKey } from "../backgrounds";
 import { COMPONENTS } from "../components";
+import { DIRECTOR_CONFIG } from "../config/director";
 import rawTimeline from "../data/timeline.json";
 import {
   COLORS,
-  FILM_GRAIN_OPACITY,
   FONTS,
   MOTION,
+  ThemeProvider,
   VIDEO_CONFIG,
+  resolveTheme,
   secToFrames,
+  themeToCssVars,
+  useActiveTheme,
 } from "../theme";
 import { loadChapters, mergeChapters } from "./chapters";
 import type { SceneTransition, SfxKey, TimelineBeat, TimelineSpec } from "./types";
@@ -60,7 +64,11 @@ function beatRequiresBgBlur(beat: TimelineBeat | undefined): boolean {
   if (typeof beat.blurBackground === "boolean") {
     return beat.blurBackground;
   }
-  if (beat.component === "GlassCard" || beat.component === "MediaWindow") {
+  if (
+    beat.component === "GlassCard" ||
+    beat.component === "MediaWindow" ||
+    beat.component === "ReferenceList"
+  ) {
     return true;
   }
   if (beat.component === "SplitStage" && beat.props.visual.type === "media") {
@@ -70,12 +78,17 @@ function beatRequiresBgBlur(beat: TimelineBeat | undefined): boolean {
 }
 
 /**
- * %2.5 Monokrom Film Greni Katmanı (M1 dostu — statik SVG doku + hafif kare kaydırma).
- * Koyu Obsidian (#07090d) gradyanlarda YouTube H.264 renk şeritlenmesini (banding) önler
- * ve dijital arayüzlere sinematik dokunsallık kazandırır.
+ * Aktif tema profiline duyarlı Monokrom Film Greni Katmanı (M1 dostu — statik SVG doku + hafif kaydırma).
+ * Koyu gradyanlarda YouTube H.264 renk şeritlenmesini (banding) önler ve sinematik doku kazandırır.
  */
 const FilmGrainOverlay: React.FC = () => {
   const frame = useCurrentFrame();
+  const theme = useActiveTheme();
+
+  if (theme.filmGrainOpacity <= 0) {
+    return null;
+  }
+
   // Her 2 karede bir doku konumunu deterministik kaydırarak doğal 35mm gren hareketi üret
   const step = Math.floor(frame / 2);
   const offsetX = ((step * 37) % 64) - 32;
@@ -86,8 +99,8 @@ const FilmGrainOverlay: React.FC = () => {
       style={{
         pointerEvents: "none",
         zIndex: 900,
-        opacity: FILM_GRAIN_OPACITY,
-        mixBlendMode: "overlay",
+        opacity: theme.filmGrainOpacity,
+        mixBlendMode: theme.isLight ? "multiply" : "overlay",
         overflow: "hidden",
       }}
     >
@@ -112,6 +125,37 @@ const FilmGrainOverlay: React.FC = () => {
         </filter>
         <rect width="100%" height="100%" filter="url(#obsidian-film-grain)" />
       </svg>
+    </AbsoluteFill>
+  );
+};
+
+/**
+ * CRT Fosfor Tarama Çizgisi (Scanline) Katmanı:
+ * Yalnızca `scanlineOpacity > 0` olan temalarda (ör. `crtPhosphor`) otomatik devreye girer.
+ */
+const ScanlineOverlay: React.FC = () => {
+  const theme = useActiveTheme();
+
+  if (theme.scanlineOpacity <= 0) {
+    return null;
+  }
+
+  return (
+    <AbsoluteFill
+      style={{
+        pointerEvents: "none",
+        zIndex: 895,
+        opacity: theme.scanlineOpacity,
+        backgroundImage:
+          "repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0, 0, 0, 0.52) 2px, rgba(0, 0, 0, 0.52) 4px)",
+      }}
+    >
+      <AbsoluteFill
+        style={{
+          background:
+            "radial-gradient(ellipse at center, transparent 58%, rgba(0, 0, 0, 0.42) 100%)",
+        }}
+      />
     </AbsoluteFill>
   );
 };
@@ -226,6 +270,7 @@ const EngineeringHUD: React.FC<{
 }> = ({ title, beats }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
+  const theme = useActiveTheme();
 
   if (beats.length === 0) return null;
 
@@ -241,7 +286,10 @@ const EngineeringHUD: React.FC<{
 
   const activeBeat = beats[activeIdx];
   const hideForImpact = activeBeat.component === "MetricBanner";
-  const progressPct = Math.min(100, Math.max(0, (frame / Math.max(1, durationInFrames - 1)) * 100));
+  const progressPct = Math.min(
+    100,
+    Math.max(0, (frame / Math.max(1, durationInFrames - 1)) * 100)
+  );
   const labelText = activeBeat.chapterLabel ?? title;
 
   return (
@@ -256,7 +304,7 @@ const EngineeringHUD: React.FC<{
             display: "flex",
             alignItems: "center",
             gap: 10,
-            opacity: 0.48,
+            opacity: theme.isLight ? 0.68 : 0.48,
             fontFamily: FONTS.mono,
             fontSize: 12,
             letterSpacing: "0.14em",
@@ -281,7 +329,7 @@ const EngineeringHUD: React.FC<{
         </div>
       )}
 
-      {/* Alt 2px sıcak kehribar ilerleme çizgisi */}
+      {/* Alt 2px aktif tema vurgu ilerleme çizgisi */}
       <div
         style={{
           position: "absolute",
@@ -289,7 +337,9 @@ const EngineeringHUD: React.FC<{
           right: 0,
           bottom: 0,
           height: 2,
-          background: "rgba(255, 255, 255, 0.05)",
+          background: theme.isLight
+            ? "rgba(15, 23, 42, 0.08)"
+            : "rgba(255, 255, 255, 0.05)",
         }}
       >
         <div
@@ -306,10 +356,14 @@ const EngineeringHUD: React.FC<{
 };
 
 /**
- * 3–5 Saniye Kuralı Denetleyici (Yalnızca Geliştirme / Studio Önizleme Modu)
- * Herhangi bir beat 5 saniyeden uzun sürerse sağ üst köşede küçük geliştirici uyarısı gösterir.
+ * Sahne Ritim Denetleyici (Yalnızca Geliştirme / Studio Önizleme Modu)
+ * Herhangi bir beat `director.json` -> `timing.maxSceneDurationSec` sınırını aşarsa
+ * sağ üst köşede geliştirici uyarısı gösterir.
  */
-const PacingRuleWarning: React.FC<{ durationSec: number }> = ({ durationSec }) => {
+const PacingRuleWarning: React.FC<{ durationSec: number; maxSec: number }> = ({
+  durationSec,
+  maxSec,
+}) => {
   return (
     <div
       style={{
@@ -334,7 +388,7 @@ const PacingRuleWarning: React.FC<{ durationSec: number }> = ({ durationSec }) =
         boxShadow: "0 10px 24px rgba(0, 0, 0, 0.45)",
       }}
     >
-      <span>[UYARI: &gt;5sn sabit sahne]</span>
+      <span>[UYARI: &gt;{maxSec}sn sabit sahne]</span>
       <span style={{ opacity: 0.78 }}>{durationSec.toFixed(1)}sn</span>
     </div>
   );
@@ -342,7 +396,8 @@ const PacingRuleWarning: React.FC<{ durationSec: number }> = ({ durationSec }) =
 
 /**
  * Tek bir sahneyi (beat) kendi yerel zaman ekseninde (Sequence içinde frame=0'dan başlayarak)
- * yönlü geçiş karakteri ve FPS-bağımsız yay çıkışıyla işler.
+ * `src/config/director.json` içindeki geçiş tipi, yay parametreleri ve animasyon başlangıç
+ * ofsetiyle işler.
  */
 const BeatStage: React.FC<{
   beat: TimelineBeat;
@@ -353,34 +408,63 @@ const BeatStage: React.FC<{
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const transitionMode: SceneTransition = beat.transition ?? "editorial";
+  const { transitions, timing } = DIRECTOR_CONFIG;
+  const transitionMode: SceneTransition = beat.transition ?? transitions.defaultType;
 
-  // Giriş geçiş yayı (yalnızca yönlü/optik geçiş seçildiyse ek katman hareketi uygular)
+  const directorSpring = {
+    damping: transitions.springDamping,
+    stiffness: transitions.springStiffness,
+    mass: 1,
+  };
+  const transitionDurationFrames = Math.max(4, Math.round(transitions.durationFrames));
+  const animationOffsetFrames = Math.max(
+    0,
+    secToFrames(timing.animationStartOffsetSec, fps)
+  );
+
+  // Giriş geçiş yayı (`director.json` spring + durationFrames)
   const enterProgress = isFirstBeat
     ? 1
     : spring({
         frame,
         fps,
-        config: MOTION.editorial,
+        durationInFrames: transitionDurationFrames,
+        config: directorSpring,
       });
 
-  // Sahne sonundaki son 0.24 sn'de FPS-bağımsız yay çıkış zarfı
-  const exitLeadFrames = Math.max(5, secToFrames(0.24, fps));
+  // Sahne sonundaki çıkış zarfı (`director.json` durationFrames ile uyumlu)
+  const exitLeadFrames = Math.min(
+    Math.max(4, Math.floor(durationInFrames / 3)),
+    Math.max(6, Math.round(transitionDurationFrames * 0.65))
+  );
   const exitLocalFrame = Math.max(0, frame - (durationInFrames - exitLeadFrames));
   const exitProgress = isLastBeat
     ? 0
     : spring({
         frame: exitLocalFrame,
         fps,
-        config: MOTION.editorial,
+        durationInFrames: exitLeadFrames,
+        config: directorSpring,
       });
 
   let translateX = 0;
   let translateY = 0;
   let scale = 1;
   let blurPx = 0;
+  let enterOpacity = 1;
 
-  if (transitionMode === "slideLeft") {
+  if (transitionMode === "fade-slide") {
+    enterOpacity = isFirstBeat
+      ? 1
+      : interpolate(enterProgress, [0, 0.72, 1], [0, 1, 1], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+        });
+    translateY =
+      interpolate(enterProgress, [0, 1], [22, 0]) +
+      interpolate(exitProgress, [0, 1], [0, -14]);
+    scale = interpolate(exitProgress, [0, 1], [1, 0.99]);
+  } else if (transitionMode === "slideLeft") {
     translateX =
       interpolate(enterProgress, [0, 1], [44, 0]) +
       interpolate(exitProgress, [0, 1], [0, -44]);
@@ -394,21 +478,39 @@ const BeatStage: React.FC<{
       interpolate(enterProgress, [0, 1], [4, 0]) +
       interpolate(exitProgress, [0, 1], [0, 4]);
   } else {
-    // Varsayılan "editorial": minimal ağırlıklı yükseliş / çekilme
+    // "editorial": minimal ağırlıklı yükseliş / çekilme
     translateY = interpolate(exitProgress, [0, 1], [0, -10]);
     scale = interpolate(exitProgress, [0, 1], [1, 0.988]);
   }
 
-  const stageOpacity = interpolate(exitProgress, [0, 1], [1, 0], {
+  const exitOpacity = interpolate(exitProgress, [0, 1], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
+  const stageOpacity = enterOpacity * exitOpacity;
 
   const BeatComponent = COMPONENTS[beat.component] as React.ComponentType<
     Record<string, unknown>
   >;
 
+  const rawBeatProps = beat.props as Record<string, unknown>;
+  const componentProps: Record<string, unknown> = {
+    ...rawBeatProps,
+    beatDurationInFrames: durationInFrames,
+  };
+  // `director.json` -> `animationStartOffsetSec` değerini explicit `startFrame` belirtilmemiş
+  // bileşen girişlerine uygula (HighlighterText'in kelime senkronlu highlightStart'ını koru)
+  if (
+    typeof rawBeatProps.startFrame !== "number" &&
+    beat.component !== "HighlighterText" &&
+    !isFirstBeat &&
+    animationOffsetFrames > 0
+  ) {
+    componentProps.startFrame = animationOffsetFrames;
+  }
+
   const beatDurationSec = beat.endSec - beat.startSec;
+  const maxAllowedSec = timing.maxSceneDurationSec;
   const isDevPreview = process.env.NODE_ENV !== "production";
 
   return (
@@ -420,14 +522,14 @@ const BeatStage: React.FC<{
           filter: blurPx > 0.05 ? `blur(${blurPx}px)` : undefined,
         }}
       >
-        <BeatComponent
-          {...(beat.props as Record<string, unknown>)}
-          beatDurationInFrames={durationInFrames}
-        />
+        <BeatComponent {...componentProps} />
       </AbsoluteFill>
 
-      {isDevPreview && beatDurationSec > 5 && (
-        <PacingRuleWarning durationSec={beatDurationSec} />
+      {isDevPreview && beatDurationSec > maxAllowedSec + 0.01 && (
+        <PacingRuleWarning
+          durationSec={beatDurationSec}
+          maxSec={maxAllowedSec}
+        />
       )}
     </AbsoluteFill>
   );
@@ -441,10 +543,11 @@ export interface TimelineRendererProps {
 }
 
 /**
- * TimelineRenderer (v2.1 Ana Video Motoru)
- * - Global kesintisiz arka plan katmanı (beat sınırlarında başa sarmaz)
- * - %2.5 monokrom film greni (H.264 banding önleyici sinematik doku)
- * - Minimalist mühendislik HUD'u + yönlü sahne geçişleri
+ * TimelineRenderer (v3.0 Ana Video Motoru)
+ * - Çoklu tema profilleri (`obsidianAmber`, `crtPhosphor`, `blueprintCyan`, `editorialPaper`) + `ThemeProvider`
+ * - Merkezi yönetmen konfigürasyonu (`src/config/director.json`) ile zamanlama ve geçiş kontrolü
+ * - Global kesintisiz arka plan katmanı + CRT scanline dokusu + tema uyumlu film greni
+ * - 13 kilitli bileşen (prosedürel SVG simülasyonları, B-Roll video, kaynakça dahil)
  * - Tekil `timeline.json` veya alfabetik birleşik `chapters/*.json` desteği
  */
 export const TimelineRenderer: React.FC<TimelineRendererProps> = ({
@@ -462,6 +565,16 @@ export const TimelineRenderer: React.FC<TimelineRendererProps> = ({
     return DEFAULT_TIMELINE;
   }, [timeline, source]);
 
+  const activeTheme = React.useMemo(
+    () => resolveTheme(resolvedTimeline.theme ?? DIRECTOR_CONFIG.activeTheme),
+    [resolvedTimeline.theme]
+  );
+
+  const themeCssVars = React.useMemo(
+    () => themeToCssVars(activeTheme) as React.CSSProperties,
+    [activeTheme]
+  );
+
   const mainAudioPath =
     resolvedTimeline.audio && resolvedTimeline.audio.trim().length > 0
       ? resolveAudioPath(resolvedTimeline.audio.trim())
@@ -478,120 +591,133 @@ export const TimelineRenderer: React.FC<TimelineRendererProps> = ({
   const showHud = resolvedTimeline.showHud ?? true;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: COLORS.background }}>
-      {/* 1. KATMAN: Global Sürekli Arka Plan (sahne geçişlerinde sıfırlanmaz) */}
-      <PersistentBackgroundLayer
-        beats={resolvedTimeline.beats}
-        defaultBackground={resolvedTimeline.background}
-      />
-
-      {/* Ana konuşma sesi (tam seviye: 1.0) */}
-      {mainAudioPath && (
-        <Audio
-          src={staticFile(mainAudioPath)}
-          startFrom={
-            resolvedTimeline.audioOffsetSec && resolvedTimeline.audioOffsetSec > 0
-              ? secToFrames(resolvedTimeline.audioOffsetSec, fps)
-              : undefined
-          }
-          volume={resolvedTimeline.audioVolume ?? 1}
+    <ThemeProvider theme={activeTheme}>
+      <AbsoluteFill
+        style={{
+          backgroundColor: COLORS.background,
+          ...themeCssVars,
+        }}
+      >
+        {/* 1. KATMAN: Global Sürekli Arka Plan (sahne geçişlerinde sıfırlanmaz) */}
+        <PersistentBackgroundLayer
+          beats={resolvedTimeline.beats}
+          defaultBackground={resolvedTimeline.background}
         />
-      )}
 
-      {/* Bölüm bazlı birleştirilmiş bireysel konuşma ses parçaları */}
-      {resolvedTimeline.audioSegments?.map((seg, idx) => {
-        const fromFrame = secToFrames(seg.startSec, fps);
-        const segFrames = seg.durationSec
-          ? Math.max(1, secToFrames(seg.durationSec, fps))
-          : undefined;
-        return (
-          <Sequence
-            key={`audio-seg-${idx}`}
-            from={fromFrame}
-            durationInFrames={segFrames}
-          >
-            <Audio
-              src={staticFile(resolveAudioPath(seg.src))}
-              volume={seg.volume ?? 1}
-            />
-          </Sequence>
-        );
-      })}
+        {/* Ana konuşma sesi (tam seviye: 1.0) */}
+        {mainAudioPath && (
+          <Audio
+            src={staticFile(mainAudioPath)}
+            startFrom={
+              resolvedTimeline.audioOffsetSec &&
+              resolvedTimeline.audioOffsetSec > 0
+                ? secToFrames(resolvedTimeline.audioOffsetSec, fps)
+                : undefined
+            }
+            volume={resolvedTimeline.audioVolume ?? 1}
+          />
+        )}
 
-      {/* Hafif, döngülü karanlık arka plan müziği */}
-      {bgMusicPath && (
-        <Audio
-          src={staticFile(bgMusicPath)}
-          loop
-          volume={(f) => {
-            const fadeIn = interpolate(f, [0, fadeInFrames], [0, 1], {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-            });
-            const fadeOut = interpolate(
-              f,
-              [Math.max(0, totalFrames - fadeOutFrames), totalFrames],
-              [1, 0],
-              {
+        {/* Bölüm bazlı birleştirilmiş bireysel konuşma ses parçaları */}
+        {resolvedTimeline.audioSegments?.map((seg, idx) => {
+          const fromFrame = secToFrames(seg.startSec, fps);
+          const segFrames = seg.durationSec
+            ? Math.max(1, secToFrames(seg.durationSec, fps))
+            : undefined;
+          return (
+            <Sequence
+              key={`audio-seg-${idx}`}
+              from={fromFrame}
+              durationInFrames={segFrames}
+            >
+              <Audio
+                src={staticFile(resolveAudioPath(seg.src))}
+                volume={seg.volume ?? 1}
+              />
+            </Sequence>
+          );
+        })}
+
+        {/* Hafif, döngülü arka plan ambiyansı */}
+        {bgMusicPath && (
+          <Audio
+            src={staticFile(bgMusicPath)}
+            loop
+            volume={(f) => {
+              const fadeIn = interpolate(f, [0, fadeInFrames], [0, 1], {
                 extrapolateLeft: "clamp",
                 extrapolateRight: "clamp",
-              }
-            );
-            return baseBgVolume * Math.min(fadeIn, fadeOut);
-          }}
-        />
-      )}
+              });
+              const fadeOut = interpolate(
+                f,
+                [Math.max(0, totalFrames - fadeOutFrames), totalFrames],
+                [1, 0],
+                {
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                }
+              );
+              return baseBgVolume * Math.min(fadeIn, fadeOut);
+            }}
+          />
+        )}
 
-      {/* 2. KATMAN: Veri güdümlü sahne (beat) dizilimi */}
-      {resolvedTimeline.beats.map((beat, index) => {
-        const fromFrame = secToFrames(beat.startSec, fps);
-        const endFrame = secToFrames(beat.endSec, fps);
-        const durationInFrames = Math.max(1, endFrame - fromFrame);
+        {/* 2. KATMAN: Veri güdümlü sahne (beat) dizilimi */}
+        {resolvedTimeline.beats.map((beat, index) => {
+          const fromFrame = secToFrames(beat.startSec, fps);
+          const endFrame = secToFrames(beat.endSec, fps);
+          const durationInFrames = Math.max(1, endFrame - fromFrame);
 
-        const defaultSfx: SfxKey =
-          beat.component === "MetricBanner"
-            ? "thud"
-            : beat.component === "CodeWindow" ||
-                beat.component === "StepCard" ||
-                beat.component === "TerminalTrace"
-              ? "tick"
-              : index === 0
-                ? "whoosh"
-                : "pop";
-        const sfxChoice: SfxKey = beat.sfx ?? defaultSfx;
-        const sfxPath = resolveSfxPath(sfxChoice);
-        const sfxVolume = beat.sfxVolume ?? 0.16;
+          const defaultSfx: SfxKey =
+            beat.component === "MetricBanner"
+              ? "thud"
+              : beat.component === "CodeWindow" ||
+                  beat.component === "StepCard" ||
+                  beat.component === "TerminalTrace" ||
+                  beat.component === "MemoryBarSim" ||
+                  beat.component === "RayCastConeSim"
+                ? "tick"
+                : index === 0
+                  ? "whoosh"
+                  : "pop";
+          const sfxChoice: SfxKey = beat.sfx ?? defaultSfx;
+          const sfxPath = resolveSfxPath(sfxChoice);
+          const sfxVolume = beat.sfxVolume ?? 0.16;
 
-        return (
-          <Sequence
-            key={beat.id}
-            name={`${beat.id} (${beat.component})`}
-            from={fromFrame}
-            durationInFrames={durationInFrames}
-          >
-            {sfxPath && <Audio src={staticFile(sfxPath)} volume={sfxVolume} />}
-
-            <BeatStage
-              beat={beat}
+          return (
+            <Sequence
+              key={beat.id}
+              name={`${beat.id} (${beat.component})`}
+              from={fromFrame}
               durationInFrames={durationInFrames}
-              isFirstBeat={index === 0}
-              isLastBeat={index === resolvedTimeline.beats.length - 1}
-            />
-          </Sequence>
-        );
-      })}
+            >
+              {sfxPath && <Audio src={staticFile(sfxPath)} volume={sfxVolume} />}
 
-      {/* 3. KATMAN: Minimalist Mühendislik HUD'u */}
-      {showHud && (
-        <EngineeringHUD
-          title={resolvedTimeline.meta.title}
-          beats={resolvedTimeline.beats}
-        />
-      )}
+              <BeatStage
+                beat={beat}
+                durationInFrames={durationInFrames}
+                isFirstBeat={index === 0}
+                isLastBeat={index === resolvedTimeline.beats.length - 1}
+              />
+            </Sequence>
+          );
+        })}
 
-      {/* 4. KATMAN: %2.5 Monokrom Film Greni */}
-      <FilmGrainOverlay />
-    </AbsoluteFill>
+        {/* 3. KATMAN: Minimalist Mühendislik HUD'u */}
+        {showHud && (
+          <EngineeringHUD
+            title={resolvedTimeline.meta.title}
+            beats={resolvedTimeline.beats}
+          />
+        )}
+
+        {/* 4. KATMAN: Tema-özel CRT Scanline Dokusu (yalnızca scanlineOpacity > 0) */}
+        <ScanlineOverlay />
+
+        {/* 5. KATMAN: Monokrom Film Greni */}
+        <FilmGrainOverlay />
+      </AbsoluteFill>
+    </ThemeProvider>
   );
 };
 

@@ -40,9 +40,45 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 DEFAULT_INPUT = ROOT_DIR / "src" / "data" / "transcript.json"
 DEFAULT_OUTPUT = ROOT_DIR / "src" / "data" / "timeline_draft.json"
 DEFAULT_GLOSSARY = ROOT_DIR / "src" / "data" / "glossary.json"
+DEFAULT_DIRECTOR = ROOT_DIR / "src" / "config" / "director.json"
 
-MIN_BEAT_SEC = 3.0
-MAX_BEAT_SEC = 5.0
+DEFAULT_DIRECTOR_CONFIG: dict[str, Any] = {
+    "activeTheme": "obsidianAmber",
+    "timing": {
+        "speechLeadPaddingSec": 0.25,
+        "speechTailPaddingSec": 0.45,
+        "minSceneDurationSec": 3.5,
+        "maxSceneDurationSec": 6.0,
+        "animationStartOffsetSec": 0.15,
+    },
+    "transitions": {
+        "defaultType": "fade-slide",
+        "durationFrames": 18,
+        "springDamping": 16,
+        "springStiffness": 110,
+    },
+    "previewRender": {
+        "scale": 0.5,
+        "crf": 28,
+    },
+}
+
+
+def load_director_config(path: Path = DEFAULT_DIRECTOR) -> dict[str, Any]:
+    """`src/config/director.json` merkezi yönetmen konfigürasyonunu okur (eksik alanlar için güvenli varsayılanlarla)."""
+    cfg = json.loads(json.dumps(DEFAULT_DIRECTOR_CONFIG))
+    if not path.is_file():
+        return cfg
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return cfg
+    if isinstance(raw.get("activeTheme"), str) and raw["activeTheme"].strip():
+        cfg["activeTheme"] = raw["activeTheme"].strip()
+    for section in ("timing", "transitions", "previewRender"):
+        if isinstance(raw.get(section), dict):
+            cfg[section].update(raw[section])
+    return cfg
 
 
 def tr_lower(text: str) -> str:
@@ -148,21 +184,51 @@ def split_segment_by_words(seg: dict[str, Any], max_sec: float = 4.7) -> list[di
     return chunks
 
 
-def build_timed_blocks(segments: list[dict[str, Any]], total_duration: float) -> list[dict[str, Any]]:
-    """Segmentleri 3–5 saniye aralığında kesintisiz, boşluksuz beat bloklarına dönüştürür."""
+def compute_seam_time(
+    prev_end: float,
+    next_start: float,
+    lead_pad_sec: float,
+    tail_pad_sec: float,
+) -> float:
+    """İki konuşma bloğu arasındaki geçiş noktasını `speechLeadPaddingSec` ve `speechTailPaddingSec` ile dengeler."""
+    gap = next_start - prev_end
+    if gap <= 0.01:
+        return round((prev_end + next_start) / 2.0, 2)
+    total_pad = max(0.05, lead_pad_sec + tail_pad_sec)
+    if gap >= total_pad:
+        # Yeni konuşmadan tam `lead_pad_sec` önce sahneye geç (nefes payı korunsun)
+        return round(next_start - lead_pad_sec, 2)
+    # Boşluk darsa tail/lead oranına göre bölüştür
+    weight_tail = tail_pad_sec / total_pad
+    return round(prev_end + gap * weight_tail, 2)
+
+
+def build_timed_blocks(
+    segments: list[dict[str, Any]],
+    total_duration: float,
+    director: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    """Segmentleri `director.json` zamanlama sınırlarına uygun kesintisiz beat bloklarına dönüştürür."""
+    timing = (director or DEFAULT_DIRECTOR_CONFIG)["timing"]
+    min_beat_sec = float(timing.get("minSceneDurationSec", 3.5))
+    max_beat_sec = float(timing.get("maxSceneDurationSec", 6.0))
+    lead_pad_sec = float(timing.get("speechLeadPaddingSec", 0.25))
+    tail_pad_sec = float(timing.get("speechTailPaddingSec", 0.45))
+
     if not segments:
         return [
             {
                 "startSec": 0.0,
-                "endSec": round(max(3.0, total_duration), 3),
+                "endSec": round(max(min_beat_sec, total_duration), 3),
                 "text": "Örnek anlatım bloğu.",
                 "words": [],
             }
         ]
 
     raw_blocks: list[dict[str, Any]] = []
+    split_cap = max(min_beat_sec + 0.5, max_beat_sec - 0.35)
     for seg in segments:
-        raw_blocks.extend(split_segment_by_words(seg, max_sec=4.65))
+        raw_blocks.extend(split_segment_by_words(seg, max_sec=split_cap))
 
     merged: list[dict[str, Any]] = []
     for blk in raw_blocks:
@@ -172,7 +238,7 @@ def build_timed_blocks(segments: list[dict[str, Any]], total_duration: float) ->
         prev = merged[-1]
         prev_dur = prev["endSec"] - prev["startSec"]
         combined_dur = blk["endSec"] - prev["startSec"]
-        if prev_dur < MIN_BEAT_SEC and combined_dur <= MAX_BEAT_SEC - 0.1:
+        if prev_dur < min_beat_sec and combined_dur <= max_beat_sec - 0.1:
             prev["endSec"] = blk["endSec"]
             prev["text"] = clean_sentence(f"{prev['text']} {blk['text']}")
             prev["words"] = (prev.get("words") or []) + (blk.get("words") or [])
@@ -182,11 +248,11 @@ def build_timed_blocks(segments: list[dict[str, Any]], total_duration: float) ->
     if len(merged) >= 2:
         last = merged[-1]
         prev = merged[-2]
-        if (total_duration - last["startSec"]) < MIN_BEAT_SEC:
+        if (total_duration - last["startSec"]) < min_beat_sec:
             combined_span = total_duration - prev["startSec"]
             combined_text = clean_sentence(f"{prev['text']} {last['text']}")
             combined_words = (prev.get("words") or []) + (last.get("words") or [])
-            if combined_span <= MAX_BEAT_SEC:
+            if combined_span <= max_beat_sec:
                 prev["endSec"] = total_duration
                 prev["text"] = combined_text
                 prev["words"] = combined_words
@@ -204,19 +270,29 @@ def build_timed_blocks(segments: list[dict[str, Any]], total_duration: float) ->
 
     merged[0]["startSec"] = 0.0
     for i in range(len(merged) - 1):
-        mid_gap = round((merged[i]["endSec"] + merged[i + 1]["startSec"]) / 2.0, 2)
-        merged[i]["endSec"] = mid_gap
-        merged[i + 1]["startSec"] = mid_gap
+        seam = compute_seam_time(
+            merged[i]["endSec"],
+            merged[i + 1]["startSec"],
+            lead_pad_sec,
+            tail_pad_sec,
+        )
+        merged[i]["endSec"] = seam
+        merged[i + 1]["startSec"] = seam
     merged[-1]["endSec"] = round(total_duration, 3)
 
     final_blocks: list[dict[str, Any]] = []
     for blk in merged:
         dur = blk["endSec"] - blk["startSec"]
-        if dur > MAX_BEAT_SEC:
-            sub = split_segment_by_words(blk, max_sec=MAX_BEAT_SEC - 0.25)
+        if dur > max_beat_sec:
+            sub = split_segment_by_words(blk, max_sec=max_beat_sec - 0.25)
             sub[0]["startSec"] = blk["startSec"]
             for j in range(len(sub) - 1):
-                seam = round((sub[j]["endSec"] + sub[j + 1]["startSec"]) / 2.0, 2)
+                seam = compute_seam_time(
+                    sub[j]["endSec"],
+                    sub[j + 1]["startSec"],
+                    lead_pad_sec,
+                    tail_pad_sec,
+                )
                 sub[j]["endSec"] = seam
                 sub[j + 1]["startSec"] = seam
             sub[-1]["endSec"] = blk["endSec"]
@@ -224,21 +300,21 @@ def build_timed_blocks(segments: list[dict[str, Any]], total_duration: float) ->
         else:
             final_blocks.append(blk)
 
-    # Çift komşu dengelemeli 3–5 sn kuralı güvencesi
+    # Çift komşu dengelemeli min/max süre kuralı güvencesi
     for _ in range(16):
         changed = False
         i = 0
         while i < len(final_blocks):
             dur = final_blocks[i]["endSec"] - final_blocks[i]["startSec"]
-            if dur < MIN_BEAT_SEC - 1e-6:
-                if i + 1 < len(final_blocks) and (final_blocks[i + 1]["endSec"] - final_blocks[i]["startSec"]) <= MAX_BEAT_SEC:
+            if dur < min_beat_sec - 1e-6:
+                if i + 1 < len(final_blocks) and (final_blocks[i + 1]["endSec"] - final_blocks[i]["startSec"]) <= max_beat_sec:
                     final_blocks[i]["endSec"] = final_blocks[i + 1]["endSec"]
                     final_blocks[i]["text"] = clean_sentence(f"{final_blocks[i]['text']} {final_blocks[i + 1]['text']}")
                     final_blocks[i]["words"] = (final_blocks[i].get("words") or []) + (final_blocks[i + 1].get("words") or [])
                     final_blocks.pop(i + 1)
                     changed = True
                     continue
-                if i > 0 and (final_blocks[i]["endSec"] - final_blocks[i - 1]["startSec"]) <= MAX_BEAT_SEC:
+                if i > 0 and (final_blocks[i]["endSec"] - final_blocks[i - 1]["startSec"]) <= max_beat_sec:
                     final_blocks[i - 1]["endSec"] = final_blocks[i]["endSec"]
                     final_blocks[i - 1]["text"] = clean_sentence(f"{final_blocks[i - 1]['text']} {final_blocks[i]['text']}")
                     final_blocks[i - 1]["words"] = (final_blocks[i - 1].get("words") or []) + (final_blocks[i].get("words") or [])
@@ -246,14 +322,14 @@ def build_timed_blocks(segments: list[dict[str, Any]], total_duration: float) ->
                     changed = True
                     continue
 
-                needed = round(MIN_BEAT_SEC - dur + 0.04, 2)
+                needed = round(min_beat_sec - dur + 0.04, 2)
                 next_slack = (
-                    max(0.0, (final_blocks[i + 1]["endSec"] - final_blocks[i + 1]["startSec"]) - MIN_BEAT_SEC)
+                    max(0.0, (final_blocks[i + 1]["endSec"] - final_blocks[i + 1]["startSec"]) - min_beat_sec)
                     if i + 1 < len(final_blocks)
                     else 0.0
                 )
                 prev_slack = (
-                    max(0.0, (final_blocks[i - 1]["endSec"] - final_blocks[i - 1]["startSec"]) - MIN_BEAT_SEC)
+                    max(0.0, (final_blocks[i - 1]["endSec"] - final_blocks[i - 1]["startSec"]) - min_beat_sec)
                     if i > 0
                     else 0.0
                 )
@@ -313,6 +389,7 @@ def resolve_highlight_timestamps(
     beat_dur_sec: float,
     words: list[dict[str, Any]],
     glossary_rules: list[tuple[re.Pattern[str], str]],
+    anim_offset_sec: float = 0.15,
 ) -> list[float]:
     """
     `transcript.json` kelime zaman damgalarından her vurgulanan ifadenin
@@ -329,6 +406,7 @@ def resolve_highlight_timestamps(
         for w in words
     ]
 
+    min_sec = max(0.05, anim_offset_sec)
     result: list[float] = []
     for idx, phrase in enumerate(highlights):
         first_token = tr_lower(phrase.split()[0].strip(".,;:!?\"'")) if phrase.split() else ""
@@ -338,13 +416,13 @@ def resolve_highlight_timestamps(
             if not first_token or not w_txt:
                 continue
             if first_token == w_txt or (len(first_token) >= 4 and (first_token in w_txt or w_txt in first_token)):
-                local_sec = max(0.15, min(beat_dur_sec - 0.5, w_start - beat_start_sec))
+                local_sec = max(min_sec, min(beat_dur_sec - 0.5, w_start - beat_start_sec))
                 matched_sec = round(local_sec, 2)
                 break
 
         if matched_sec is None:
-            fallback = min(beat_dur_sec - 0.5, 0.35 + idx * 0.75)
-            matched_sec = round(max(0.15, fallback), 2)
+            fallback = min(beat_dur_sec - 0.5, max(min_sec + 0.15, 0.35) + idx * 0.75)
+            matched_sec = round(max(min_sec, fallback), 2)
 
         result.append(matched_sec)
     return result
@@ -352,7 +430,7 @@ def resolve_highlight_timestamps(
 
 def extract_metric(text: str) -> tuple[str, str] | None:
     m = re.search(
-        r"(\d+(?:\s*(?:ile|-|–)\s*\d+)?\s*(?:derece|°C|tablo|gram|g|ml|ms|saniye|sn|%|temel\s+\w+))",
+        r"(\d+(?:\s*(?:ile|-|–)\s*\d+)?\s*(?:derece|°C|tablo|gram|g|ml|ms|saniye|sn|%|MB|MHz|temel\s+\w+))",
         text,
         re.IGNORECASE,
     )
@@ -363,9 +441,12 @@ def extract_metric(text: str) -> tuple[str, str] | None:
 
 
 def classify_component(text: str, index: int, prev_component: str | None) -> str:
-    """Konuşma metnindeki anahtar kelimelere göre 10 kilitli bileşenden en uygununu seçer."""
+    """Konuşma metnindeki anahtar kelimelere göre 13 kilitli bileşenden en uygununu seçer."""
     lower = tr_lower(text)
 
+    ref_kw = ("kaynakça", "referans", "github", "kaynak kod", "dokümantasyon", "açıklama kısmında")
+    memory_kw = ("hunk", "arena", "z_malloc", "malloc", "parçalanma", "fragmentation", "pointer", "bellek bloğ", "heap")
+    raycast_kw = ("raycast", "görüş konisi", "görünürlük ışın", "fov", "pvs", "bsp ağac", "ışın")
     terminal_kw = ("curl", "http", "409", "201", "endpoint", "json", "istek", "yanıt", "rest api", "status")
     code_kw = ("kod", "sorgu", "sql", "select", "tablo", "java", "bash", "script", "constraint", "transactional")
     split_kw = ("performans", "milisaniye", "hız", "explain", "indeks", "index", "latency", "ms")
@@ -374,6 +455,12 @@ def classify_component(text: str, index: int, prev_component: str | None) -> str
     step_kw = ("adım", "sırayla", "ardından", "aşama", "saniye", "ön ıslatma", "tamamlarsanız")
     flow_kw = ("oran", "akış", "bağlanır", "sonucu", "yakarsınız", "çıkar")
 
+    if any(k in lower for k in ref_kw):
+        return "ReferenceList"
+    if any(k in lower for k in memory_kw) and prev_component != "MemoryBarSim":
+        return "MemoryBarSim"
+    if any(k in lower for k in raycast_kw) and prev_component != "RayCastConeSim":
+        return "RayCastConeSim"
     if any(k in lower for k in terminal_kw):
         return "TerminalTrace"
     if any(k in lower for k in code_kw):
@@ -407,12 +494,84 @@ def build_beat_props(
     beat_dur_sec: float,
     words: list[dict[str, Any]],
     glossary_rules: list[tuple[re.Pattern[str], str]],
+    director: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], str, bool, str]:
     """
     Seçilen bileşene `TimelineRenderer.tsx` ile %100 uyumlu props sözlüğü,
     SFX, blurBackground bayrağı ve sahne geçiş karakterini (`transition`) üretir.
     """
+    cfg = director or DEFAULT_DIRECTOR_CONFIG
+    default_transition = str(cfg["transitions"].get("defaultType", "fade-slide"))
+    anim_offset_sec = float(cfg["timing"].get("animationStartOffsetSec", 0.15))
     lower = tr_lower(text)
+
+    if component == "MemoryBarSim":
+        mode = (
+            "fragmentation"
+            if any(k in lower for k in ("parçalan", "fragmentation", "heap"))
+            and "arena" not in lower
+            and "hunk" not in lower
+            else "arena"
+            if any(k in lower for k in ("sıfırla", "pointer", "offset"))
+            and "malloc" not in lower
+            else "comparison"
+        )
+        return (
+            {
+                "eyebrow": f"BELLEK SİMÜLASYONU · SAHNE {index + 1:02d}",
+                "title": "Doğrusal Arena vs Heap Parçalanması",
+                "badge": "O(1) ARENA",
+                "mode": mode,
+                "resetAtSec": round(beat_dur_sec * 0.72, 2),
+                "caption": text,
+            },
+            "tick",
+            False,
+            default_transition,
+        )
+
+    if component == "RayCastConeSim":
+        return (
+            {
+                "eyebrow": f"GÖRÜNÜRLÜK SİMÜLASYONU · SAHNE {index + 1:02d}",
+                "title": "Gerçek Zamanlı FOV Işınları ve BSP / PVS",
+                "badge": "BSP · PVS",
+                "fovDeg": 68,
+                "rayCount": 26,
+                "showBspTree": True,
+                "caption": text,
+            },
+            "tick",
+            False,
+            default_transition,
+        )
+
+    if component == "ReferenceList":
+        return (
+            {
+                "eyebrow": "KAYNAKÇA & REFERANSLAR",
+                "title": "Teknik Kaynaklar ve Kod Depoları",
+                "badge": "SOURCES",
+                "items": [
+                    {
+                        "title": "Kaynak Dokümantasyon ve Mimari Notlar",
+                        "source": text[:72],
+                        "tag": "DOCS",
+                        "highlighted": True,
+                    },
+                    {
+                        "title": "Örnek Kod ve Proje Deposu",
+                        "source": "Açık kaynak referans implementasyon",
+                        "url": "github.com/org/repo",
+                        "tag": "GITHUB",
+                    },
+                ],
+                "footerNote": "Tüm kaynak bağlantıları video açıklamasında yer alır.",
+            },
+            "pop",
+            True,
+            default_transition,
+        )
 
     if component == "TerminalTrace":
         is_conflict = any(k in lower for k in ("409", "çakış", "hata", "conflict", "engelle"))
@@ -514,7 +673,7 @@ def build_beat_props(
             },
             "pop",
             False,
-            "editorial",
+            default_transition,
         )
 
     if component == "MediaWindow":
@@ -528,7 +687,7 @@ def build_beat_props(
             },
             "whoosh",
             True,
-            "editorial",
+            default_transition,
         )
 
     if component == "StepCard":
@@ -551,7 +710,7 @@ def build_beat_props(
             },
             "tick",
             False,
-            "editorial",
+            default_transition,
         )
 
     if component == "NodeFlow":
@@ -614,13 +773,18 @@ def build_beat_props(
             },
             "pop",
             True,
-            "editorial",
+            default_transition,
         )
 
     # Varsayılan: HighlighterText (kelime zaman damgalı `highlightAtSecs` + giriş/kapanışta frameless)
     highlights = extract_key_phrases(text)
     highlight_secs = resolve_highlight_timestamps(
-        highlights, beat_start_sec, beat_dur_sec, words, glossary_rules
+        highlights,
+        beat_start_sec,
+        beat_dur_sec,
+        words,
+        glossary_rules,
+        anim_offset_sec=anim_offset_sec,
     )
     use_frameless = index == 0 or index == total_beats - 1
     return (
@@ -633,7 +797,7 @@ def build_beat_props(
         },
         "whoosh" if index == 0 else "pop",
         False,
-        "focusBlur" if use_frameless else "editorial",
+        "focusBlur" if use_frameless else default_transition,
     )
 
 
@@ -641,13 +805,15 @@ def build_timeline_draft(
     transcript: dict[str, Any],
     glossary_rules: list[tuple[re.Pattern[str], str]],
     fps: int = 30,
+    director: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    cfg = director or load_director_config()
     total_duration = round(float(transcript.get("durationSec") or 0.0), 3)
     segments = transcript.get("segments") or []
     source_audio = transcript.get("source") or ""
     audio_name = Path(source_audio).name if source_audio else None
 
-    blocks = build_timed_blocks(segments, total_duration)
+    blocks = build_timed_blocks(segments, total_duration, director=cfg)
 
     beats: list[dict[str, Any]] = []
     prev_component: str | None = None
@@ -670,6 +836,7 @@ def build_timeline_draft(
             beat_dur,
             blk.get("words") or [],
             glossary_rules,
+            director=cfg,
         )
         if comp == "StepCard":
             step_counter += 1
@@ -696,12 +863,13 @@ def build_timeline_draft(
 
     return {
         "meta": {
-            "title": "Otomatik Sahne Taslağı (Draft v3)",
+            "title": "Otomatik Sahne Taslağı (Draft v3.0)",
             "fps": fps,
             "width": 1920,
             "height": 1080,
             "durationSec": total_duration,
         },
+        "theme": cfg["activeTheme"],
         "audio": audio_name,
         "audioVolume": 1,
         "bgMusic": "audio/ambient.mp3",
@@ -758,6 +926,7 @@ def write_split_chapters(
                 "height": draft["meta"]["height"],
                 "durationSec": ch_dur,
             },
+            "theme": draft.get("theme", DEFAULT_DIRECTOR_CONFIG["activeTheme"]),
             "audio": draft["audio"],
             "audioVolume": draft["audioVolume"],
             "bgMusic": draft["bgMusic"],
@@ -780,11 +949,13 @@ def write_script_chapters(
     glossary_rules: list[tuple[re.Pattern[str], str]],
     chapters_dir: Path,
     fps: int = 30,
+    director: dict[str, Any] | None = None,
 ) -> list[Path]:
     """
     `generate_voice.py` tarafından `transcript.json` içine yazılan `chapters` sınırlarına göre
     her `## Bölüm` başlığını kendi bağımsız bölüm JSON dosyasına (audioOffsetSec ile) böler.
     """
+    cfg = director or load_director_config()
     script_chapters = transcript.get("chapters") or []
     if not script_chapters:
         return []
@@ -833,7 +1004,7 @@ def write_script_chapters(
             "durationSec": ch_dur,
             "segments": rel_segments,
         }
-        ch_spec = build_timeline_draft(sub_transcript, glossary_rules, fps=fps)
+        ch_spec = build_timeline_draft(sub_transcript, glossary_rules, fps=fps, director=cfg)
         ch_spec["meta"]["title"] = ch_title
         if ch_start > 0:
             ch_spec["audioOffsetSec"] = ch_start
@@ -855,11 +1026,13 @@ def write_script_chapters(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="transcript.json + glossary.json ile 3–5 sn kuralına uygun timeline_draft.json üretir."
+        description="transcript.json + glossary.json + director.json ile timeline_draft.json üretir."
     )
     parser.add_argument("--input", default=str(DEFAULT_INPUT), help="Girdi transcript.json yolu")
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Çıktı timeline_draft.json yolu")
     parser.add_argument("--glossary", default=str(DEFAULT_GLOSSARY), help="Terim düzeltme sözlüğü JSON yolu")
+    parser.add_argument("--director", default=str(DEFAULT_DIRECTOR), help="Merkezi director.json konfigürasyon yolu")
+    parser.add_argument("--theme", default="", help="İsteğe bağlı tema profili geçersiz kılması (obsidianAmber|crtPhosphor|blueprintCyan|editorialPaper)")
     parser.add_argument("--fps", type=int, default=30, help="Varsayılan FPS (M1 için 30)")
     parser.add_argument(
         "--split-chapters",
@@ -885,14 +1058,19 @@ def main() -> int:
     in_path = Path(args.input).resolve()
     out_path = Path(args.output).resolve()
     glossary_path = Path(args.glossary).resolve()
+    director_path = Path(args.director).resolve()
 
     if not in_path.is_file():
         print(f"[HATA] Transkript dosyası bulunamadı: {in_path}", file=sys.stderr)
         return 1
 
+    director = load_director_config(director_path)
+    if args.theme.strip():
+        director["activeTheme"] = args.theme.strip()
+
     glossary_rules = load_glossary(glossary_path)
     transcript = json.loads(in_path.read_text(encoding="utf-8"))
-    draft = build_timeline_draft(transcript, glossary_rules, fps=args.fps)
+    draft = build_timeline_draft(transcript, glossary_rules, fps=args.fps, director=director)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(
@@ -901,11 +1079,14 @@ def main() -> int:
     )
 
     beats = draft["beats"]
-    over_5 = [b for b in beats if (b["endSec"] - b["startSec"]) > MAX_BEAT_SEC + 1e-6]
-    under_3 = [b for b in beats if (b["endSec"] - b["startSec"]) < MIN_BEAT_SEC - 1e-6]
+    min_sec = float(director["timing"]["minSceneDurationSec"])
+    max_sec = float(director["timing"]["maxSceneDurationSec"])
+    over_max = [b for b in beats if (b["endSec"] - b["startSec"]) > max_sec + 1e-6]
+    under_min = [b for b in beats if (b["endSec"] - b["startSec"]) < min_sec - 1e-6]
+    print(f"[plan] Yönetmen: {director_path.name} (tema={director['activeTheme']}, ritim={min_sec}–{max_sec}sn, geçiş={director['transitions']['defaultType']})")
     print(f"[plan] Sözlük: {len(glossary_rules)} terim kuralı ({glossary_path.name})")
     print(f"[plan] Kaynak: {in_path.name} ({draft['meta']['durationSec']} sn @ {args.fps} fps)")
-    print(f"[plan] Sahne sayısı: {len(beats)} | >5sn ihlali: {len(over_5)} | <3sn: {len(under_3)}")
+    print(f"[plan] Sahne sayısı: {len(beats)} | >{max_sec}sn ihlali: {len(over_max)} | <{min_sec}sn: {len(under_min)}")
     for b in beats:
         dur = b["endSec"] - b["startSec"]
         extra = ""
@@ -919,7 +1100,7 @@ def main() -> int:
 
     chapters_dir = Path(args.chapters_dir).resolve()
     if args.split_by_script and transcript.get("chapters"):
-        files = write_script_chapters(transcript, glossary_rules, chapters_dir, fps=args.fps)
+        files = write_script_chapters(transcript, glossary_rules, chapters_dir, fps=args.fps, director=director)
         print(f"[plan] {len(files)} betik bölümü üretildi -> {args.chapters_dir}")
         for f in files:
             print(f"       - {f.name}")

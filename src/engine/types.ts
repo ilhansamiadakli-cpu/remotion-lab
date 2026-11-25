@@ -6,16 +6,25 @@ import type {
   GlassCardProps,
   HighlighterTextProps,
   MediaWindowProps,
+  MemoryBarSimProps,
   MetricBannerProps,
   NodeFlowProps,
+  RayCastConeSimProps,
+  ReferenceListProps,
   SplitStageProps,
   StepCardProps,
   TerminalTraceProps,
 } from "../components";
+import type { ThemeKey } from "../theme";
 
 export type SfxKey = "whoosh" | "pop" | "tick" | "thud" | "none";
 
-export type SceneTransition = "editorial" | "slideLeft" | "depthZoom" | "focusBlur";
+export type SceneTransition =
+  | "fade-slide"
+  | "editorial"
+  | "slideLeft"
+  | "depthZoom"
+  | "focusBlur";
 
 export interface ComponentPropsMap {
   HighlighterText: HighlighterTextProps;
@@ -28,6 +37,9 @@ export interface ComponentPropsMap {
   MetricBanner: MetricBannerProps;
   SplitStage: SplitStageProps;
   TerminalTrace: TerminalTraceProps;
+  MemoryBarSim: MemoryBarSimProps;
+  RayCastConeSim: RayCastConeSimProps;
+  ReferenceList: ReferenceListProps;
 }
 
 /**
@@ -42,7 +54,7 @@ export type TimelineBeat = {
     component: K;
     background?: BackgroundKey;
     blurBackground?: boolean;
-    /** Sahne geçiş karakteri (varsayılan: "editorial") */
+    /** Sahne geçiş karakteri (varsayılan: `src/config/director.json` -> `transitions.defaultType`) */
     transition?: SceneTransition;
     /** Sol üst minimalist HUD için opsiyonel bölüm etiketi */
     chapterLabel?: string;
@@ -86,6 +98,8 @@ export interface TimelineSpec {
   bgMusicVolume?: number;
   /** Minimalist üst bölüm izi ve 2px alt ilerleme çizgisi gösterilsin mi? (varsayılan: true) */
   showHud?: boolean;
+  /** Seriye özel görsel tema profili (belirtilmezse `src/config/director.json` -> `activeTheme` kullanılır) */
+  theme?: ThemeKey;
   /** Sahne düzeyinde belirtilmezse kullanılacak varsayılan arka plan */
   background: BackgroundKey;
   /** Bölüm birleştirici tarafından opsiyonel olarak üretilen zamanlı ses parçaları */

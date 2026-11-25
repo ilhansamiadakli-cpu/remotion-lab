@@ -1,0 +1,322 @@
+{
+  "meta": {
+    "title": "Bölüm 01 · Donanım Darboğazı ve Z-Buffer İmkânsızlığı",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 60.872
+  },
+  "audio": "doom_goldsrc.wav",
+  "audioVolume": 1,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "ch01-01-modern-tab",
+      "startSec": 0,
+      "endSec": 4.95,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "01 · DONANIM DARBOĞAZI",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "SİSTEM ARKEOLOJİSİ · 1993",
+        "text": "Bugün sıradan bir tarayıcı sekmesi bile yüzlerce megabayt bellek tüketiyor.",
+        "highlights": ["tarayıcı sekmesi", "yüzlerce megabayt"],
+        "highlightAtSecs": [1.43, 2.67]
+      }
+    },
+    {
+      "id": "ch01-02-doom-goldsrc-banner",
+      "startSec": 4.95,
+      "endSec": 9.65,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "01 · DOOM & GOLDSRC",
+      "sfx": "thud",
+      "sfxVolume": 0.22,
+      "props": {
+        "frameless": true,
+        "badge": "1993 DOOM · 1998 HALF-LIFE",
+        "value": "DOOM & GOLDSRC",
+        "label": "SIFIR GPU İLE GERÇEK ZAMANLI 3D",
+        "subtext": "Donanım sınırlarını saf matematik ve bellek disipliniyle aşan iki efsanevi motor."
+      }
+    },
+    {
+      "id": "ch01-03-4mb-33mhz",
+      "startSec": 9.65,
+      "endSec": 14.5,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "01 · 4 MB · 33 MHz",
+      "sfx": "thud",
+      "sfxVolume": 0.22,
+      "props": {
+        "frameless": true,
+        "badge": "INTEL 486DX · TEK ÇEKİRDEK",
+        "value": "4 MB · 33 MHz",
+        "label": "TOPLAM RAM VE İŞLEMCİ HIZI",
+        "subtext": "Tüm oyun motoru, sesler, yapay zekâ ve 3D geometri bu bütçeye sığdı."
+      }
+    },
+    {
+      "id": "ch01-04-hardware-split",
+      "startSec": 14.5,
+      "endSec": 19.35,
+      "component": "SplitStage",
+      "background": "obsidianGrid",
+      "transition": "slideLeft",
+      "chapterLabel": "01 · 486DX MİMARİSİ",
+      "sfx": "tick",
+      "sfxVolume": 0.15,
+      "props": {
+        "eyebrow": "1993 DONANIM PROFİLİ",
+        "title": "Tek Çekirdek Üzerinde 3D Dünya",
+        "subtitle": "Özel bir grafik kartı olmadan tüm sahne yazılım rasterizer ile CPU'da çizildi.",
+        "metric": {
+          "before": "800 MB",
+          "value": "4 MB",
+          "delta": "200x AZ",
+          "label": "TOPLAM SİSTEM BELLEĞİ"
+        },
+        "points": [
+          {
+            "title": "Intel 486DX @ 33 MHz",
+            "detail": "Çoklu iş parçacığı ve donanımsal T&L olmadan tek çekirdek.",
+            "tag": "CPU",
+            "highlighted": true
+          }
+        ],
+        "visual": {
+          "type": "code",
+          "language": "bash",
+          "title": "1993-hardware-spec.env",
+          "code": "CPU=Intel 486DX @ 33 MHz (1 Core)\nRAM=4,096 KB (4 MB Total)\nGPU=NONE (CPU Software Rasterizer)\nVRAM=256 KB VGA Mode 13h\nFRAME_BUDGET=16.6 ms (60 FPS)",
+          "highlightLines": [1, 2, 3]
+        }
+      }
+    },
+    {
+      "id": "ch01-05-no-gpu-vram",
+      "startSec": 19.35,
+      "endSec": 24.3,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "01 · GPU & VRAM YOK",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "subtitle": "SIFIR DONANIM HIZLANDIRMA",
+        "title": "GPU ve Megabaytlarca VRAM Yoktu",
+        "badge": "SOFTWARE 3D",
+        "items": [
+          {
+            "label": "Grafik İşlemci (GPU)",
+            "value": "Yok — her sütun ve piksel doğrudan CPU ile hesaplanır",
+            "tag": "CPU ONLY",
+            "highlighted": true
+          },
+          {
+            "label": "Video Belleği (VRAM)",
+            "value": "Yalnızca 256 KB VGA tamponu; 3D hızlandırıcı bellek yok",
+            "tag": "256 KB"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch01-06-frame-budget-text",
+      "startSec": 24.3,
+      "endSec": 28.45,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "01 · KARE BÜTÇESİ",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "GERÇEK ZAMANLI KISIT",
+        "text": "Akıcı bir oyun için elinizdeki tüm kare bütçesi sadece 16.6 milisaniyeydi.",
+        "highlights": ["tüm kare bütçesi", "16.6 milisaniyeydi"],
+        "highlightAtSecs": [3.58, 3.85]
+      }
+    },
+    {
+      "id": "ch01-07-16ms-banner",
+      "startSec": 28.45,
+      "endSec": 32.85,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "01 · 16.6 MS",
+      "sfx": "thud",
+      "sfxVolume": 0.22,
+      "props": {
+        "frameless": true,
+        "badge": "60 FPS SÜRE SINIRI",
+        "value": "16.6 ms",
+        "label": "HER KARE İÇİN MAKSİMUM BÜTÇE",
+        "subtext": "Giriş, fizik, yapay zekâ ve tüm 3D çizim bu dar zaman penceresine sığmak zorundaydı."
+      }
+    },
+    {
+      "id": "ch01-08-zbuffer-impossible",
+      "startSec": 32.85,
+      "endSec": 37.75,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "01 · Z-BUFFER İMKÂNSIZ",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "DERİNLİK TAMPONU ÇIKMAZI",
+        "text": "Modern motorların vazgeçilmezi olan Z-Buffer tekniği bu donanımda tamamen imkânsızdı.",
+        "highlights": ["Z-Buffer tekniği", "tamamen imkânsızdı"],
+        "highlightAtSecs": [2.65, 4.23]
+      }
+    },
+    {
+      "id": "ch01-09-zbuffer-code",
+      "startSec": 37.75,
+      "endSec": 42.65,
+      "component": "CodeWindow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "chapterLabel": "01 · Z-BUFFER MALİYETİ",
+      "sfx": "tick",
+      "sfxVolume": 0.15,
+      "props": {
+        "language": "java",
+        "title": "zbuffer_bottleneck.c",
+        "code": "// 486DX uzerinde her piksel icin Z-Buffer darbogazi\nfor (int p = 0; p < WIDTH * HEIGHT; p++) {\n  if (pixel_depth < zbuffer[p]) {   // RAM oku + karsilastir\n    zbuffer[p] = pixel_depth;       // 32-bit derinlik yaz\n    framebuffer[p] = shade_texel(); // Ayni piksel 5x cizilir!\n  }\n}",
+        "diffLines": {
+          "remove": [3, 4, 5]
+        },
+        "caption": "Piksel başına ekstra derinlik okuması ve üst üste çizim bellek veri yolunu boğar."
+      }
+    },
+    {
+      "id": "ch01-10-zbuffer-comparison",
+      "startSec": 42.65,
+      "endSec": 47.45,
+      "component": "ComparisonCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "01 · MİMARİ KARŞILAŞTIRMA",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "RENDER STRATEJİSİ",
+        "title": "Klasik Z-Buffer vs. Ön-Hesaplı Motor",
+        "leftTitle": "Klasik Z-Buffer",
+        "leftBadge": "DARBOĞAZ",
+        "leftItems": [
+          "Her pikselde RAM derinlik okuma-yazma",
+          "Gizli duvarlar boşuna rasterize edilir (overdraw)",
+          "33 MHz CPU bellek bant genişliğinde tıkanır"
+        ],
+        "rightTitle": "Carmack Ön-Hesaplama",
+        "rightBadge": "SIFIR OVERDRAW",
+        "rightItems": [
+          "Geometri harita derleme anında sıralanır",
+          "Yalnızca kameranın gördüğü piksel çizilir",
+          "Derinlik tamponu olmadan kararlı kare süresi"
+        ]
+      }
+    },
+    {
+      "id": "ch01-11-overdraw-lock",
+      "startSec": 47.45,
+      "endSec": 51.6,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "01 · OVERDRAW RİSKİ",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "subtitle": "GİZLİ YÜZEY İSRAFI",
+        "title": "Görünmeyen Yüzeyler CPU'yu Kilitler",
+        "badge": "OVERDRAW",
+        "items": [
+          {
+            "label": "Sorun",
+            "value": "Öndeki duvarın arkasındaki tüm yüzeyler boşuna hesaplanır",
+            "tag": "İSRAF",
+            "highlighted": true
+          },
+          {
+            "label": "Etki",
+            "value": "Tek çekirdekli 33 MHz işlemci 16.6 ms sınırını anında aşar",
+            "tag": "KİLİT"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch01-12-carmack-rule",
+      "startSec": 51.6,
+      "endSec": 56.1,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "01 · CARMACK KURALI",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "PARADİGMA DEĞİŞİMİ",
+        "text": "John Carmack bu darboğazı aşmak için kuralı kökten değiştirdi.",
+        "highlights": ["John Carmack", "kuralı kökten değiştirdi"],
+        "highlightAtSecs": [0.11, 2.4]
+      }
+    },
+    {
+      "id": "ch01-13-offline-shift",
+      "startSec": 56.1,
+      "endSec": 60.872,
+      "component": "NodeFlow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "chapterLabel": "01 · OFFLINE DERLEME",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "MALİYET TRANSFERİ",
+        "title": "Pahalı Hesabı Çalışma Anından Derlemeye Taşı",
+        "nodes": [
+          {
+            "badge": "01 · OFFLINE",
+            "label": "Harita Derleyici",
+            "sublabel": "BSP · PVS · Radiosity"
+          },
+          {
+            "badge": "02 · STATİK",
+            "label": "Derlenmiş .BSP",
+            "sublabel": "Hazır ağaç + bit matrisi"
+          },
+          {
+            "badge": "03 · 16.6 MS",
+            "label": "Oyun Motoru",
+            "sublabel": "Sadece hızlı okuma ve çizim",
+            "highlighted": true
+          }
+        ],
+        "edgeLabels": ["Bir kez hesapla", "Saniyede 60 kez oku"],
+        "caption": "Çalışma anında ağır matematik yerine önceden derlenmiş veri yapıları gezilir."
+      }
+    }
+  ]
+}

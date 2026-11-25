@@ -3,14 +3,17 @@ import { ComparisonCard } from "./ComparisonCard";
 import { GlassCard } from "./GlassCard";
 import { HighlighterText } from "./HighlighterText";
 import { MediaWindow } from "./MediaWindow";
+import { MemoryBarSim } from "./MemoryBarSim";
 import { MetricBanner } from "./MetricBanner";
 import { NodeFlow } from "./NodeFlow";
+import { RayCastConeSim } from "./RayCastConeSim";
+import { ReferenceList } from "./ReferenceList";
 import { SplitStage } from "./SplitStage";
 import { StepCard } from "./StepCard";
 import { TerminalTrace } from "./TerminalTrace";
 
 /**
- * Kilitli Bileşen Havuzu Kayıt Defteri (v2.3 — 10 Modüler Bileşen)
+ * Kilitli Bileşen Havuzu Kayıt Defteri (v3.0 — 13 Modüler Bileşen)
  * `src/data/timeline.json` veya `src/data/chapters/*.json` içindeki her beat'in
  * `component` alanı bu havuzdan otomatik çözülür.
  */
@@ -25,6 +28,9 @@ export const COMPONENTS = {
   MetricBanner,
   SplitStage,
   TerminalTrace,
+  MemoryBarSim,
+  RayCastConeSim,
+  ReferenceList,
 } as const;
 
 export type ComponentType = keyof typeof COMPONENTS;
@@ -48,10 +54,16 @@ export { HighlighterText } from "./HighlighterText";
 export type { HighlighterTextProps } from "./HighlighterText";
 export { MediaWindow } from "./MediaWindow";
 export type { MediaWindowProps } from "./MediaWindow";
+export { MemoryBarSim } from "./MemoryBarSim";
+export type { MemoryBarSimProps, MemoryBlockSpec } from "./MemoryBarSim";
 export { MetricBanner } from "./MetricBanner";
 export type { MetricBannerProps } from "./MetricBanner";
 export { NodeFlow } from "./NodeFlow";
 export type { FlowNode, NodeFlowProps } from "./NodeFlow";
+export { RayCastConeSim } from "./RayCastConeSim";
+export type { RayCastConeSimProps } from "./RayCastConeSim";
+export { ReferenceList } from "./ReferenceList";
+export type { ReferenceItem, ReferenceListProps } from "./ReferenceList";
 export { SplitStage } from "./SplitStage";
 export type {
   SplitMetric,

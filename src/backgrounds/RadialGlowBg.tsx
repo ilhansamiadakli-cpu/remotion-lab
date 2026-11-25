@@ -1,5 +1,6 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
+import { COLORS, useActiveTheme } from "../theme";
 import type { BackgroundProps } from "./ObsidianGridBg";
 
 /**
@@ -15,6 +16,7 @@ export const RadialGlowBg: React.FC<BackgroundProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const theme = useActiveTheme();
   const t = frame / fps;
 
   if (layerOpacity <= 0.001) {
@@ -44,7 +46,7 @@ export const RadialGlowBg: React.FC<BackgroundProps> = ({
           transform: blurPx > 0.01 ? "scale(1.035)" : "scale(1)",
         }}
       >
-        {/* Ana merkez sıcak kehribar odak ışığı */}
+        {/* Ana merkez temaya uyumlu odak ışığı */}
         <div
           style={{
             position: "absolute",
@@ -53,13 +55,12 @@ export const RadialGlowBg: React.FC<BackgroundProps> = ({
             width: 1180,
             height: 700,
             transform: `translate(calc(-50% + ${primaryOffsetX}px), calc(-50% + ${primaryOffsetY}px)) scale(${primaryScale})`,
-            background:
-              "radial-gradient(ellipse at center, rgba(245, 158, 11, 0.11) 0%, rgba(245, 158, 11, 0.03) 42%, transparent 72%)",
+            background: `radial-gradient(ellipse at center, rgba(${theme.colors.accentRgb}, ${theme.isLight ? 0.09 : 0.11}) 0%, rgba(${theme.colors.accentRgb}, 0.03) 42%, transparent 72%)`,
             pointerEvents: "none",
           }}
         />
 
-        {/* İkincil monokrom gümüş derinlik halesi */}
+        {/* İkincil derinlik halesi */}
         <div
           style={{
             position: "absolute",
@@ -68,8 +69,7 @@ export const RadialGlowBg: React.FC<BackgroundProps> = ({
             width: 880,
             height: 500,
             transform: `translate(calc(-50% - ${secondaryOffsetX}px), calc(-50% + ${secondaryOffsetY}px))`,
-            background:
-              "radial-gradient(ellipse at center, rgba(230, 237, 243, 0.045) 0%, transparent 66%)",
+            background: `radial-gradient(ellipse at center, ${COLORS.ambientSecondary} 0%, transparent 66%)`,
             pointerEvents: "none",
           }}
         />
@@ -79,8 +79,7 @@ export const RadialGlowBg: React.FC<BackgroundProps> = ({
           style={{
             position: "absolute",
             inset: 0,
-            background:
-              "radial-gradient(ellipse 80% 80% at 50% 50%, transparent 45%, rgba(0, 0, 0, 0.62) 100%)",
+            background: `radial-gradient(ellipse 80% 80% at 50% 50%, transparent 45%, ${COLORS.vignetteColor} 100%)`,
             pointerEvents: "none",
           }}
         />

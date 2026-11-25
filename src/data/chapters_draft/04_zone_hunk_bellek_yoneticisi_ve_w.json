@@ -1,0 +1,451 @@
+{
+  "meta": {
+    "title": "Bölüm 4: Zone, Hunk Bellek Yöneticisi ve WebAssembly Mirası",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 57.944
+  },
+  "audio": "doom_goldsrc.wav",
+  "audioVolume": 1,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "ch04-01-splitstage",
+      "startSec": 0.0,
+      "endSec": 3.04,
+      "component": "SplitStage",
+      "background": "obsidianGrid",
+      "transition": "depthZoom",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "ANALİZ · SAHNE 01",
+        "title": "Teknik Etki ve Ölçüm",
+        "subtitle": "Ancak hız yalnızca grafikle bitmez;",
+        "metric": {
+          "before": "420 ms",
+          "value": "8 ms",
+          "delta": "-98%",
+          "label": "PERFORMANS KAZANIMI"
+        },
+        "points": [
+          {
+            "title": "Ölçülebilir İyileşme",
+            "detail": "Ancak hız yalnızca grafikle bitmez;",
+            "tag": "BENCHMARK",
+            "highlighted": true
+          }
+        ],
+        "visual": {
+          "type": "code",
+          "language": "sql",
+          "title": "explain.sql",
+          "code": "EXPLAIN ANALYZE\nSELECT 1 FROM tablo\nWHERE kosul = 1\nLIMIT 1;",
+          "highlightLines": [
+            2,
+            3
+          ]
+        }
+      },
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-02-highlightertext",
+      "startSec": 3.04,
+      "endSec": 6.05,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 02",
+        "text": "asıl sessiz katil bellek parçalanmasıdır.",
+        "highlights": [
+          "katil bellek"
+        ],
+        "highlightAtSecs": [
+          0.75
+        ]
+      },
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-03-glasscard",
+      "startSec": 6.05,
+      "endSec": 10.45,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 03",
+        "title": "4 MB RAM içinde",
+        "badge": "SAHNE 03",
+        "body": "4 MB RAM içinde her nesne için standart C malloc ve free",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-04-highlightertext",
+      "startSec": 10.45,
+      "endSec": 14.57,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 04",
+        "text": "çağrıları yaparsanız, bellek delik deşik olur ve kare süreleri aniden sıçrar.",
+        "highlights": [
+          "olur"
+        ],
+        "highlightAtSecs": [
+          2.49
+        ]
+      },
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-05-glasscard",
+      "startSec": 14.57,
+      "endSec": 18.73,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 05",
+        "title": "Doom bunu kendi Zone",
+        "badge": "SAHNE 05",
+        "body": "Doom bunu kendi Zone bellek yöneticisi Z_Malloc",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-06-highlightertext",
+      "startSec": 18.73,
+      "endSec": 22.3,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 06",
+        "text": "ile, Quake ve GoldSrc ise doğrusal Hunk arena mimarisiyle çözdü.",
+        "highlights": [
+          "Hunk arena"
+        ],
+        "highlightAtSecs": [
+          2.08
+        ]
+      },
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-07-glasscard",
+      "startSec": 22.3,
+      "endSec": 25.34,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 07",
+        "title": "Motor açılışta tüm",
+        "badge": "SAHNE 07",
+        "body": "Motor açılışta tüm",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-08-highlightertext",
+      "startSec": 25.34,
+      "endSec": 28.16,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 08",
+        "text": "boş RAM 'i tek bir blok halinde ayırır.",
+        "highlights": [
+          "halinde ayırır"
+        ],
+        "highlightAtSecs": [
+          0.51
+        ]
+      },
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-09-glasscard",
+      "startSec": 28.16,
+      "endSec": 31.3,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 09",
+        "title": "Harita yüklenirken veriler sadece",
+        "badge": "SAHNE 09",
+        "body": "Harita yüklenirken veriler sadece tek",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-10-highlightertext",
+      "startSec": 31.3,
+      "endSec": 34.46,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 10",
+        "text": "bir pointer ileri kaydırılarak peş peşe yazılır.",
+        "highlights": [
+          "kaydırılarak peş"
+        ],
+        "highlightAtSecs": [
+          0.91
+        ]
+      },
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-11-glasscard",
+      "startSec": 34.46,
+      "endSec": 37.06,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 11",
+        "title": "Bölüm bittiğinde binlerce ayrı",
+        "badge": "SAHNE 11",
+        "body": "Bölüm bittiğinde binlerce ayrı",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-12-comparisoncard",
+      "startSec": 37.06,
+      "endSec": 40.1,
+      "component": "ComparisonCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "KARŞILAŞTIRMA · SAHNE 12",
+        "title": "Yanlış Yaklaşım vs Doğru Yöntem",
+        "leftTitle": "Eski / Hatalı Yaklaşım",
+        "leftBadge": "HATALI",
+        "leftItems": [
+          "Kontrolsüz ve tutarsız uygulama",
+          "Beklenmeyen kalite kaybı"
+        ],
+        "rightTitle": "Önerilen Doğru Yaklaşım",
+        "rightBadge": "DOĞRU",
+        "rightItems": [
+          "free çağrısı yapmak yerine, tek bir pointer",
+          "Ölçülebilir ve tekrarlanabilir sonuç"
+        ]
+      },
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-13-stepcard",
+      "startSec": 40.1,
+      "endSec": 43.9,
+      "component": "StepCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "tick",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "UYGULAMA ADIMLARI",
+        "title": "Adım Adım Akış",
+        "activeStepIndex": 0,
+        "steps": [
+          {
+            "title": "1. başlangıç adresine sıfırlanır ve tüm bellek mikrosaniy",
+            "detail": "başlangıç adresine sıfırlanır ve tüm bellek mikrosaniyeler içinde tertemiz olur."
+          },
+          {
+            "title": "2. Kontrollü ilerleme",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          },
+          {
+            "title": "3. Temiz kapanış",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          }
+        ]
+      },
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-14-highlightertext",
+      "startSec": 43.9,
+      "endSec": 48.52,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 14",
+        "text": "İşletim sistemine bağımlı olmayan bu deterministik saf",
+        "highlights": [
+          "bağımlı olmayan"
+        ],
+        "highlightAtSecs": [
+          2.19
+        ]
+      },
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-15-glasscard",
+      "startSec": 48.52,
+      "endSec": 52.1,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 15",
+        "title": "C mimarisi o kadar",
+        "badge": "SAHNE 15",
+        "body": "C mimarisi o kadar sağlamdı ki, bugün Xash3D motoruyla",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-16-highlightertext",
+      "startSec": 52.1,
+      "endSec": 55.14,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 16",
+        "text": "WebAssembly 'e derlenip doğrudan tarayıcıda bile",
+        "highlights": [
+          "doğrudan tarayıcıda"
+        ],
+        "highlightAtSecs": [
+          1.82
+        ]
+      },
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    },
+    {
+      "id": "ch04-17-glasscard",
+      "startSec": 55.14,
+      "endSec": 57.944,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 17",
+        "title": "akıcı şekilde çalışabiliyor",
+        "badge": "SAHNE 17",
+        "body": "akıcı şekilde çalışabiliyor.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "04 · BÖLÜM 4: ZONE, HUNK BELLEK Y"
+    }
+  ],
+  "audioOffsetSec": 173.464
+}

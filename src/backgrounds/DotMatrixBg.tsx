@@ -1,6 +1,6 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
-import { COLORS } from "../theme";
+import { COLORS, useActiveTheme } from "../theme";
 import type { BackgroundProps } from "./ObsidianGridBg";
 
 /**
@@ -16,6 +16,7 @@ export const DotMatrixBg: React.FC<BackgroundProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const theme = useActiveTheme();
   const t = frame / fps;
 
   const shiftX = t * 10 + Math.sin(t * 0.34) * 4 + parallaxX;
@@ -46,8 +47,7 @@ export const DotMatrixBg: React.FC<BackgroundProps> = ({
           style={{
             position: "absolute",
             inset: -120,
-            backgroundImage:
-              "radial-gradient(rgba(230, 237, 243, 0.11) 1.3px, transparent 1.3px)",
+            backgroundImage: `radial-gradient(${COLORS.dotColor} 1.3px, transparent 1.3px)`,
             backgroundSize: "38px 38px",
             backgroundPosition: `${shiftX}px ${shiftY}px`,
             maskImage:
@@ -57,7 +57,7 @@ export const DotMatrixBg: React.FC<BackgroundProps> = ({
           }}
         />
 
-        {/* Çok yumuşak sıcak kehribar derinlik ışığı */}
+        {/* Temaya uyumlu yumuşak derinlik ışığı */}
         <div
           style={{
             position: "absolute",
@@ -66,7 +66,7 @@ export const DotMatrixBg: React.FC<BackgroundProps> = ({
             width: 1100,
             height: 600,
             transform: "translate(-50%, -50%)",
-            background: `radial-gradient(ellipse at center, rgba(245, 158, 11, ${ambientOpacity}) 0%, transparent 64%)`,
+            background: `radial-gradient(ellipse at center, rgba(${theme.colors.accentRgb}, ${ambientOpacity}) 0%, transparent 64%)`,
             pointerEvents: "none",
           }}
         />
@@ -76,7 +76,7 @@ export const DotMatrixBg: React.FC<BackgroundProps> = ({
             position: "absolute",
             inset: 0,
             background: `radial-gradient(ellipse 84% 84% at 50% 50%, transparent 50%, ${COLORS.canvasDeep} 100%)`,
-            opacity: 0.65,
+            opacity: theme.isLight ? 0.35 : 0.65,
           }}
         />
       </AbsoluteFill>

@@ -143,6 +143,8 @@ export function mergeChapters(chapters: ChapterEntry[]): TimelineSpec | null {
     offsetSec = Number(chapterAbsoluteEnd.toFixed(3));
   }
 
+  const sharedTheme = chapters.find((c) => c.timeline.theme)?.timeline.theme;
+
   return {
     meta: {
       title:
@@ -159,6 +161,8 @@ export function mergeChapters(chapters: ChapterEntry[]): TimelineSpec | null {
     audioSegments: audioSegments.length > 0 ? audioSegments : undefined,
     bgMusic: sharedBgMusic ?? null,
     bgMusicVolume: sharedBgMusicVolume ?? 0.06,
+    showHud: first.showHud,
+    theme: sharedTheme,
     background: first.background ?? "obsidianGrid",
     beats: mergedBeats,
   };

@@ -3,6 +3,7 @@ import {
   AbsoluteFill,
   Easing,
   Img,
+  Loop,
   OffthreadVideo,
   interpolate,
   spring,
@@ -26,8 +27,16 @@ export interface MediaWindowProps {
   zoomPan?: boolean;
   /** Video oynatma hızı (yalnızca .mp4/.webm/.mov) */
   playbackRate?: number;
-  /** Video sessiz mi oynasın? (varsayılan true) */
+  /** Video sessiz mi oynasın? (varsayılan true — B-Roll için önerilir) */
   muted?: boolean;
+  /** B-Roll video klibini sahne boyunca pürüzsüz döngüye al (varsayılan true) */
+  loop?: boolean;
+  /** Döngüye alınacak kaynak video uzunluğu (saniye; verilmezse sahne süresi kullanılır) */
+  loopDurationSec?: number;
+  /** Videonun başlangıç kesim noktası (saniye) */
+  startFromSec?: number;
+  /** Medya sığdırma modu (`"cover"` varsayılan, diyagramlar için `"contain"`) */
+  objectFit?: "cover" | "contain";
   /** `SplitStage` gibi üst bileşenlerin içine gömüldüğünde `<AbsoluteFill>` sarmalayıcısını kaldırır */
   embedded?: boolean;
   /** Medya görünüm alanı yüksekliği (px, varsayılan tam ekran 700, gömülü 580) */
@@ -61,6 +70,10 @@ export const MediaWindow: React.FC<MediaWindowProps> = ({
   zoomPan = false,
   playbackRate = 1,
   muted = true,
+  loop = true,
+  loopDurationSec,
+  startFromSec = 0,
+  objectFit = "cover",
   embedded = false,
   mediaHeight,
   beatDurationInFrames = 120,
@@ -195,23 +208,40 @@ export const MediaWindow: React.FC<MediaWindowProps> = ({
           }}
         >
           {isVideo ? (
-            <OffthreadVideo
-              src={mediaUrl}
-              muted={muted}
-              playbackRate={playbackRate}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            />
+            (() => {
+              const trimBeforeFrames = startFromSec > 0 ? secToFrames(startFromSec, fps) : undefined;
+              const videoEl = (
+                <OffthreadVideo
+                  src={mediaUrl}
+                  muted={muted}
+                  playbackRate={playbackRate}
+                  trimBefore={trimBeforeFrames}
+                  pauseWhenBuffering
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit,
+                  }}
+                />
+              );
+              if (!loop) {
+                return videoEl;
+              }
+              const loopFrames = Math.max(
+                1,
+                loopDurationSec
+                  ? secToFrames(loopDurationSec, fps)
+                  : beatDurationInFrames
+              );
+              return <Loop durationInFrames={loopFrames}>{videoEl}</Loop>;
+            })()
           ) : (
             <Img
               src={mediaUrl}
               style={{
                 width: "100%",
                 height: "100%",
-                objectFit: "cover",
+                objectFit,
               }}
             />
           )}

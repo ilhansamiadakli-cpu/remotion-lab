@@ -1,3160 +1,2950 @@
 {
-  "source": "public/audio/kayit.wav",
+  "source": "public/audio/doom_goldsrc.wav",
+  "generator": "edge-tts (tr-TR-AhmetNeural)",
+  "title": "Sistem Arkeolojisi: Doom ve Half-Life (GoldSrc) Nasıl 4 MB RAM ve 33 MHz CPU İle 3D Dünya Çizdi?",
   "language": "tr",
-  "durationSec": 247.386,
-  "fullText": "Bölüm 1. Giriş ve temel problem Bir otel rezervasyon sistemi, dışarıdan bakıldığında basit bir kayıt ekranı gibi görünür. Müşteri gelir, tarih seçer, odayı tutar. Ama işin mutfağına indiğinizde asıl mesele ekran tasarımı değil, veri tutarlılığıdır. Aynı odanın, aynı tarihlerde iki farklı kişiye satılmasını nasıl engellersiniz? Ya da bir rezervasyon iddial edildiğinde, ödeme, oda durumu ve fiyat geçmişi birbirine karışmadan nasıl güncellenir? Bu projede tam olarak bu problemlere odaklandım. MySQL 8.0 ve Spring Boot kullanarak, 13 tablodan oluşan tamamen üçüncü normal form kurallarına uygun bir otel rezervasyon ve konatlama yönetim sistemi tasarladım. Bölüm 2, 13, tablolu 3-MF, Mimari Çoğu başlangıç projesinde yapılan en büyük hata, tüm bilgileri tek bir devasa rezervasyon tablosuna yığmaktır. Müşteri adı, oda tipi, fiyat, ödeme bilgisi hepsi yan yana durur. Kısa vadede kolay görünür ama bir oda fiyatını güncellediğinizde eski faturalar bozulur, veri tekrar başlar. Biz bu sistemi en baştan 3-MF disiplini ile 13 ayrı tabloya böldük. Müşteriler, odalar, oda tipleri, rezervasyonlar, ödemeler ve ekstra hizmetler birbirinden med sınırlarla ayrıldı. Her tablonun tek bir sorumluluğu var. Yabancı anahtarlar, yani foreign cake ısıtlamaları sayesinde, sistemde olmayan bir odaya rezervasyon düşmesi ya da karşılığı olmayan bir ödeme kaydı oluşması, daha veri tabanı seviyesinde engelleniyor. Bölüm 3-Eş zamanlılık Transaction ve Çakışma yönetimi Peki sistemin gerçek sınavı ne zaman başlar? Aynı saniyede iki farklı kullanıcı, son kalan 204 numaralı odayı ayırtmaya çalıştığında. Eğer bu kontrolü sadece uygulama tarafında basit bir ifbule oyla yaparsanız, iki istek aynı anda geçer ve çifte rezervasyon hatası oluşur. Bunu çözmek için Spring Boot tarafında Ad Transactional yapısını ve MySQL in-o-ndb satır kilitleme mekanizmasını devreye aldık. Bir rezervasyon isteği geldiğinde, önce tarih çakışması veri tabanı seviyesinde kilitlenerek kontrol ediliyor. İlk gelen istek, 201 created yanıtıyla işlemi güvenle tamamlarken milisanyeler sonra gelen ikinci istek, doğrudan 409 konflik hatasıyla geri çevriliyor. Ya tüm adımlar eksiksiz tamamlanıyor ya da en ufak bir hatada sistem kendini tamamen geri sarıyor. Bölüm 4 Triggers Stored Procedure ve Performance İş mantığının sadece Java kodunda yaşamaması, veri tabanının da kendi bütünlüğünü koruması gerekiyor. Bu yüzden kritik noktalarda Trigger ve Stored Procedure yapıları kurduk. Örneğin müsait odaları listelerken uygulama tarafına binlerce gereksiz satır çekmek yerine, doğrudan MySQL içinde çalışan saklı yordamlarla sadece tarih aralığına uyan boş odaları filtreliyoruz. Ayrıca rezervasyon durumu değiştiğinde oda durumunu veya log kayıtlarını otomatik güncelleyen tetikleyiciler sayesinde insan hatasına veya unutulan bir sorguya yer kalmıyor. Doğru kolonlara eklenen indekslerle birlikte normalde yüzlerce milisaniye süren sorbular tekhaneli milisaniyelere iniyor. Özetle bu proje sadece veri ekleyen ve silen standard bir CREUD uygulaması değil. 13 tablolu temiz şeması, 3 NF kuralları, işlem bütünlüğü ve çakışma korumasıyla gerçek bir konaklama sisteminin çekirdeğini modelleyen bir mimari. Tüm SQL şemasına, eR diagramına ve kaynak kodlara git hap reposu üzerinden ulaşabilirsiniz. İzlediğiniz için teşekkürler.",
+  "durationSec": 231.408,
+  "fullText": "Bugün sıradan bir tarayıcı sekmesi bile yüzlerce megabayt bellek tüketiyor. Oysa 1993 yılında Doom ve birkaç yıl sonra Half-Life motoru GoldSrc, yalnızca 4 MB RAM ve 33 MHz hızında tek çekirdekli bir 486DX CPU üzerinde gerçek zamanlı 3D dünyalar çiziyordu. Üstelik ortada donanımsal bir GPU ve megabaytlarca VRAM yoktu. Akıcı bir oyun için elinizdeki tüm kare bütçesi sadece 16.6 milisaniyeydi. Modern motorların vazgeçilmezi olan Z-Buffer tekniği bu donanımda tamamen imkânsızdı. Çünkü her piksel için derinlik karşılaştırması yapmak, hem kısıtlı bellek bant genişliğini boğuyor hem de duvarların arkasında kalan görünmez yüzeyleri boşuna hesaplayarak CPU'yu kilitliyordu. John Carmack bu darboğazı aşmak için kuralı kökten değiştirdi: pahalı hesapları çalışma anından çıkarıp harita derleme anına taşıdı. Bu devrimin ilk sütunu BSP, yani Binary Space Partitioning ağaçlarıydı. Harita henüz oyuncunun bilgisayarına ulaşmadan, offline derleme aşamasında tüm duvarlar ve yüzeyler düzlemlerle özyinelemeli olarak ikiye bölünür. Ortaya haritanın tüm geometrisini dışbükey odacıklara ayıran statik bir ikili ağaç çıkar. Oyun çalışırken motor her karede binlerce poligonu sıralamak zorunda kalmaz. Kamera koordinatı kök düğümdeki düzleme karşı tek bir işaret testiyle kontrol edilir. Kamera düzlemin önündeyse önce ön dal, ardından arka dal gezilir. Böylece tüm sahne önden arkaya kesin bir derinlik sırasıyla taranır. Ekranda bir piksel dolduğu anda arkasındaki hiçbir duvar bir daha çizilmez; Z-Buffer olmadan mükemmel gizleme ve sıfır overdraw sağlanır. Quake ve Half-Life'ın kullandığı GoldSrc motoruyla tam 3D koridorlara geçildiğinde BSP tek başına yeterli değildi. Çünkü kamera bir odadayken duvarın arkasındaki elli odanın düğümlerini dolaşmak hâlâ CPU zamanını harcıyordu. Çözüm PVS, yani Potentially Visible Set oldu. Derleyici haritadaki her oda çifti arasında ışık geçiren bir görüş hattı olup olmadığını önceden hesaplar ve sonucu sıkıştırılmış bir bit matrisine gömer. Oyuncu bir odaya girdiğinde motor sadece tek bir bit vektörünü açar; sıfır olan tüm görünmez odalar tek hamlede elenir. Aynı felsefe aydınlatmada da uygulandı. Gerçek zamanlı gölge hesaplamak yerine Radiosity algoritmasıyla yumuşak ışıklar önceden Lightmap dokularına pişirildi. Çalışma anında CPU sadece hazır ışığı yüzey dokusuyla çarparak sinematik atmosferi bedavaya getirdi. Ancak hız yalnızca grafikle bitmez; asıl sessiz katil bellek parçalanmasıdır. 4 MB RAM içinde her nesne için standart C malloc ve free çağrıları yaparsanız, bellek delik deşik olur ve kare süreleri aniden sıçrar. Doom bunu kendi Zone bellek yöneticisi Z_Malloc ile, Quake ve GoldSrc ise doğrusal Hunk arena mimarisiyle çözdü. Motor açılışta tüm boş RAM'i tek bir blok halinde ayırır. Harita yüklenirken veriler sadece tek bir pointer ileri kaydırılarak peş peşe yazılır. Bölüm bittiğinde binlerce ayrı free çağrısı yapmak yerine, tek bir pointer başlangıç adresine sıfırlanır ve tüm bellek mikrosaniyeler içinde tertemiz olur. İşletim sistemine bağımlı olmayan bu deterministik saf C mimarisi o kadar sağlamdı ki, bugün Xash3D motoruyla WebAssembly'e derlenip doğrudan tarayıcıda bile akıcı şekilde çalışabiliyor.",
+  "chapters": [
+    {
+      "index": 1,
+      "title": "Bölüm 1: Donanım Darboğazı ve Z-Buffer İmkânsızlığı",
+      "slug": "donanim_darbogazi_ve_z_buffer_im",
+      "startSec": 0.0,
+      "endSec": 60.872,
+      "speechDurationSec": 60.672,
+      "wordBoundaryCount": 128
+    },
+    {
+      "index": 2,
+      "title": "Bölüm 2: BSP Ağaçları ve Derleme Anında Düzlem Bölünmesi",
+      "slug": "bsp_agaclari_ve_derleme_aninda_d",
+      "startSec": 60.872,
+      "endSec": 115.536,
+      "speechDurationSec": 54.264,
+      "wordBoundaryCount": 103
+    },
+    {
+      "index": 3,
+      "title": "Bölüm 3: PVS Görünürlük Matrisi ve Lightmap Pişirme",
+      "slug": "pvs_gorunurluk_matrisi_ve_lightm",
+      "startSec": 115.536,
+      "endSec": 173.464,
+      "speechDurationSec": 57.528,
+      "wordBoundaryCount": 119
+    },
+    {
+      "index": 4,
+      "title": "Bölüm 4: Zone, Hunk Bellek Yöneticisi ve WebAssembly Mirası",
+      "slug": "zone_hunk_bellek_yoneticisi_ve_w",
+      "startSec": 173.464,
+      "endSec": 231.408,
+      "speechDurationSec": 57.744,
+      "wordBoundaryCount": 122
+    }
+  ],
   "segments": [
     {
       "id": 0,
-      "startSec": 0.0,
-      "endSec": 2.88,
-      "text": "Bölüm 1. Giriş ve temel problem",
+      "startSec": 0.1,
+      "endSec": 4.7,
+      "text": "Bugün sıradan bir tarayıcı sekmesi bile yüzlerce megabayt bellek tüketiyor.",
       "words": [
         {
-          "word": "Bölüm",
-          "startSec": 0.0,
-          "endSec": 0.36,
-          "probability": 0.6734
+          "word": "Bugün",
+          "startSec": 0.1,
+          "endSec": 0.762,
+          "probability": 1.0
         },
         {
-          "word": "1.",
-          "startSec": 0.36,
-          "endSec": 0.56,
-          "probability": 0.699
+          "word": "sıradan",
+          "startSec": 0.762,
+          "endSec": 1.237,
+          "probability": 1.0
         },
         {
-          "word": "Giriş",
-          "startSec": 1.24,
-          "endSec": 1.68,
-          "probability": 0.7746
+          "word": "bir",
+          "startSec": 1.25,
+          "endSec": 1.413,
+          "probability": 1.0
         },
         {
-          "word": "ve",
-          "startSec": 1.68,
-          "endSec": 1.94,
-          "probability": 0.9668
+          "word": "tarayıcı",
+          "startSec": 1.425,
+          "endSec": 1.875,
+          "probability": 1.0
         },
         {
-          "word": "temel",
-          "startSec": 1.94,
-          "endSec": 2.48,
-          "probability": 0.8632
+          "word": "sekmesi",
+          "startSec": 1.875,
+          "endSec": 2.413,
+          "probability": 1.0
         },
         {
-          "word": "problem",
-          "startSec": 2.48,
-          "endSec": 2.88,
-          "probability": 0.9894
+          "word": "bile",
+          "startSec": 2.413,
+          "endSec": 2.663,
+          "probability": 1.0
+        },
+        {
+          "word": "yüzlerce",
+          "startSec": 2.675,
+          "endSec": 3.287,
+          "probability": 1.0
+        },
+        {
+          "word": "megabayt",
+          "startSec": 3.288,
+          "endSec": 3.763,
+          "probability": 1.0
+        },
+        {
+          "word": "bellek",
+          "startSec": 3.812,
+          "endSec": 4.125,
+          "probability": 1.0
+        },
+        {
+          "word": "tüketiyor.",
+          "startSec": 4.125,
+          "endSec": 4.7,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 1,
-      "startSec": 3.64,
-      "endSec": 9.22,
-      "text": "Bir otel rezervasyon sistemi, dışarıdan bakıldığında basit bir kayıt ekranı gibi görünür.",
+      "startSec": 5.9,
+      "endSec": 20.025,
+      "text": "Oysa 1993 yılında Doom ve birkaç yıl sonra Half-Life motoru GoldSrc, yalnızca 4 MB RAM ve 33 MHz hızında tek çekirdekli bir 486DX CPU üzerinde gerçek zamanlı 3D dünyalar çiziyordu.",
       "words": [
         {
-          "word": "Bir",
-          "startSec": 3.64,
-          "endSec": 4.06,
-          "probability": 0.4149
+          "word": "Oysa",
+          "startSec": 5.9,
+          "endSec": 6.275,
+          "probability": 1.0
         },
         {
-          "word": "otel",
-          "startSec": 4.06,
-          "endSec": 4.5,
-          "probability": 0.9467
+          "word": "1993",
+          "startSec": 6.375,
+          "endSec": 7.588,
+          "probability": 1.0
         },
         {
-          "word": "rezervasyon",
-          "startSec": 4.5,
-          "endSec": 5.24,
-          "probability": 0.9585
+          "word": "yılında",
+          "startSec": 7.588,
+          "endSec": 8.0,
+          "probability": 1.0
         },
         {
-          "word": "sistemi,",
-          "startSec": 5.24,
-          "endSec": 5.76,
-          "probability": 0.9862
+          "word": "Doom",
+          "startSec": 8.025,
+          "endSec": 8.287,
+          "probability": 1.0
         },
         {
-          "word": "dışarıdan",
-          "startSec": 6.04,
-          "endSec": 6.48,
-          "probability": 0.9609
+          "word": "ve",
+          "startSec": 8.3,
+          "endSec": 8.413,
+          "probability": 1.0
         },
         {
-          "word": "bakıldığında",
-          "startSec": 6.48,
-          "endSec": 7.14,
-          "probability": 0.9953
+          "word": "birkaç",
+          "startSec": 8.425,
+          "endSec": 8.888,
+          "probability": 1.0
         },
         {
-          "word": "basit",
-          "startSec": 7.14,
-          "endSec": 7.68,
-          "probability": 0.9694
+          "word": "yıl",
+          "startSec": 8.887,
+          "endSec": 9.05,
+          "probability": 1.0
+        },
+        {
+          "word": "sonra",
+          "startSec": 9.05,
+          "endSec": 9.438,
+          "probability": 1.0
+        },
+        {
+          "word": "Half-Life",
+          "startSec": 9.463,
+          "endSec": 9.95,
+          "probability": 1.0
+        },
+        {
+          "word": "motoru",
+          "startSec": 9.95,
+          "endSec": 10.275,
+          "probability": 1.0
+        },
+        {
+          "word": "GoldSrc",
+          "startSec": 10.275,
+          "endSec": 10.55,
+          "probability": 1.0
+        },
+        {
+          "word": ",",
+          "startSec": 10.55,
+          "endSec": 10.975,
+          "probability": 1.0
+        },
+        {
+          "word": "yalnızca",
+          "startSec": 11.137,
+          "endSec": 11.775,
+          "probability": 1.0
+        },
+        {
+          "word": "4",
+          "startSec": 11.775,
+          "endSec": 12.037,
+          "probability": 1.0
+        },
+        {
+          "word": "MB",
+          "startSec": 12.05,
+          "endSec": 12.338,
+          "probability": 1.0
+        },
+        {
+          "word": "RAM",
+          "startSec": 12.35,
+          "endSec": 12.6,
+          "probability": 1.0
+        },
+        {
+          "word": "ve",
+          "startSec": 12.6,
+          "endSec": 12.7,
+          "probability": 1.0
+        },
+        {
+          "word": "33",
+          "startSec": 12.713,
+          "endSec": 13.175,
+          "probability": 1.0
+        },
+        {
+          "word": "MHz",
+          "startSec": 13.213,
+          "endSec": 13.775,
+          "probability": 1.0
+        },
+        {
+          "word": "hızında",
+          "startSec": 13.775,
+          "endSec": 14.138,
+          "probability": 1.0
+        },
+        {
+          "word": "tek",
+          "startSec": 14.15,
+          "endSec": 14.375,
+          "probability": 1.0
+        },
+        {
+          "word": "çekirdekli",
+          "startSec": 14.375,
+          "endSec": 14.963,
+          "probability": 1.0
         },
         {
           "word": "bir",
-          "startSec": 7.68,
-          "endSec": 7.82,
-          "probability": 0.9957
+          "startSec": 14.963,
+          "endSec": 15.138,
+          "probability": 1.0
         },
         {
-          "word": "kayıt",
-          "startSec": 7.82,
-          "endSec": 8.22,
-          "probability": 0.9852
+          "word": "486DX",
+          "startSec": 15.137,
+          "endSec": 16.45,
+          "probability": 1.0
         },
         {
-          "word": "ekranı",
-          "startSec": 8.22,
-          "endSec": 8.58,
-          "probability": 0.9098
+          "word": "CPU",
+          "startSec": 16.45,
+          "endSec": 16.887,
+          "probability": 1.0
         },
         {
-          "word": "gibi",
-          "startSec": 8.58,
-          "endSec": 8.68,
-          "probability": 0.9968
+          "word": "üzerinde",
+          "startSec": 16.887,
+          "endSec": 17.363,
+          "probability": 1.0
         },
         {
-          "word": "görünür.",
-          "startSec": 8.68,
-          "endSec": 9.22,
-          "probability": 0.984
+          "word": "gerçek",
+          "startSec": 17.363,
+          "endSec": 17.8,
+          "probability": 1.0
+        },
+        {
+          "word": "zamanlı",
+          "startSec": 17.8,
+          "endSec": 18.3,
+          "probability": 1.0
+        },
+        {
+          "word": "3D",
+          "startSec": 18.312,
+          "endSec": 18.9,
+          "probability": 1.0
+        },
+        {
+          "word": "dünyalar",
+          "startSec": 18.9,
+          "endSec": 19.425,
+          "probability": 1.0
+        },
+        {
+          "word": "çiziyordu.",
+          "startSec": 19.425,
+          "endSec": 20.025,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 2,
-      "startSec": 9.6,
-      "endSec": 12.68,
-      "text": "Müşteri gelir, tarih seçer, odayı tutar.",
+      "startSec": 21.238,
+      "endSec": 25.425,
+      "text": "Üstelik ortada donanımsal bir GPU ve megabaytlarca VRAM yoktu.",
       "words": [
         {
-          "word": "Müşteri",
-          "startSec": 9.6,
-          "endSec": 10.2,
-          "probability": 0.894
+          "word": "Üstelik",
+          "startSec": 21.238,
+          "endSec": 21.913,
+          "probability": 1.0
         },
         {
-          "word": "gelir,",
-          "startSec": 10.2,
-          "endSec": 10.52,
-          "probability": 0.9971
+          "word": "ortada",
+          "startSec": 21.913,
+          "endSec": 22.363,
+          "probability": 1.0
         },
         {
-          "word": "tarih",
-          "startSec": 10.96,
-          "endSec": 11.24,
-          "probability": 0.9865
+          "word": "donanımsal",
+          "startSec": 22.363,
+          "endSec": 23.05,
+          "probability": 1.0
         },
         {
-          "word": "seçer,",
-          "startSec": 11.24,
-          "endSec": 11.7,
-          "probability": 0.9935
+          "word": "bir",
+          "startSec": 23.05,
+          "endSec": 23.225,
+          "probability": 1.0
         },
         {
-          "word": "odayı",
-          "startSec": 11.98,
-          "endSec": 12.22,
-          "probability": 0.8807
+          "word": "GPU",
+          "startSec": 23.225,
+          "endSec": 23.712,
+          "probability": 1.0
         },
         {
-          "word": "tutar.",
-          "startSec": 12.22,
-          "endSec": 12.68,
-          "probability": 0.9968
+          "word": "ve",
+          "startSec": 23.712,
+          "endSec": 23.837,
+          "probability": 1.0
+        },
+        {
+          "word": "megabaytlarca",
+          "startSec": 23.837,
+          "endSec": 24.688,
+          "probability": 1.0
+        },
+        {
+          "word": "VRAM",
+          "startSec": 24.688,
+          "endSec": 25.05,
+          "probability": 1.0
+        },
+        {
+          "word": "yoktu.",
+          "startSec": 25.05,
+          "endSec": 25.425,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 3,
-      "startSec": 13.34,
-      "endSec": 18.98,
-      "text": "Ama işin mutfağına indiğinizde asıl mesele ekran tasarımı değil, veri tutarlılığıdır.",
+      "startSec": 26.613,
+      "endSec": 32.087,
+      "text": "Akıcı bir oyun için elinizdeki tüm kare bütçesi sadece 16.6 milisaniyeydi.",
       "words": [
         {
-          "word": "Ama",
-          "startSec": 13.34,
-          "endSec": 13.6,
-          "probability": 0.9717
+          "word": "Akıcı",
+          "startSec": 26.613,
+          "endSec": 27.225,
+          "probability": 1.0
         },
         {
-          "word": "işin",
-          "startSec": 13.6,
-          "endSec": 14.04,
-          "probability": 0.968
+          "word": "bir",
+          "startSec": 27.225,
+          "endSec": 27.375,
+          "probability": 1.0
         },
         {
-          "word": "mutfağına",
-          "startSec": 14.04,
-          "endSec": 14.52,
-          "probability": 0.9903
+          "word": "oyun",
+          "startSec": 27.375,
+          "endSec": 27.613,
+          "probability": 1.0
         },
         {
-          "word": "indiğinizde",
-          "startSec": 14.52,
-          "endSec": 15.3,
-          "probability": 0.9655
+          "word": "için",
+          "startSec": 27.375,
+          "endSec": 27.613,
+          "probability": 1.0
         },
         {
-          "word": "asıl",
-          "startSec": 15.3,
-          "endSec": 15.84,
-          "probability": 0.7931
+          "word": "elinizdeki",
+          "startSec": 27.613,
+          "endSec": 27.875,
+          "probability": 1.0
         },
         {
-          "word": "mesele",
-          "startSec": 15.84,
-          "endSec": 16.22,
-          "probability": 0.9967
+          "word": "tüm",
+          "startSec": 27.875,
+          "endSec": 28.45,
+          "probability": 1.0
         },
         {
-          "word": "ekran",
-          "startSec": 16.22,
-          "endSec": 16.64,
-          "probability": 0.9196
+          "word": "kare",
+          "startSec": 28.45,
+          "endSec": 28.675,
+          "probability": 1.0
         },
         {
-          "word": "tasarımı",
-          "startSec": 16.64,
-          "endSec": 17.14,
-          "probability": 0.899
+          "word": "bütçesi",
+          "startSec": 28.688,
+          "endSec": 28.95,
+          "probability": 1.0
         },
         {
-          "word": "değil,",
-          "startSec": 17.14,
-          "endSec": 17.38,
-          "probability": 0.992
+          "word": "sadece",
+          "startSec": 28.95,
+          "endSec": 29.438,
+          "probability": 1.0
         },
         {
-          "word": "veri",
-          "startSec": 17.8,
-          "endSec": 18.18,
-          "probability": 0.8754
+          "word": "16.6",
+          "startSec": 29.438,
+          "endSec": 31.225,
+          "probability": 1.0
         },
         {
-          "word": "tutarlılığıdır.",
-          "startSec": 18.18,
-          "endSec": 18.98,
-          "probability": 0.9352
+          "word": "milisaniyeydi.",
+          "startSec": 31.225,
+          "endSec": 32.087,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 4,
-      "startSec": 19.96,
-      "endSec": 24.8,
-      "text": "Aynı odanın, aynı tarihlerde iki farklı kişiye satılmasını nasıl engellersiniz?",
+      "startSec": 33.237,
+      "endSec": 38.325,
+      "text": "Modern motorların vazgeçilmezi olan Z-Buffer tekniği bu donanımda tamamen imkânsızdı.",
       "words": [
         {
-          "word": "Aynı",
-          "startSec": 19.96,
-          "endSec": 20.38,
-          "probability": 0.9834
+          "word": "Modern",
+          "startSec": 33.237,
+          "endSec": 33.85,
+          "probability": 1.0
         },
         {
-          "word": "odanın,",
-          "startSec": 20.38,
-          "endSec": 20.78,
-          "probability": 0.9853
+          "word": "motorların",
+          "startSec": 33.85,
+          "endSec": 34.438,
+          "probability": 1.0
         },
         {
-          "word": "aynı",
-          "startSec": 21.06,
-          "endSec": 21.22,
-          "probability": 0.9884
+          "word": "vazgeçilmezi",
+          "startSec": 34.438,
+          "endSec": 35.188,
+          "probability": 1.0
         },
         {
-          "word": "tarihlerde",
-          "startSec": 21.22,
-          "endSec": 21.96,
-          "probability": 0.9802
+          "word": "olan",
+          "startSec": 35.188,
+          "endSec": 35.5,
+          "probability": 1.0
         },
         {
-          "word": "iki",
-          "startSec": 21.96,
-          "endSec": 22.26,
-          "probability": 0.8038
+          "word": "Z-Buffer",
+          "startSec": 35.5,
+          "endSec": 36.0,
+          "probability": 1.0
         },
         {
-          "word": "farklı",
-          "startSec": 22.26,
-          "endSec": 22.58,
-          "probability": 0.9993
+          "word": "tekniği",
+          "startSec": 36.0,
+          "endSec": 36.413,
+          "probability": 1.0
         },
         {
-          "word": "kişiye",
-          "startSec": 22.58,
-          "endSec": 22.98,
-          "probability": 0.995
+          "word": "bu",
+          "startSec": 36.438,
+          "endSec": 36.612,
+          "probability": 1.0
         },
         {
-          "word": "satılmasını",
-          "startSec": 22.98,
-          "endSec": 23.64,
-          "probability": 0.9895
+          "word": "donanımda",
+          "startSec": 36.612,
+          "endSec": 37.075,
+          "probability": 1.0
         },
         {
-          "word": "nasıl",
-          "startSec": 23.64,
-          "endSec": 23.94,
-          "probability": 0.9923
+          "word": "tamamen",
+          "startSec": 37.075,
+          "endSec": 37.575,
+          "probability": 1.0
         },
         {
-          "word": "engellersiniz?",
-          "startSec": 23.94,
-          "endSec": 24.8,
-          "probability": 0.9175
+          "word": "imkânsızdı.",
+          "startSec": 37.575,
+          "endSec": 38.325,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 5,
-      "startSec": 25.22,
-      "endSec": 32.9,
-      "text": "Ya da bir rezervasyon iddial edildiğinde, ödeme, oda durumu ve fiyat geçmişi birbirine karışmadan nasıl güncellenir?",
+      "startSec": 39.475,
+      "endSec": 50.513,
+      "text": "Çünkü her piksel için derinlik karşılaştırması yapmak, hem kısıtlı bellek bant genişliğini boğuyor hem de duvarların arkasında kalan görünmez yüzeyleri boşuna hesaplayarak CPU'yu kilitliyordu.",
       "words": [
         {
-          "word": "Ya",
-          "startSec": 25.22,
-          "endSec": 25.68,
-          "probability": 0.5865
+          "word": "Çünkü",
+          "startSec": 39.475,
+          "endSec": 39.875,
+          "probability": 1.0
         },
         {
-          "word": "da",
-          "startSec": 25.68,
-          "endSec": 25.88,
-          "probability": 0.9976
+          "word": "her",
+          "startSec": 39.875,
+          "endSec": 40.15,
+          "probability": 1.0
         },
         {
-          "word": "bir",
-          "startSec": 25.88,
-          "endSec": 26.12,
-          "probability": 0.8959
+          "word": "piksel",
+          "startSec": 40.163,
+          "endSec": 40.525,
+          "probability": 1.0
         },
         {
-          "word": "rezervasyon",
-          "startSec": 26.12,
-          "endSec": 26.9,
-          "probability": 0.9638
+          "word": "için",
+          "startSec": 40.525,
+          "endSec": 40.762,
+          "probability": 1.0
         },
         {
-          "word": "iddial",
-          "startSec": 26.9,
-          "endSec": 27.28,
-          "probability": 0.6855
+          "word": "derinlik",
+          "startSec": 40.763,
+          "endSec": 41.175,
+          "probability": 1.0
         },
         {
-          "word": "edildiğinde,",
-          "startSec": 27.28,
-          "endSec": 27.9,
-          "probability": 0.9757
+          "word": "karşılaştırması",
+          "startSec": 41.175,
+          "endSec": 42.125,
+          "probability": 1.0
         },
         {
-          "word": "ödeme,",
-          "startSec": 28.44,
-          "endSec": 28.76,
-          "probability": 0.9637
+          "word": "yapmak,",
+          "startSec": 42.125,
+          "endSec": 42.6,
+          "probability": 1.0
         },
         {
-          "word": "oda",
-          "startSec": 29.06,
-          "endSec": 29.24,
-          "probability": 0.8995
+          "word": "hem",
+          "startSec": 42.812,
+          "endSec": 43.038,
+          "probability": 1.0
         },
         {
-          "word": "durumu",
-          "startSec": 29.24,
-          "endSec": 29.58,
-          "probability": 0.9926
+          "word": "kısıtlı",
+          "startSec": 43.038,
+          "endSec": 43.462,
+          "probability": 1.0
         },
         {
-          "word": "ve",
-          "startSec": 29.58,
-          "endSec": 29.84,
-          "probability": 0.9881
+          "word": "bellek",
+          "startSec": 43.462,
+          "endSec": 43.825,
+          "probability": 1.0
         },
         {
-          "word": "fiyat",
-          "startSec": 29.84,
-          "endSec": 30.26,
-          "probability": 0.9932
+          "word": "bant",
+          "startSec": 43.837,
+          "endSec": 44.112,
+          "probability": 1.0
         },
         {
-          "word": "geçmişi",
-          "startSec": 30.26,
-          "endSec": 30.74,
-          "probability": 0.9958
+          "word": "genişliğini",
+          "startSec": 44.163,
+          "endSec": 44.675,
+          "probability": 1.0
         },
         {
-          "word": "birbirine",
-          "startSec": 30.74,
-          "endSec": 31.22,
-          "probability": 0.9906
+          "word": "boğuyor",
+          "startSec": 44.675,
+          "endSec": 45.087,
+          "probability": 1.0
         },
         {
-          "word": "karışmadan",
-          "startSec": 31.22,
-          "endSec": 31.74,
-          "probability": 0.9972
+          "word": "hem",
+          "startSec": 45.312,
+          "endSec": 45.525,
+          "probability": 1.0
         },
         {
-          "word": "nasıl",
-          "startSec": 31.74,
-          "endSec": 32.16,
-          "probability": 0.9868
+          "word": "de",
+          "startSec": 45.575,
+          "endSec": 45.663,
+          "probability": 1.0
         },
         {
-          "word": "güncellenir?",
-          "startSec": 32.16,
-          "endSec": 32.9,
-          "probability": 0.9478
+          "word": "duvarların",
+          "startSec": 45.663,
+          "endSec": 46.275,
+          "probability": 1.0
+        },
+        {
+          "word": "arkasında",
+          "startSec": 46.275,
+          "endSec": 46.85,
+          "probability": 1.0
+        },
+        {
+          "word": "kalan",
+          "startSec": 46.85,
+          "endSec": 47.2,
+          "probability": 1.0
+        },
+        {
+          "word": "görünmez",
+          "startSec": 47.2,
+          "endSec": 47.713,
+          "probability": 1.0
+        },
+        {
+          "word": "yüzeyleri",
+          "startSec": 47.712,
+          "endSec": 48.188,
+          "probability": 1.0
+        },
+        {
+          "word": "boşuna",
+          "startSec": 48.188,
+          "endSec": 48.562,
+          "probability": 1.0
+        },
+        {
+          "word": "hesaplayarak",
+          "startSec": 48.562,
+          "endSec": 49.288,
+          "probability": 1.0
+        },
+        {
+          "word": "CPU",
+          "startSec": 49.288,
+          "endSec": 49.587,
+          "probability": 1.0
+        },
+        {
+          "word": "'yu",
+          "startSec": 49.587,
+          "endSec": 49.812,
+          "probability": 1.0
+        },
+        {
+          "word": "kilitliyordu.",
+          "startSec": 49.812,
+          "endSec": 50.513,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 6,
-      "startSec": 33.52,
-      "endSec": 36.78,
-      "text": "Bu projede tam olarak bu problemlere odaklandım.",
+      "startSec": 51.712,
+      "endSec": 59.487,
+      "text": "John Carmack bu darboğazı aşmak için kuralı kökten değiştirdi: pahalı hesapları çalışma anından çıkarıp harita derleme anına taşıdı.",
       "words": [
         {
-          "word": "Bu",
-          "startSec": 33.52,
-          "endSec": 33.98,
-          "probability": 0.9901
+          "word": "John",
+          "startSec": 51.712,
+          "endSec": 51.938,
+          "probability": 1.0
         },
         {
-          "word": "projede",
-          "startSec": 33.98,
-          "endSec": 34.54,
-          "probability": 0.9731
-        },
-        {
-          "word": "tam",
-          "startSec": 34.54,
-          "endSec": 34.96,
-          "probability": 0.9205
-        },
-        {
-          "word": "olarak",
-          "startSec": 34.96,
-          "endSec": 35.22,
-          "probability": 0.9997
+          "word": "Carmack",
+          "startSec": 52.237,
+          "endSec": 52.65,
+          "probability": 1.0
         },
         {
           "word": "bu",
-          "startSec": 35.22,
-          "endSec": 35.48,
-          "probability": 0.9931
+          "startSec": 52.65,
+          "endSec": 52.812,
+          "probability": 1.0
         },
         {
-          "word": "problemlere",
-          "startSec": 35.48,
-          "endSec": 36.1,
-          "probability": 0.9903
+          "word": "darboğazı",
+          "startSec": 52.812,
+          "endSec": 53.362,
+          "probability": 1.0
         },
         {
-          "word": "odaklandım.",
-          "startSec": 36.1,
-          "endSec": 36.78,
-          "probability": 0.9929
+          "word": "aşmak",
+          "startSec": 53.362,
+          "endSec": 53.725,
+          "probability": 1.0
+        },
+        {
+          "word": "için",
+          "startSec": 53.725,
+          "endSec": 54.0,
+          "probability": 1.0
+        },
+        {
+          "word": "kuralı",
+          "startSec": 54.0,
+          "endSec": 54.438,
+          "probability": 1.0
+        },
+        {
+          "word": "kökten",
+          "startSec": 54.438,
+          "endSec": 54.888,
+          "probability": 1.0
+        },
+        {
+          "word": "değiştirdi:",
+          "startSec": 54.888,
+          "endSec": 55.525,
+          "probability": 1.0
+        },
+        {
+          "word": "pahalı",
+          "startSec": 55.763,
+          "endSec": 56.125,
+          "probability": 1.0
+        },
+        {
+          "word": "hesapları",
+          "startSec": 56.125,
+          "endSec": 56.675,
+          "probability": 1.0
+        },
+        {
+          "word": "çalışma",
+          "startSec": 56.675,
+          "endSec": 57.112,
+          "probability": 1.0
+        },
+        {
+          "word": "anından",
+          "startSec": 57.112,
+          "endSec": 57.562,
+          "probability": 1.0
+        },
+        {
+          "word": "çıkarıp",
+          "startSec": 57.562,
+          "endSec": 57.962,
+          "probability": 1.0
+        },
+        {
+          "word": "harita",
+          "startSec": 57.975,
+          "endSec": 58.312,
+          "probability": 1.0
+        },
+        {
+          "word": "derleme",
+          "startSec": 58.312,
+          "endSec": 58.737,
+          "probability": 1.0
+        },
+        {
+          "word": "anına",
+          "startSec": 58.737,
+          "endSec": 59.05,
+          "probability": 1.0
+        },
+        {
+          "word": "taşıdı.",
+          "startSec": 59.05,
+          "endSec": 59.487,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 7,
-      "startSec": 37.54,
-      "endSec": 49.5,
-      "text": "MySQL 8.0 ve Spring Boot kullanarak, 13 tablodan oluşan tamamen üçüncü normal form kurallarına uygun bir otel rezervasyon ve konatlama yönetim sistemi tasarladım.",
+      "startSec": 61.172,
+      "endSec": 67.709,
+      "text": "Bu devrimin ilk sütunu BSP, yani Binary Space Partitioning ağaçlarıydı.",
       "words": [
         {
-          "word": "MySQL",
-          "startSec": 37.54,
-          "endSec": 38.26,
-          "probability": 0.7459
+          "word": "Bu",
+          "startSec": 61.172,
+          "endSec": 61.372,
+          "probability": 1.0
         },
         {
-          "word": "8",
-          "startSec": 38.26,
-          "endSec": 38.68,
-          "probability": 0.8652
+          "word": "devrimin",
+          "startSec": 61.572,
+          "endSec": 62.097,
+          "probability": 1.0
         },
         {
-          "word": ".0",
-          "startSec": 38.68,
-          "endSec": 39.32,
-          "probability": 0.9801
+          "word": "ilk",
+          "startSec": 62.147,
+          "endSec": 62.347,
+          "probability": 1.0
         },
         {
-          "word": "ve",
-          "startSec": 39.32,
-          "endSec": 39.84,
-          "probability": 0.929
+          "word": "sütunu",
+          "startSec": 62.347,
+          "endSec": 62.759,
+          "probability": 1.0
         },
         {
-          "word": "Spring",
-          "startSec": 39.84,
-          "endSec": 40.26,
-          "probability": 0.7575
+          "word": "BSP",
+          "startSec": 62.759,
+          "endSec": 63.334,
+          "probability": 1.0
         },
         {
-          "word": "Boot",
-          "startSec": 40.26,
-          "endSec": 40.54,
-          "probability": 0.9034
+          "word": ",",
+          "startSec": 63.497,
+          "endSec": 63.884,
+          "probability": 1.0
         },
         {
-          "word": "kullanarak,",
-          "startSec": 40.54,
-          "endSec": 41.22,
-          "probability": 0.9927
+          "word": "yani",
+          "startSec": 63.884,
+          "endSec": 64.284,
+          "probability": 1.0
         },
         {
-          "word": "13",
-          "startSec": 41.64,
-          "endSec": 41.92,
-          "probability": 0.8968
+          "word": "Binary",
+          "startSec": 64.284,
+          "endSec": 64.705,
+          "probability": 1.0
         },
         {
-          "word": "tablodan",
-          "startSec": 41.92,
-          "endSec": 42.5,
-          "probability": 0.826
+          "word": "Space",
+          "startSec": 64.705,
+          "endSec": 65.056,
+          "probability": 1.0
         },
         {
-          "word": "oluşan",
-          "startSec": 42.5,
-          "endSec": 42.92,
-          "probability": 0.9996
+          "word": "Partitioning",
+          "startSec": 65.056,
+          "endSec": 65.897,
+          "probability": 1.0
         },
         {
-          "word": "tamamen",
-          "startSec": 42.92,
-          "endSec": 43.76,
-          "probability": 0.6698
-        },
-        {
-          "word": "üçüncü",
-          "startSec": 43.76,
-          "endSec": 44.26,
-          "probability": 0.7098
-        },
-        {
-          "word": "normal",
-          "startSec": 44.26,
-          "endSec": 44.5,
-          "probability": 0.9461
-        },
-        {
-          "word": "form",
-          "startSec": 44.5,
-          "endSec": 44.92,
-          "probability": 0.9924
-        },
-        {
-          "word": "kurallarına",
-          "startSec": 44.92,
-          "endSec": 45.54,
-          "probability": 0.9823
-        },
-        {
-          "word": "uygun",
-          "startSec": 45.54,
-          "endSec": 45.96,
-          "probability": 0.9776
-        },
-        {
-          "word": "bir",
-          "startSec": 45.96,
-          "endSec": 46.12,
-          "probability": 0.994
-        },
-        {
-          "word": "otel",
-          "startSec": 46.12,
-          "endSec": 46.58,
-          "probability": 0.9615
-        },
-        {
-          "word": "rezervasyon",
-          "startSec": 46.58,
-          "endSec": 47.38,
-          "probability": 0.986
-        },
-        {
-          "word": "ve",
-          "startSec": 47.38,
-          "endSec": 47.48,
-          "probability": 0.9949
-        },
-        {
-          "word": "konatlama",
-          "startSec": 47.48,
-          "endSec": 48.08,
-          "probability": 0.8176
-        },
-        {
-          "word": "yönetim",
-          "startSec": 48.08,
-          "endSec": 48.48,
-          "probability": 0.9785
-        },
-        {
-          "word": "sistemi",
-          "startSec": 48.48,
-          "endSec": 48.9,
-          "probability": 0.9767
-        },
-        {
-          "word": "tasarladım.",
-          "startSec": 48.9,
-          "endSec": 49.5,
-          "probability": 0.952
+          "word": "ağaçlarıydı.",
+          "startSec": 67.072,
+          "endSec": 67.709,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 8,
-      "startSec": 50.02,
-      "endSec": 54.7,
-      "text": "Bölüm 2, 13, tablolu 3-MF, Mimari",
+      "startSec": 67.709,
+      "endSec": 77.747,
+      "text": "Harita henüz oyuncunun bilgisayarına ulaşmadan, offline derleme aşamasında tüm duvarlar ve yüzeyler düzlemlerle özyinelemeli olarak ikiye bölünür.",
       "words": [
         {
-          "word": "Bölüm",
-          "startSec": 50.02,
-          "endSec": 50.52,
-          "probability": 0.6854
+          "word": "Harita",
+          "startSec": 67.709,
+          "endSec": 68.059,
+          "probability": 1.0
         },
         {
-          "word": "2,",
-          "startSec": 50.52,
-          "endSec": 50.82,
-          "probability": 0.8635
+          "word": "henüz",
+          "startSec": 68.059,
+          "endSec": 68.534,
+          "probability": 1.0
         },
         {
-          "word": "13,",
-          "startSec": 51.26,
-          "endSec": 51.8,
-          "probability": 0.8575
+          "word": "oyuncunun",
+          "startSec": 68.534,
+          "endSec": 69.234,
+          "probability": 1.0
         },
         {
-          "word": "tablolu",
-          "startSec": 52.3,
-          "endSec": 52.82,
-          "probability": 0.6798
+          "word": "bilgisayarına",
+          "startSec": 69.234,
+          "endSec": 70.047,
+          "probability": 1.0
         },
         {
-          "word": "3",
-          "startSec": 52.82,
-          "endSec": 53.22,
-          "probability": 0.9563
+          "word": "ulaşmadan,",
+          "startSec": 70.159,
+          "endSec": 70.572,
+          "probability": 1.0
         },
         {
-          "word": "-MF,",
-          "startSec": 53.22,
-          "endSec": 53.7,
-          "probability": 0.5567
+          "word": "offline",
+          "startSec": 70.572,
+          "endSec": 70.947,
+          "probability": 1.0
         },
         {
-          "word": "Mimari",
-          "startSec": 54.2,
-          "endSec": 54.7,
-          "probability": 0.618
+          "word": "derleme",
+          "startSec": 70.947,
+          "endSec": 71.672,
+          "probability": 1.0
+        },
+        {
+          "word": "aşamasında",
+          "startSec": 71.784,
+          "endSec": 72.01,
+          "probability": 1.0
+        },
+        {
+          "word": "tüm",
+          "startSec": 72.01,
+          "endSec": 72.547,
+          "probability": 1.0
+        },
+        {
+          "word": "duvarlar",
+          "startSec": 72.697,
+          "endSec": 72.809,
+          "probability": 1.0
+        },
+        {
+          "word": "ve",
+          "startSec": 72.809,
+          "endSec": 73.359,
+          "probability": 1.0
+        },
+        {
+          "word": "yüzeyler",
+          "startSec": 73.359,
+          "endSec": 74.072,
+          "probability": 1.0
+        },
+        {
+          "word": "düzlemlerle",
+          "startSec": 74.072,
+          "endSec": 74.772,
+          "probability": 1.0
+        },
+        {
+          "word": "özyinelemeli",
+          "startSec": 74.772,
+          "endSec": 75.135,
+          "probability": 1.0
+        },
+        {
+          "word": "olarak",
+          "startSec": 75.184,
+          "endSec": 75.497,
+          "probability": 1.0
+        },
+        {
+          "word": "ikiye",
+          "startSec": 75.497,
+          "endSec": 75.897,
+          "probability": 1.0
+        },
+        {
+          "word": "bölünür.",
+          "startSec": 77.084,
+          "endSec": 77.747,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 9,
-      "startSec": 55.38,
-      "endSec": 62.72,
-      "text": "Çoğu başlangıç projesinde yapılan en büyük hata, tüm bilgileri tek bir devasa rezervasyon tablosuna yığmaktır.",
+      "startSec": 77.747,
+      "endSec": 83.822,
+      "text": "Ortaya haritanın tüm geometrisini dışbükey odacıklara ayıran statik bir ikili ağaç çıkar.",
       "words": [
         {
-          "word": "Çoğu",
-          "startSec": 55.38,
-          "endSec": 55.84,
-          "probability": 0.6983
+          "word": "Ortaya",
+          "startSec": 77.747,
+          "endSec": 78.309,
+          "probability": 1.0
         },
         {
-          "word": "başlangıç",
-          "startSec": 55.84,
-          "endSec": 56.42,
-          "probability": 0.9732
-        },
-        {
-          "word": "projesinde",
-          "startSec": 56.42,
-          "endSec": 57.0,
-          "probability": 0.9781
-        },
-        {
-          "word": "yapılan",
-          "startSec": 57.0,
-          "endSec": 57.44,
-          "probability": 0.9968
-        },
-        {
-          "word": "en",
-          "startSec": 57.44,
-          "endSec": 57.7,
-          "probability": 0.9869
-        },
-        {
-          "word": "büyük",
-          "startSec": 57.7,
-          "endSec": 57.88,
-          "probability": 0.9933
-        },
-        {
-          "word": "hata,",
-          "startSec": 57.88,
-          "endSec": 58.34,
-          "probability": 0.9857
+          "word": "haritanın",
+          "startSec": 78.309,
+          "endSec": 78.547,
+          "probability": 1.0
         },
         {
           "word": "tüm",
-          "startSec": 58.84,
-          "endSec": 59.04,
-          "probability": 0.9485
+          "startSec": 78.559,
+          "endSec": 79.247,
+          "probability": 1.0
         },
         {
-          "word": "bilgileri",
-          "startSec": 59.04,
-          "endSec": 59.52,
-          "probability": 0.9912
+          "word": "geometrisini",
+          "startSec": 79.26,
+          "endSec": 79.772,
+          "probability": 1.0
         },
         {
-          "word": "tek",
-          "startSec": 59.52,
-          "endSec": 59.86,
-          "probability": 0.7843
+          "word": "dışbükey",
+          "startSec": 79.772,
+          "endSec": 80.334,
+          "probability": 1.0
+        },
+        {
+          "word": "odacıklara",
+          "startSec": 80.334,
+          "endSec": 80.734,
+          "probability": 1.0
+        },
+        {
+          "word": "ayıran",
+          "startSec": 80.734,
+          "endSec": 81.147,
+          "probability": 1.0
+        },
+        {
+          "word": "statik",
+          "startSec": 81.159,
+          "endSec": 81.334,
+          "probability": 1.0
         },
         {
           "word": "bir",
-          "startSec": 59.86,
-          "endSec": 60.12,
-          "probability": 0.9896
+          "startSec": 81.334,
+          "endSec": 81.597,
+          "probability": 1.0
         },
         {
-          "word": "devasa",
-          "startSec": 60.12,
-          "endSec": 60.68,
-          "probability": 0.971
+          "word": "ikili",
+          "startSec": 81.597,
+          "endSec": 81.809,
+          "probability": 1.0
         },
         {
-          "word": "rezervasyon",
-          "startSec": 60.68,
-          "endSec": 61.5,
-          "probability": 0.9494
+          "word": "ağaç",
+          "startSec": 81.809,
+          "endSec": 82.26,
+          "probability": 1.0
         },
         {
-          "word": "tablosuna",
-          "startSec": 61.5,
-          "endSec": 62.06,
-          "probability": 0.9287
-        },
-        {
-          "word": "yığmaktır.",
-          "startSec": 62.06,
-          "endSec": 62.72,
-          "probability": 0.9577
+          "word": "çıkar.",
+          "startSec": 83.409,
+          "endSec": 83.822,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 10,
-      "startSec": 63.36,
-      "endSec": 68.08,
-      "text": "Müşteri adı, oda tipi, fiyat, ödeme bilgisi hepsi yan yana durur.",
+      "startSec": 83.822,
+      "endSec": 89.709,
+      "text": "Oyun çalışırken motor her karede binlerce poligonu sıralamak zorunda kalmaz.",
       "words": [
         {
-          "word": "Müşteri",
-          "startSec": 63.36,
-          "endSec": 63.82,
-          "probability": 0.8442
+          "word": "Oyun",
+          "startSec": 83.822,
+          "endSec": 84.51,
+          "probability": 1.0
         },
         {
-          "word": "adı,",
-          "startSec": 63.82,
-          "endSec": 64.28,
-          "probability": 0.9901
+          "word": "çalışırken",
+          "startSec": 84.51,
+          "endSec": 84.859,
+          "probability": 1.0
         },
         {
-          "word": "oda",
-          "startSec": 64.46,
-          "endSec": 64.66,
-          "probability": 0.7981
+          "word": "motor",
+          "startSec": 84.859,
+          "endSec": 85.097,
+          "probability": 1.0
         },
         {
-          "word": "tipi,",
-          "startSec": 64.66,
-          "endSec": 65.02,
-          "probability": 0.9231
+          "word": "her",
+          "startSec": 85.097,
+          "endSec": 85.459,
+          "probability": 1.0
         },
         {
-          "word": "fiyat,",
-          "startSec": 65.24,
-          "endSec": 65.58,
-          "probability": 0.976
+          "word": "karede",
+          "startSec": 85.472,
+          "endSec": 86.022,
+          "probability": 1.0
         },
         {
-          "word": "ödeme",
-          "startSec": 65.86,
-          "endSec": 66.1,
-          "probability": 0.988
+          "word": "binlerce",
+          "startSec": 86.022,
+          "endSec": 86.484,
+          "probability": 1.0
         },
         {
-          "word": "bilgisi",
-          "startSec": 66.1,
-          "endSec": 66.6,
-          "probability": 0.9921
+          "word": "poligonu",
+          "startSec": 86.484,
+          "endSec": 86.984,
+          "probability": 1.0
         },
         {
-          "word": "hepsi",
-          "startSec": 66.6,
-          "endSec": 67.26,
-          "probability": 0.7883
+          "word": "sıralamak",
+          "startSec": 86.984,
+          "endSec": 87.372,
+          "probability": 1.0
         },
         {
-          "word": "yan",
-          "startSec": 67.26,
-          "endSec": 67.48,
-          "probability": 0.9744
+          "word": "zorunda",
+          "startSec": 87.372,
+          "endSec": 87.947,
+          "probability": 1.0
         },
         {
-          "word": "yana",
-          "startSec": 67.48,
-          "endSec": 67.7,
-          "probability": 0.9695
-        },
-        {
-          "word": "durur.",
-          "startSec": 67.7,
-          "endSec": 68.08,
-          "probability": 0.998
+          "word": "kalmaz.",
+          "startSec": 89.059,
+          "endSec": 89.709,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 11,
-      "startSec": 68.62,
-      "endSec": 75.56,
-      "text": "Kısa vadede kolay görünür ama bir oda fiyatını güncellediğinizde eski faturalar bozulur, veri tekrar başlar.",
+      "startSec": 89.709,
+      "endSec": 94.209,
+      "text": "Kamera koordinatı kök düğümdeki düzleme karşı tek bir işaret testiyle kontrol edilir.",
       "words": [
         {
-          "word": "Kısa",
-          "startSec": 68.62,
-          "endSec": 68.88,
-          "probability": 0.9635
+          "word": "Kamera",
+          "startSec": 89.709,
+          "endSec": 90.347,
+          "probability": 1.0
         },
         {
-          "word": "vadede",
-          "startSec": 68.88,
-          "endSec": 69.26,
-          "probability": 0.7715
+          "word": "koordinatı",
+          "startSec": 89.709,
+          "endSec": 90.347,
+          "probability": 1.0
         },
         {
-          "word": "kolay",
-          "startSec": 69.26,
-          "endSec": 69.6,
-          "probability": 0.9967
+          "word": "kök",
+          "startSec": 90.359,
+          "endSec": 90.609,
+          "probability": 1.0
         },
         {
-          "word": "görünür",
-          "startSec": 69.6,
-          "endSec": 70.14,
-          "probability": 0.9847
+          "word": "düğümdeki",
+          "startSec": 90.622,
+          "endSec": 91.097,
+          "probability": 1.0
         },
         {
-          "word": "ama",
-          "startSec": 70.14,
-          "endSec": 70.52,
-          "probability": 0.8415
+          "word": "düzleme",
+          "startSec": 91.097,
+          "endSec": 91.547,
+          "probability": 1.0
+        },
+        {
+          "word": "karşı",
+          "startSec": 91.547,
+          "endSec": 91.959,
+          "probability": 1.0
+        },
+        {
+          "word": "tek",
+          "startSec": 91.959,
+          "endSec": 92.197,
+          "probability": 1.0
         },
         {
           "word": "bir",
-          "startSec": 70.52,
-          "endSec": 70.88,
-          "probability": 0.8833
+          "startSec": 92.209,
+          "endSec": 92.385,
+          "probability": 1.0
         },
         {
-          "word": "oda",
-          "startSec": 70.88,
-          "endSec": 71.2,
-          "probability": 0.9907
+          "word": "işaret",
+          "startSec": 92.385,
+          "endSec": 92.847,
+          "probability": 1.0
         },
         {
-          "word": "fiyatını",
-          "startSec": 71.2,
-          "endSec": 71.6,
-          "probability": 0.9957
+          "word": "testiyle",
+          "startSec": 92.859,
+          "endSec": 93.309,
+          "probability": 1.0
         },
         {
-          "word": "güncellediğinizde",
-          "startSec": 71.6,
-          "endSec": 72.64,
-          "probability": 0.9211
+          "word": "kontrol",
+          "startSec": 93.309,
+          "endSec": 93.797,
+          "probability": 1.0
         },
         {
-          "word": "eski",
-          "startSec": 72.64,
-          "endSec": 73.12,
-          "probability": 0.9882
-        },
-        {
-          "word": "faturalar",
-          "startSec": 73.12,
-          "endSec": 73.64,
-          "probability": 0.9089
-        },
-        {
-          "word": "bozulur,",
-          "startSec": 73.64,
-          "endSec": 74.18,
-          "probability": 0.9975
-        },
-        {
-          "word": "veri",
-          "startSec": 74.4,
-          "endSec": 74.76,
-          "probability": 0.875
-        },
-        {
-          "word": "tekrar",
-          "startSec": 74.76,
-          "endSec": 74.96,
-          "probability": 0.993
-        },
-        {
-          "word": "başlar.",
-          "startSec": 74.96,
-          "endSec": 75.56,
-          "probability": 0.8843
+          "word": "edilir.",
+          "startSec": 93.797,
+          "endSec": 94.209,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 12,
-      "startSec": 76.17,
-      "endSec": 81.38,
-      "text": "Biz bu sistemi en baştan 3-MF disiplini ile 13 ayrı tabloya böldük.",
+      "startSec": 95.372,
+      "endSec": 99.572,
+      "text": "Kamera düzlemin önündeyse önce ön dal, ardından arka dal gezilir.",
       "words": [
         {
-          "word": "Biz",
-          "startSec": 76.17,
-          "endSec": 76.6,
-          "probability": 0.0968
+          "word": "Kamera",
+          "startSec": 95.372,
+          "endSec": 95.959,
+          "probability": 1.0
         },
         {
-          "word": "bu",
-          "startSec": 76.6,
-          "endSec": 76.84,
-          "probability": 0.9457
+          "word": "düzlemin",
+          "startSec": 95.959,
+          "endSec": 96.472,
+          "probability": 1.0
         },
         {
-          "word": "sistemi",
-          "startSec": 76.84,
-          "endSec": 77.28,
-          "probability": 0.9848
+          "word": "önündeyse",
+          "startSec": 96.472,
+          "endSec": 97.047,
+          "probability": 1.0
         },
         {
-          "word": "en",
-          "startSec": 77.28,
-          "endSec": 77.64,
-          "probability": 0.7423
+          "word": "önce",
+          "startSec": 97.047,
+          "endSec": 97.385,
+          "probability": 1.0
         },
         {
-          "word": "baştan",
-          "startSec": 77.64,
-          "endSec": 78.06,
-          "probability": 0.9921
+          "word": "ön",
+          "startSec": 97.385,
+          "endSec": 97.622,
+          "probability": 1.0
         },
         {
-          "word": "3",
-          "startSec": 78.06,
-          "endSec": 78.44,
-          "probability": 0.8793
+          "word": "dal,",
+          "startSec": 97.622,
+          "endSec": 97.885,
+          "probability": 1.0
         },
         {
-          "word": "-MF",
-          "startSec": 78.44,
-          "endSec": 78.86,
-          "probability": 0.5299
+          "word": "ardından",
+          "startSec": 98.034,
+          "endSec": 98.584,
+          "probability": 1.0
         },
         {
-          "word": "disiplini",
-          "startSec": 78.86,
-          "endSec": 79.4,
-          "probability": 0.8391
+          "word": "arka",
+          "startSec": 98.597,
+          "endSec": 98.872,
+          "probability": 1.0
         },
         {
-          "word": "ile",
-          "startSec": 79.4,
-          "endSec": 79.64,
-          "probability": 0.6905
+          "word": "dal",
+          "startSec": 98.872,
+          "endSec": 99.084,
+          "probability": 1.0
         },
         {
-          "word": "13",
-          "startSec": 79.64,
-          "endSec": 80.08,
-          "probability": 0.912
-        },
-        {
-          "word": "ayrı",
-          "startSec": 80.08,
-          "endSec": 80.54,
-          "probability": 0.9853
-        },
-        {
-          "word": "tabloya",
-          "startSec": 80.54,
-          "endSec": 80.98,
-          "probability": 0.9607
-        },
-        {
-          "word": "böldük.",
-          "startSec": 80.98,
-          "endSec": 81.38,
-          "probability": 0.9813
+          "word": "gezilir.",
+          "startSec": 99.084,
+          "endSec": 99.572,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 13,
-      "startSec": 82.0,
-      "endSec": 89.72,
-      "text": "Müşteriler, odalar, oda tipleri, rezervasyonlar, ödemeler ve ekstra hizmetler birbirinden med sınırlarla ayrıldı.",
+      "startSec": 100.747,
+      "endSec": 104.772,
+      "text": "Böylece tüm sahne önden arkaya kesin bir derinlik sırasıyla taranır.",
       "words": [
         {
-          "word": "Müşteriler,",
-          "startSec": 82.0,
-          "endSec": 82.56,
-          "probability": 0.7246
+          "word": "Böylece",
+          "startSec": 100.747,
+          "endSec": 101.472,
+          "probability": 1.0
         },
         {
-          "word": "odalar,",
-          "startSec": 82.88,
-          "endSec": 83.2,
-          "probability": 0.9883
+          "word": "tüm",
+          "startSec": 101.472,
+          "endSec": 101.734,
+          "probability": 1.0
         },
         {
-          "word": "oda",
-          "startSec": 83.58,
-          "endSec": 83.76,
-          "probability": 0.8361
+          "word": "sahne",
+          "startSec": 101.734,
+          "endSec": 102.122,
+          "probability": 1.0
         },
         {
-          "word": "tipleri,",
-          "startSec": 83.76,
-          "endSec": 84.18,
-          "probability": 0.7177
+          "word": "önden",
+          "startSec": 102.122,
+          "endSec": 102.484,
+          "probability": 1.0
         },
         {
-          "word": "rezervasyonlar,",
-          "startSec": 84.5,
-          "endSec": 85.38,
-          "probability": 0.9815
+          "word": "arkaya",
+          "startSec": 102.484,
+          "endSec": 102.872,
+          "probability": 1.0
         },
         {
-          "word": "ödemeler",
-          "startSec": 85.66,
-          "endSec": 86.06,
-          "probability": 0.9934
+          "word": "kesin",
+          "startSec": 102.872,
+          "endSec": 103.234,
+          "probability": 1.0
         },
         {
-          "word": "ve",
-          "startSec": 86.06,
-          "endSec": 86.54,
-          "probability": 0.9682
+          "word": "bir",
+          "startSec": 103.234,
+          "endSec": 103.409,
+          "probability": 1.0
         },
         {
-          "word": "ekstra",
-          "startSec": 86.54,
-          "endSec": 87.06,
-          "probability": 0.9502
+          "word": "derinlik",
+          "startSec": 103.409,
+          "endSec": 103.784,
+          "probability": 1.0
         },
         {
-          "word": "hizmetler",
-          "startSec": 87.06,
-          "endSec": 87.68,
-          "probability": 0.9985
+          "word": "sırasıyla",
+          "startSec": 103.784,
+          "endSec": 104.322,
+          "probability": 1.0
         },
         {
-          "word": "birbirinden",
-          "startSec": 87.68,
-          "endSec": 88.4,
-          "probability": 0.8769
-        },
-        {
-          "word": "med",
-          "startSec": 88.4,
-          "endSec": 88.7,
-          "probability": 0.5259
-        },
-        {
-          "word": "sınırlarla",
-          "startSec": 88.7,
-          "endSec": 89.38,
-          "probability": 0.939
-        },
-        {
-          "word": "ayrıldı.",
-          "startSec": 89.38,
-          "endSec": 89.72,
-          "probability": 0.9929
+          "word": "taranır.",
+          "startSec": 104.322,
+          "endSec": 104.772,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 14,
-      "startSec": 90.66,
-      "endSec": 92.62,
-      "text": "Her tablonun tek bir sorumluluğu var.",
+      "startSec": 105.934,
+      "endSec": 114.147,
+      "text": "Ekranda bir piksel dolduğu anda arkasındaki hiçbir duvar bir daha çizilmez; Z-Buffer olmadan mükemmel gizleme ve sıfır overdraw sağlanır.",
       "words": [
         {
-          "word": "Her",
-          "startSec": 90.66,
-          "endSec": 90.86,
-          "probability": 0.9918
-        },
-        {
-          "word": "tablonun",
-          "startSec": 90.86,
-          "endSec": 91.4,
-          "probability": 0.9779
-        },
-        {
-          "word": "tek",
-          "startSec": 91.4,
-          "endSec": 91.62,
-          "probability": 0.9885
+          "word": "Ekranda",
+          "startSec": 105.934,
+          "endSec": 106.709,
+          "probability": 1.0
         },
         {
           "word": "bir",
-          "startSec": 91.62,
-          "endSec": 91.84,
-          "probability": 0.9919
+          "startSec": 106.709,
+          "endSec": 106.897,
+          "probability": 1.0
         },
         {
-          "word": "sorumluluğu",
-          "startSec": 91.84,
-          "endSec": 92.46,
-          "probability": 0.9755
+          "word": "piksel",
+          "startSec": 106.897,
+          "endSec": 107.334,
+          "probability": 1.0
         },
         {
-          "word": "var.",
-          "startSec": 92.46,
-          "endSec": 92.62,
-          "probability": 0.9992
+          "word": "dolduğu",
+          "startSec": 107.334,
+          "endSec": 107.684,
+          "probability": 1.0
+        },
+        {
+          "word": "anda",
+          "startSec": 107.684,
+          "endSec": 108.022,
+          "probability": 1.0
+        },
+        {
+          "word": "arkasındaki",
+          "startSec": 108.022,
+          "endSec": 108.722,
+          "probability": 1.0
+        },
+        {
+          "word": "hiçbir",
+          "startSec": 108.722,
+          "endSec": 109.109,
+          "probability": 1.0
+        },
+        {
+          "word": "duvar",
+          "startSec": 109.109,
+          "endSec": 109.484,
+          "probability": 1.0
+        },
+        {
+          "word": "bir",
+          "startSec": 109.497,
+          "endSec": 109.659,
+          "probability": 1.0
+        },
+        {
+          "word": "daha",
+          "startSec": 109.659,
+          "endSec": 109.872,
+          "probability": 1.0
+        },
+        {
+          "word": "çizilmez;",
+          "startSec": 109.872,
+          "endSec": 110.534,
+          "probability": 1.0
+        },
+        {
+          "word": "Z-Buffer",
+          "startSec": 110.709,
+          "endSec": 111.184,
+          "probability": 1.0
+        },
+        {
+          "word": "olmadan",
+          "startSec": 111.184,
+          "endSec": 111.722,
+          "probability": 1.0
+        },
+        {
+          "word": "mükemmel",
+          "startSec": 111.722,
+          "endSec": 112.284,
+          "probability": 1.0
+        },
+        {
+          "word": "gizleme",
+          "startSec": 112.284,
+          "endSec": 112.684,
+          "probability": 1.0
+        },
+        {
+          "word": "ve",
+          "startSec": 112.684,
+          "endSec": 112.797,
+          "probability": 1.0
+        },
+        {
+          "word": "sıfır",
+          "startSec": 112.797,
+          "endSec": 113.109,
+          "probability": 1.0
+        },
+        {
+          "word": "overdraw",
+          "startSec": 113.109,
+          "endSec": 113.584,
+          "probability": 1.0
+        },
+        {
+          "word": "sağlanır.",
+          "startSec": 113.584,
+          "endSec": 114.147,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 15,
-      "startSec": 93.4,
-      "endSec": 100.36,
-      "text": "Yabancı anahtarlar, yani foreign cake ısıtlamaları sayesinde, sistemde olmayan bir odaya rezervasyon düşmesi",
+      "startSec": 115.836,
+      "endSec": 124.573,
+      "text": "Quake ve Half-Life'ın kullandığı GoldSrc motoruyla tam 3D koridorlara geçildiğinde BSP tek başına yeterli değildi.",
       "words": [
         {
-          "word": "Yabancı",
-          "startSec": 93.4,
-          "endSec": 93.82,
-          "probability": 0.9887
+          "word": "Quake",
+          "startSec": 115.836,
+          "endSec": 116.311,
+          "probability": 1.0
         },
         {
-          "word": "anahtarlar,",
-          "startSec": 93.82,
-          "endSec": 94.4,
-          "probability": 0.9878
+          "word": "ve",
+          "startSec": 116.323,
+          "endSec": 116.473,
+          "probability": 1.0
         },
         {
-          "word": "yani",
-          "startSec": 94.72,
-          "endSec": 94.94,
-          "probability": 0.946
+          "word": "Half-Life",
+          "startSec": 116.473,
+          "endSec": 117.148,
+          "probability": 1.0
         },
         {
-          "word": "foreign",
-          "startSec": 94.94,
-          "endSec": 95.38,
-          "probability": 0.1847
+          "word": "'ın",
+          "startSec": 117.148,
+          "endSec": 117.698,
+          "probability": 1.0
         },
         {
-          "word": "cake",
-          "startSec": 95.38,
-          "endSec": 95.7,
-          "probability": 0.7578
+          "word": "kullandığı",
+          "startSec": 117.698,
+          "endSec": 117.986,
+          "probability": 1.0
         },
         {
-          "word": "ısıtlamaları",
-          "startSec": 95.7,
-          "endSec": 96.36,
-          "probability": 0.9223
+          "word": "GoldSrc",
+          "startSec": 117.986,
+          "endSec": 118.823,
+          "probability": 1.0
         },
         {
-          "word": "sayesinde,",
-          "startSec": 96.36,
-          "endSec": 97.08,
-          "probability": 0.9952
+          "word": "motoruyla",
+          "startSec": 118.898,
+          "endSec": 119.161,
+          "probability": 1.0
         },
         {
-          "word": "sistemde",
-          "startSec": 97.54,
-          "endSec": 98.06,
-          "probability": 0.9871
+          "word": "tam",
+          "startSec": 119.248,
+          "endSec": 119.386,
+          "probability": 1.0
         },
         {
-          "word": "olmayan",
-          "startSec": 98.06,
-          "endSec": 98.64,
-          "probability": 0.9938
+          "word": "3D",
+          "startSec": 119.423,
+          "endSec": 120.423,
+          "probability": 1.0
         },
         {
-          "word": "bir",
-          "startSec": 98.64,
-          "endSec": 98.76,
-          "probability": 0.9974
+          "word": "koridorlara",
+          "startSec": 120.423,
+          "endSec": 121.073,
+          "probability": 1.0
         },
         {
-          "word": "odaya",
-          "startSec": 98.76,
-          "endSec": 99.18,
-          "probability": 0.9507
+          "word": "geçildiğinde",
+          "startSec": 121.098,
+          "endSec": 121.211,
+          "probability": 1.0
         },
         {
-          "word": "rezervasyon",
-          "startSec": 99.18,
-          "endSec": 99.88,
-          "probability": 0.9905
+          "word": "BSP",
+          "startSec": 121.211,
+          "endSec": 121.761,
+          "probability": 1.0
         },
         {
-          "word": "düşmesi",
-          "startSec": 99.88,
-          "endSec": 100.36,
-          "probability": 0.9946
+          "word": "tek",
+          "startSec": 121.761,
+          "endSec": 122.161,
+          "probability": 1.0
+        },
+        {
+          "word": "başına",
+          "startSec": 122.161,
+          "endSec": 122.598,
+          "probability": 1.0
+        },
+        {
+          "word": "yeterli",
+          "startSec": 122.598,
+          "endSec": 123.048,
+          "probability": 1.0
+        },
+        {
+          "word": "değildi.",
+          "startSec": 124.223,
+          "endSec": 124.573,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 16,
-      "startSec": 100.36,
-      "endSec": 106.36,
-      "text": "ya da karşılığı olmayan bir ödeme kaydı oluşması, daha veri tabanı seviyesinde engelleniyor.",
+      "startSec": 124.573,
+      "endSec": 130.536,
+      "text": "Çünkü kamera bir odadayken duvarın arkasındaki elli odanın düğümlerini dolaşmak hâlâ CPU zamanını harcıyordu.",
       "words": [
         {
-          "word": "ya",
-          "startSec": 100.36,
-          "endSec": 100.54,
-          "probability": 0.152
+          "word": "Çünkü",
+          "startSec": 124.573,
+          "endSec": 124.986,
+          "probability": 1.0
         },
         {
-          "word": "da",
-          "startSec": 100.54,
-          "endSec": 101.1,
-          "probability": 0.9911
-        },
-        {
-          "word": "karşılığı",
-          "startSec": 101.1,
-          "endSec": 101.76,
-          "probability": 0.94
-        },
-        {
-          "word": "olmayan",
-          "startSec": 101.76,
-          "endSec": 102.3,
-          "probability": 0.9947
+          "word": "kamera",
+          "startSec": 124.998,
+          "endSec": 125.161,
+          "probability": 1.0
         },
         {
           "word": "bir",
-          "startSec": 102.3,
-          "endSec": 102.42,
-          "probability": 0.9941
+          "startSec": 125.161,
+          "endSec": 125.786,
+          "probability": 1.0
         },
         {
-          "word": "ödeme",
-          "startSec": 102.42,
-          "endSec": 102.84,
-          "probability": 0.9618
+          "word": "odadayken",
+          "startSec": 125.786,
+          "endSec": 126.186,
+          "probability": 1.0
         },
         {
-          "word": "kaydı",
-          "startSec": 102.84,
-          "endSec": 103.16,
-          "probability": 0.7957
+          "word": "duvarın",
+          "startSec": 126.186,
+          "endSec": 126.886,
+          "probability": 1.0
         },
         {
-          "word": "oluşması,",
-          "startSec": 103.16,
-          "endSec": 103.66,
-          "probability": 0.9968
+          "word": "arkasındaki",
+          "startSec": 126.886,
+          "endSec": 127.136,
+          "probability": 1.0
         },
         {
-          "word": "daha",
-          "startSec": 104.04,
-          "endSec": 104.3,
-          "probability": 0.9861
+          "word": "elli",
+          "startSec": 127.136,
+          "endSec": 127.511,
+          "probability": 1.0
         },
         {
-          "word": "veri",
-          "startSec": 104.3,
-          "endSec": 104.66,
-          "probability": 0.9139
+          "word": "odanın",
+          "startSec": 127.511,
+          "endSec": 128.011,
+          "probability": 1.0
         },
         {
-          "word": "tabanı",
-          "startSec": 104.66,
-          "endSec": 104.92,
-          "probability": 0.8475
+          "word": "düğümlerini",
+          "startSec": 128.011,
+          "endSec": 128.573,
+          "probability": 1.0
         },
         {
-          "word": "seviyesinde",
-          "startSec": 104.92,
-          "endSec": 105.54,
-          "probability": 0.9677
+          "word": "dolaşmak",
+          "startSec": 128.599,
+          "endSec": 128.948,
+          "probability": 1.0
         },
         {
-          "word": "engelleniyor.",
-          "startSec": 105.54,
-          "endSec": 106.36,
-          "probability": 0.9516
+          "word": "hâlâ",
+          "startSec": 128.599,
+          "endSec": 128.948,
+          "probability": 1.0
+        },
+        {
+          "word": "CPU",
+          "startSec": 128.948,
+          "endSec": 129.349,
+          "probability": 1.0
+        },
+        {
+          "word": "zamanını",
+          "startSec": 129.349,
+          "endSec": 129.849,
+          "probability": 1.0
+        },
+        {
+          "word": "harcıyordu.",
+          "startSec": 129.849,
+          "endSec": 130.536,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 17,
-      "startSec": 107.14,
-      "endSec": 109.4,
-      "text": "Bölüm 3-Eş zamanlılık",
+      "startSec": 131.736,
+      "endSec": 136.761,
+      "text": "Çözüm PVS, yani Potentially Visible Set oldu.",
       "words": [
         {
-          "word": "Bölüm",
-          "startSec": 107.14,
-          "endSec": 107.4,
-          "probability": 0.7144
+          "word": "Çözüm",
+          "startSec": 131.736,
+          "endSec": 132.123,
+          "probability": 1.0
         },
         {
-          "word": "3",
-          "startSec": 107.4,
-          "endSec": 107.74,
-          "probability": 0.8454
+          "word": "PVS",
+          "startSec": 132.136,
+          "endSec": 132.673,
+          "probability": 1.0
         },
         {
-          "word": "-Eş",
-          "startSec": 107.74,
-          "endSec": 108.66,
-          "probability": 0.3275
+          "word": ",",
+          "startSec": 132.823,
+          "endSec": 133.211,
+          "probability": 1.0
         },
         {
-          "word": "zamanlılık",
-          "startSec": 108.66,
-          "endSec": 109.4,
-          "probability": 0.8613
+          "word": "yani",
+          "startSec": 133.211,
+          "endSec": 133.798,
+          "probability": 1.0
+        },
+        {
+          "word": "Potentially",
+          "startSec": 133.798,
+          "endSec": 134.303,
+          "probability": 1.0
+        },
+        {
+          "word": "Visible",
+          "startSec": 134.303,
+          "endSec": 134.623,
+          "probability": 1.0
+        },
+        {
+          "word": "Set",
+          "startSec": 134.623,
+          "endSec": 134.761,
+          "probability": 1.0
+        },
+        {
+          "word": "oldu.",
+          "startSec": 135.936,
+          "endSec": 136.761,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 18,
-      "startSec": 109.4,
-      "endSec": 111.86,
-      "text": "Transaction ve Çakışma yönetimi",
+      "startSec": 136.761,
+      "endSec": 146.736,
+      "text": "Derleyici haritadaki her oda çifti arasında ışık geçiren bir görüş hattı olup olmadığını önceden hesaplar ve sonucu sıkıştırılmış bir bit matrisine gömer.",
       "words": [
         {
-          "word": "Transaction",
-          "startSec": 109.4,
-          "endSec": 110.4,
-          "probability": 0.5466
+          "word": "Derleyici",
+          "startSec": 136.761,
+          "endSec": 137.411,
+          "probability": 1.0
+        },
+        {
+          "word": "haritadaki",
+          "startSec": 137.411,
+          "endSec": 137.623,
+          "probability": 1.0
+        },
+        {
+          "word": "her",
+          "startSec": 137.623,
+          "endSec": 137.798,
+          "probability": 1.0
+        },
+        {
+          "word": "oda",
+          "startSec": 137.798,
+          "endSec": 138.111,
+          "probability": 1.0
+        },
+        {
+          "word": "çifti",
+          "startSec": 138.111,
+          "endSec": 138.648,
+          "probability": 1.0
+        },
+        {
+          "word": "arasında",
+          "startSec": 138.736,
+          "endSec": 139.048,
+          "probability": 1.0
+        },
+        {
+          "word": "ışık",
+          "startSec": 139.048,
+          "endSec": 139.523,
+          "probability": 1.0
+        },
+        {
+          "word": "geçiren",
+          "startSec": 139.523,
+          "endSec": 139.698,
+          "probability": 1.0
+        },
+        {
+          "word": "bir",
+          "startSec": 139.698,
+          "endSec": 140.073,
+          "probability": 1.0
+        },
+        {
+          "word": "görüş",
+          "startSec": 140.073,
+          "endSec": 140.336,
+          "probability": 1.0
+        },
+        {
+          "word": "hattı",
+          "startSec": 140.336,
+          "endSec": 140.623,
+          "probability": 1.0
+        },
+        {
+          "word": "olup",
+          "startSec": 140.686,
+          "endSec": 141.248,
+          "probability": 1.0
+        },
+        {
+          "word": "olmadığını",
+          "startSec": 141.248,
+          "endSec": 141.761,
+          "probability": 1.0
+        },
+        {
+          "word": "önceden",
+          "startSec": 141.761,
+          "endSec": 142.386,
+          "probability": 1.0
+        },
+        {
+          "word": "hesaplar",
+          "startSec": 142.511,
+          "endSec": 142.636,
+          "probability": 1.0
         },
         {
           "word": "ve",
-          "startSec": 110.4,
-          "endSec": 110.72,
-          "probability": 0.9711
+          "startSec": 142.636,
+          "endSec": 143.023,
+          "probability": 1.0
         },
         {
-          "word": "Çakışma",
-          "startSec": 110.72,
-          "endSec": 111.36,
-          "probability": 0.9639
+          "word": "sonucu",
+          "startSec": 143.023,
+          "endSec": 143.748,
+          "probability": 1.0
         },
         {
-          "word": "yönetimi",
-          "startSec": 111.36,
-          "endSec": 111.86,
-          "probability": 0.8249
+          "word": "sıkıştırılmış",
+          "startSec": 143.748,
+          "endSec": 143.936,
+          "probability": 1.0
+        },
+        {
+          "word": "bir",
+          "startSec": 143.936,
+          "endSec": 144.099,
+          "probability": 1.0
+        },
+        {
+          "word": "bit",
+          "startSec": 144.111,
+          "endSec": 144.636,
+          "probability": 1.0
+        },
+        {
+          "word": "matrisine",
+          "startSec": 144.636,
+          "endSec": 145.011,
+          "probability": 1.0
+        },
+        {
+          "word": "gömer.",
+          "startSec": 146.173,
+          "endSec": 146.736,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 19,
-      "startSec": 112.34,
-      "endSec": 115.32,
-      "text": "Peki sistemin gerçek sınavı ne zaman başlar?",
+      "startSec": 146.736,
+      "endSec": 154.623,
+      "text": "Oyuncu bir odaya girdiğinde motor sadece tek bir bit vektörünü açar; sıfır olan tüm görünmez odalar tek hamlede elenir.",
       "words": [
         {
-          "word": "Peki",
-          "startSec": 112.34,
-          "endSec": 112.8,
-          "probability": 0.9263
+          "word": "Oyuncu",
+          "startSec": 146.736,
+          "endSec": 146.886,
+          "probability": 1.0
         },
         {
-          "word": "sistemin",
-          "startSec": 112.8,
-          "endSec": 113.48,
-          "probability": 0.6201
+          "word": "bir",
+          "startSec": 146.886,
+          "endSec": 147.161,
+          "probability": 1.0
         },
         {
-          "word": "gerçek",
-          "startSec": 113.48,
-          "endSec": 113.84,
-          "probability": 0.9883
+          "word": "odaya",
+          "startSec": 147.161,
+          "endSec": 147.698,
+          "probability": 1.0
         },
         {
-          "word": "sınavı",
-          "startSec": 113.84,
-          "endSec": 114.42,
-          "probability": 0.9824
+          "word": "girdiğinde",
+          "startSec": 147.698,
+          "endSec": 148.061,
+          "probability": 1.0
         },
         {
-          "word": "ne",
-          "startSec": 114.42,
-          "endSec": 114.58,
-          "probability": 0.9884
+          "word": "motor",
+          "startSec": 148.061,
+          "endSec": 148.611,
+          "probability": 1.0
         },
         {
-          "word": "zaman",
-          "startSec": 114.58,
-          "endSec": 114.86,
-          "probability": 0.999
+          "word": "sadece",
+          "startSec": 148.611,
+          "endSec": 148.861,
+          "probability": 1.0
         },
         {
-          "word": "başlar?",
-          "startSec": 114.86,
-          "endSec": 115.32,
-          "probability": 0.9959
+          "word": "tek",
+          "startSec": 148.873,
+          "endSec": 149.061,
+          "probability": 1.0
+        },
+        {
+          "word": "bir",
+          "startSec": 149.061,
+          "endSec": 149.224,
+          "probability": 1.0
+        },
+        {
+          "word": "bit",
+          "startSec": 149.236,
+          "endSec": 149.736,
+          "probability": 1.0
+        },
+        {
+          "word": "vektörünü",
+          "startSec": 149.736,
+          "endSec": 150.136,
+          "probability": 1.0
+        },
+        {
+          "word": "açar;",
+          "startSec": 150.273,
+          "endSec": 150.611,
+          "probability": 1.0
+        },
+        {
+          "word": "sıfır",
+          "startSec": 150.611,
+          "endSec": 150.936,
+          "probability": 1.0
+        },
+        {
+          "word": "olan",
+          "startSec": 150.948,
+          "endSec": 151.161,
+          "probability": 1.0
+        },
+        {
+          "word": "tüm",
+          "startSec": 151.173,
+          "endSec": 151.636,
+          "probability": 1.0
+        },
+        {
+          "word": "görünmez",
+          "startSec": 151.636,
+          "endSec": 151.998,
+          "probability": 1.0
+        },
+        {
+          "word": "odalar",
+          "startSec": 152.011,
+          "endSec": 152.198,
+          "probability": 1.0
+        },
+        {
+          "word": "tek",
+          "startSec": 152.198,
+          "endSec": 152.599,
+          "probability": 1.0
+        },
+        {
+          "word": "hamlede",
+          "startSec": 152.599,
+          "endSec": 153.011,
+          "probability": 1.0
+        },
+        {
+          "word": "elenir.",
+          "startSec": 154.186,
+          "endSec": 154.623,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 20,
-      "startSec": 116.1,
-      "endSec": 122.16,
-      "text": "Aynı saniyede iki farklı kullanıcı, son kalan 204 numaralı odayı ayırtmaya çalıştığında.",
+      "startSec": 154.623,
+      "endSec": 156.648,
+      "text": "Aynı felsefe aydınlatmada da uygulandı.",
       "words": [
         {
           "word": "Aynı",
-          "startSec": 116.1,
-          "endSec": 116.48,
-          "probability": 0.977
+          "startSec": 154.623,
+          "endSec": 155.148,
+          "probability": 1.0
         },
         {
-          "word": "saniyede",
-          "startSec": 116.48,
-          "endSec": 117.14,
-          "probability": 0.9676
+          "word": "felsefe",
+          "startSec": 155.148,
+          "endSec": 155.923,
+          "probability": 1.0
         },
         {
-          "word": "iki",
-          "startSec": 117.14,
-          "endSec": 117.52,
-          "probability": 0.7249
+          "word": "aydınlatmada",
+          "startSec": 155.923,
+          "endSec": 156.023,
+          "probability": 1.0
         },
         {
-          "word": "farklı",
-          "startSec": 117.52,
-          "endSec": 117.82,
-          "probability": 0.9979
+          "word": "da",
+          "startSec": 155.923,
+          "endSec": 156.023,
+          "probability": 1.0
         },
         {
-          "word": "kullanıcı,",
-          "startSec": 117.82,
-          "endSec": 118.5,
-          "probability": 0.9949
-        },
-        {
-          "word": "son",
-          "startSec": 118.82,
-          "endSec": 119.04,
-          "probability": 0.9556
-        },
-        {
-          "word": "kalan",
-          "startSec": 119.04,
-          "endSec": 119.4,
-          "probability": 0.963
-        },
-        {
-          "word": "204",
-          "startSec": 119.4,
-          "endSec": 120.04,
-          "probability": 0.9412
-        },
-        {
-          "word": "numaralı",
-          "startSec": 120.04,
-          "endSec": 120.5,
-          "probability": 0.9869
-        },
-        {
-          "word": "odayı",
-          "startSec": 120.5,
-          "endSec": 120.94,
-          "probability": 0.7446
-        },
-        {
-          "word": "ayırtmaya",
-          "startSec": 120.94,
-          "endSec": 121.38,
-          "probability": 0.9738
-        },
-        {
-          "word": "çalıştığında.",
-          "startSec": 121.38,
-          "endSec": 122.16,
-          "probability": 0.9938
+          "word": "uygulandı.",
+          "startSec": 156.023,
+          "endSec": 156.648,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 21,
-      "startSec": 122.64,
-      "endSec": 127.7,
-      "text": "Eğer bu kontrolü sadece uygulama tarafında basit bir ifbule oyla yaparsanız,",
+      "startSec": 157.811,
+      "endSec": 164.761,
+      "text": "Gerçek zamanlı gölge hesaplamak yerine Radiosity algoritmasıyla yumuşak ışıklar önceden Lightmap dokularına pişirildi.",
       "words": [
         {
-          "word": "Eğer",
-          "startSec": 122.64,
-          "endSec": 123.22,
-          "probability": 0.9823
+          "word": "Gerçek",
+          "startSec": 157.811,
+          "endSec": 158.573,
+          "probability": 1.0
         },
         {
-          "word": "bu",
-          "startSec": 123.22,
-          "endSec": 123.4,
-          "probability": 0.9939
+          "word": "zamanlı",
+          "startSec": 158.573,
+          "endSec": 159.011,
+          "probability": 1.0
         },
         {
-          "word": "kontrolü",
-          "startSec": 123.4,
-          "endSec": 124.04,
-          "probability": 0.9589
+          "word": "gölge",
+          "startSec": 159.011,
+          "endSec": 159.361,
+          "probability": 1.0
         },
         {
-          "word": "sadece",
-          "startSec": 124.04,
-          "endSec": 124.36,
-          "probability": 0.9642
+          "word": "hesaplamak",
+          "startSec": 159.361,
+          "endSec": 159.998,
+          "probability": 1.0
         },
         {
-          "word": "uygulama",
-          "startSec": 124.36,
-          "endSec": 125.06,
-          "probability": 0.9944
+          "word": "yerine",
+          "startSec": 160.011,
+          "endSec": 160.336,
+          "probability": 1.0
         },
         {
-          "word": "tarafında",
-          "startSec": 125.06,
-          "endSec": 125.6,
-          "probability": 0.9883
+          "word": "Radiosity",
+          "startSec": 160.336,
+          "endSec": 160.961,
+          "probability": 1.0
         },
         {
-          "word": "basit",
-          "startSec": 125.6,
-          "endSec": 126.1,
-          "probability": 0.9767
+          "word": "algoritmasıyla",
+          "startSec": 160.961,
+          "endSec": 161.873,
+          "probability": 1.0
         },
         {
-          "word": "bir",
-          "startSec": 126.1,
-          "endSec": 126.24,
-          "probability": 0.9959
+          "word": "yumuşak",
+          "startSec": 161.923,
+          "endSec": 162.336,
+          "probability": 1.0
         },
         {
-          "word": "ifbule",
-          "startSec": 126.24,
-          "endSec": 126.74,
-          "probability": 0.6358
+          "word": "ışıklar",
+          "startSec": 162.336,
+          "endSec": 162.773,
+          "probability": 1.0
         },
         {
-          "word": "oyla",
-          "startSec": 126.74,
-          "endSec": 126.98,
-          "probability": 0.5199
+          "word": "önceden",
+          "startSec": 162.798,
+          "endSec": 163.273,
+          "probability": 1.0
         },
         {
-          "word": "yaparsanız,",
-          "startSec": 126.98,
-          "endSec": 127.7,
-          "probability": 0.997
+          "word": "Lightmap",
+          "startSec": 163.273,
+          "endSec": 163.673,
+          "probability": 1.0
+        },
+        {
+          "word": "dokularına",
+          "startSec": 163.686,
+          "endSec": 164.148,
+          "probability": 1.0
+        },
+        {
+          "word": "pişirildi.",
+          "startSec": 164.148,
+          "endSec": 164.761,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 22,
-      "startSec": 127.7,
-      "endSec": 132.28,
-      "text": "iki istek aynı anda geçer ve çifte rezervasyon hatası oluşur.",
+      "startSec": 165.923,
+      "endSec": 172.111,
+      "text": "Çalışma anında CPU sadece hazır ışığı yüzey dokusuyla çarparak sinematik atmosferi bedavaya getirdi.",
       "words": [
         {
-          "word": "iki",
-          "startSec": 127.7,
-          "endSec": 128.34,
-          "probability": 0.0088
+          "word": "Çalışma",
+          "startSec": 165.923,
+          "endSec": 166.623,
+          "probability": 1.0
         },
         {
-          "word": "istek",
-          "startSec": 128.34,
-          "endSec": 128.74,
-          "probability": 0.9444
+          "word": "anında",
+          "startSec": 166.623,
+          "endSec": 167.023,
+          "probability": 1.0
         },
         {
-          "word": "aynı",
-          "startSec": 128.74,
-          "endSec": 129.08,
-          "probability": 0.9746
+          "word": "CPU",
+          "startSec": 167.023,
+          "endSec": 167.461,
+          "probability": 1.0
         },
         {
-          "word": "anda",
-          "startSec": 129.08,
-          "endSec": 129.36,
-          "probability": 0.9969
+          "word": "sadece",
+          "startSec": 167.461,
+          "endSec": 168.011,
+          "probability": 1.0
         },
         {
-          "word": "geçer",
-          "startSec": 129.36,
-          "endSec": 129.84,
-          "probability": 0.9944
+          "word": "hazır",
+          "startSec": 168.011,
+          "endSec": 168.336,
+          "probability": 1.0
         },
         {
-          "word": "ve",
-          "startSec": 129.84,
-          "endSec": 130.24,
-          "probability": 0.9451
+          "word": "ışığı",
+          "startSec": 168.336,
+          "endSec": 168.648,
+          "probability": 1.0
         },
         {
-          "word": "çifte",
-          "startSec": 130.24,
-          "endSec": 130.72,
-          "probability": 0.9697
+          "word": "yüzey",
+          "startSec": 168.648,
+          "endSec": 168.986,
+          "probability": 1.0
         },
         {
-          "word": "rezervasyon",
-          "startSec": 130.72,
-          "endSec": 131.4,
-          "probability": 0.9833
+          "word": "dokusuyla",
+          "startSec": 168.986,
+          "endSec": 169.523,
+          "probability": 1.0
         },
         {
-          "word": "hatası",
-          "startSec": 131.4,
-          "endSec": 131.84,
-          "probability": 0.9874
+          "word": "çarparak",
+          "startSec": 169.536,
+          "endSec": 170.086,
+          "probability": 1.0
         },
         {
-          "word": "oluşur.",
-          "startSec": 131.84,
-          "endSec": 132.28,
-          "probability": 0.9783
+          "word": "sinematik",
+          "startSec": 170.086,
+          "endSec": 170.636,
+          "probability": 1.0
+        },
+        {
+          "word": "atmosferi",
+          "startSec": 170.636,
+          "endSec": 171.236,
+          "probability": 1.0
+        },
+        {
+          "word": "bedavaya",
+          "startSec": 171.236,
+          "endSec": 171.673,
+          "probability": 1.0
+        },
+        {
+          "word": "getirdi.",
+          "startSec": 171.673,
+          "endSec": 172.111,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 23,
-      "startSec": 132.78,
-      "endSec": 135.26,
-      "text": "Bunu çözmek için Spring Boot tarafında",
+      "startSec": 173.764,
+      "endSec": 178.926,
+      "text": "Ancak hız yalnızca grafikle bitmez; asıl sessiz katil bellek parçalanmasıdır.",
       "words": [
         {
-          "word": "Bunu",
-          "startSec": 132.78,
-          "endSec": 133.12,
-          "probability": 0.9467
+          "word": "Ancak",
+          "startSec": 173.764,
+          "endSec": 174.489,
+          "probability": 1.0
         },
         {
-          "word": "çözmek",
-          "startSec": 133.12,
-          "endSec": 133.5,
-          "probability": 0.9935
+          "word": "hız",
+          "startSec": 174.489,
+          "endSec": 174.714,
+          "probability": 1.0
         },
         {
-          "word": "için",
-          "startSec": 133.5,
-          "endSec": 133.78,
-          "probability": 0.9989
+          "word": "yalnızca",
+          "startSec": 174.714,
+          "endSec": 175.276,
+          "probability": 1.0
         },
         {
-          "word": "Spring",
-          "startSec": 133.78,
-          "endSec": 134.32,
-          "probability": 0.6962
+          "word": "grafikle",
+          "startSec": 175.276,
+          "endSec": 175.801,
+          "probability": 1.0
         },
         {
-          "word": "Boot",
-          "startSec": 134.32,
-          "endSec": 134.6,
-          "probability": 0.7771
+          "word": "bitmez;",
+          "startSec": 175.801,
+          "endSec": 176.314,
+          "probability": 1.0
         },
         {
-          "word": "tarafında",
-          "startSec": 134.6,
-          "endSec": 135.26,
-          "probability": 0.9883
+          "word": "asıl",
+          "startSec": 176.501,
+          "endSec": 176.826,
+          "probability": 1.0
+        },
+        {
+          "word": "sessiz",
+          "startSec": 176.826,
+          "endSec": 177.251,
+          "probability": 1.0
+        },
+        {
+          "word": "katil",
+          "startSec": 177.251,
+          "endSec": 177.614,
+          "probability": 1.0
+        },
+        {
+          "word": "bellek",
+          "startSec": 177.614,
+          "endSec": 177.939,
+          "probability": 1.0
+        },
+        {
+          "word": "parçalanmasıdır.",
+          "startSec": 177.939,
+          "endSec": 178.926,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 24,
-      "startSec": 135.26,
-      "endSec": 137.18,
-      "text": "Ad Transactional yapısını",
+      "startSec": 180.101,
+      "endSec": 188.039,
+      "text": "4 MB RAM içinde her nesne için standart C malloc ve free çağrıları yaparsanız, bellek delik deşik olur ve kare süreleri aniden sıçrar.",
       "words": [
         {
-          "word": "Ad",
-          "startSec": 135.26,
-          "endSec": 135.86,
-          "probability": 0.1617
+          "word": "4",
+          "startSec": 180.101,
+          "endSec": 180.564,
+          "probability": 1.0
         },
         {
-          "word": "Transactional",
-          "startSec": 135.86,
-          "endSec": 136.6,
-          "probability": 0.7629
+          "word": "MB",
+          "startSec": 180.589,
+          "endSec": 180.889,
+          "probability": 1.0
         },
         {
-          "word": "yapısını",
-          "startSec": 136.6,
-          "endSec": 137.18,
-          "probability": 0.8686
+          "word": "RAM",
+          "startSec": 180.901,
+          "endSec": 181.126,
+          "probability": 1.0
+        },
+        {
+          "word": "içinde",
+          "startSec": 181.126,
+          "endSec": 181.476,
+          "probability": 1.0
+        },
+        {
+          "word": "her",
+          "startSec": 181.476,
+          "endSec": 181.739,
+          "probability": 1.0
+        },
+        {
+          "word": "nesne",
+          "startSec": 181.739,
+          "endSec": 182.101,
+          "probability": 1.0
+        },
+        {
+          "word": "için",
+          "startSec": 182.101,
+          "endSec": 182.439,
+          "probability": 1.0
+        },
+        {
+          "word": "standart",
+          "startSec": 182.451,
+          "endSec": 183.039,
+          "probability": 1.0
+        },
+        {
+          "word": "C",
+          "startSec": 183.064,
+          "endSec": 183.226,
+          "probability": 1.0
+        },
+        {
+          "word": "malloc",
+          "startSec": 183.226,
+          "endSec": 183.564,
+          "probability": 1.0
+        },
+        {
+          "word": "ve",
+          "startSec": 183.576,
+          "endSec": 183.726,
+          "probability": 1.0
+        },
+        {
+          "word": "free",
+          "startSec": 183.726,
+          "endSec": 183.914,
+          "probability": 1.0
+        },
+        {
+          "word": "çağrıları",
+          "startSec": 183.914,
+          "endSec": 184.439,
+          "probability": 1.0
+        },
+        {
+          "word": "yaparsanız,",
+          "startSec": 184.439,
+          "endSec": 185.201,
+          "probability": 1.0
+        },
+        {
+          "word": "bellek",
+          "startSec": 185.414,
+          "endSec": 185.839,
+          "probability": 1.0
+        },
+        {
+          "word": "delik",
+          "startSec": 185.851,
+          "endSec": 186.101,
+          "probability": 1.0
+        },
+        {
+          "word": "deşik",
+          "startSec": 186.114,
+          "endSec": 186.401,
+          "probability": 1.0
+        },
+        {
+          "word": "olur",
+          "startSec": 186.401,
+          "endSec": 186.676,
+          "probability": 1.0
+        },
+        {
+          "word": "ve",
+          "startSec": 186.689,
+          "endSec": 186.826,
+          "probability": 1.0
+        },
+        {
+          "word": "kare",
+          "startSec": 186.826,
+          "endSec": 187.114,
+          "probability": 1.0
+        },
+        {
+          "word": "süreleri",
+          "startSec": 187.114,
+          "endSec": 187.564,
+          "probability": 1.0
+        },
+        {
+          "word": "aniden",
+          "startSec": 187.114,
+          "endSec": 187.564,
+          "probability": 1.0
+        },
+        {
+          "word": "sıçrar.",
+          "startSec": 187.564,
+          "endSec": 188.039,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 25,
-      "startSec": 137.18,
-      "endSec": 142.02,
-      "text": "ve MySQL in-o-ndb satır kilitleme mekanizmasını devreye aldık.",
+      "startSec": 188.039,
+      "endSec": 196.126,
+      "text": "Doom bunu kendi Zone bellek yöneticisi Z_Malloc ile, Quake ve GoldSrc ise doğrusal Hunk arena mimarisiyle çözdü.",
       "words": [
         {
+          "word": "Doom",
+          "startSec": 188.039,
+          "endSec": 188.526,
+          "probability": 1.0
+        },
+        {
+          "word": "bunu",
+          "startSec": 189.664,
+          "endSec": 189.826,
+          "probability": 1.0
+        },
+        {
+          "word": "kendi",
+          "startSec": 190.089,
+          "endSec": 190.326,
+          "probability": 1.0
+        },
+        {
+          "word": "Zone",
+          "startSec": 190.326,
+          "endSec": 190.676,
+          "probability": 1.0
+        },
+        {
+          "word": "bellek",
+          "startSec": 190.676,
+          "endSec": 190.976,
+          "probability": 1.0
+        },
+        {
+          "word": "yöneticisi",
+          "startSec": 190.976,
+          "endSec": 191.326,
+          "probability": 1.0
+        },
+        {
+          "word": "Z_Malloc",
+          "startSec": 191.339,
+          "endSec": 192.189,
+          "probability": 1.0
+        },
+        {
+          "word": "ile,",
+          "startSec": 192.189,
+          "endSec": 192.489,
+          "probability": 1.0
+        },
+        {
+          "word": "Quake",
+          "startSec": 192.489,
+          "endSec": 192.764,
+          "probability": 1.0
+        },
+        {
           "word": "ve",
-          "startSec": 137.18,
-          "endSec": 137.68,
-          "probability": 0.9836
+          "startSec": 192.964,
+          "endSec": 193.276,
+          "probability": 1.0
         },
         {
-          "word": "MySQL",
-          "startSec": 137.68,
-          "endSec": 138.44,
-          "probability": 0.9299
+          "word": "GoldSrc",
+          "startSec": 193.289,
+          "endSec": 193.701,
+          "probability": 1.0
         },
         {
-          "word": "in",
-          "startSec": 138.44,
-          "endSec": 138.94,
-          "probability": 0.4918
+          "word": "ise",
+          "startSec": 193.701,
+          "endSec": 194.051,
+          "probability": 1.0
         },
         {
-          "word": "-o",
-          "startSec": 138.94,
-          "endSec": 139.18,
-          "probability": 0.1746
+          "word": "doğrusal",
+          "startSec": 194.051,
+          "endSec": 194.276,
+          "probability": 1.0
         },
         {
-          "word": "-ndb",
-          "startSec": 139.18,
-          "endSec": 139.66,
-          "probability": 0.7905
+          "word": "Hunk",
+          "startSec": 194.276,
+          "endSec": 194.851,
+          "probability": 1.0
         },
         {
-          "word": "satır",
-          "startSec": 139.66,
-          "endSec": 140.04,
-          "probability": 0.9651
+          "word": "arena",
+          "startSec": 194.851,
+          "endSec": 195.089,
+          "probability": 1.0
         },
         {
-          "word": "kilitleme",
-          "startSec": 140.04,
-          "endSec": 140.46,
-          "probability": 0.9791
+          "word": "mimarisiyle",
+          "startSec": 195.089,
+          "endSec": 195.401,
+          "probability": 1.0
         },
         {
-          "word": "mekanizmasını",
-          "startSec": 140.46,
-          "endSec": 141.24,
-          "probability": 0.9869
-        },
-        {
-          "word": "devreye",
-          "startSec": 141.24,
-          "endSec": 141.7,
-          "probability": 0.9482
-        },
-        {
-          "word": "aldık.",
-          "startSec": 141.7,
-          "endSec": 142.02,
-          "probability": 0.9964
+          "word": "çözdü.",
+          "startSec": 195.401,
+          "endSec": 196.126,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 26,
-      "startSec": 142.76,
-      "endSec": 144.9,
-      "text": "Bir rezervasyon isteği geldiğinde,",
+      "startSec": 196.126,
+      "endSec": 201.051,
+      "text": "Motor açılışta tüm boş RAM'i tek bir blok halinde ayırır.",
       "words": [
         {
-          "word": "Bir",
-          "startSec": 142.76,
-          "endSec": 142.92,
-          "probability": 0.9839
+          "word": "Motor",
+          "startSec": 196.126,
+          "endSec": 196.551,
+          "probability": 1.0
         },
         {
-          "word": "rezervasyon",
-          "startSec": 142.92,
-          "endSec": 143.62,
-          "probability": 0.9965
+          "word": "açılışta",
+          "startSec": 197.714,
+          "endSec": 198.226,
+          "probability": 1.0
         },
         {
-          "word": "isteği",
-          "startSec": 143.62,
-          "endSec": 143.98,
-          "probability": 0.9862
+          "word": "tüm",
+          "startSec": 198.226,
+          "endSec": 198.776,
+          "probability": 1.0
         },
         {
-          "word": "geldiğinde,",
-          "startSec": 143.98,
-          "endSec": 144.9,
-          "probability": 0.9854
+          "word": "boş",
+          "startSec": 198.826,
+          "endSec": 199.051,
+          "probability": 1.0
+        },
+        {
+          "word": "RAM",
+          "startSec": 199.051,
+          "endSec": 199.314,
+          "probability": 1.0
+        },
+        {
+          "word": "'i",
+          "startSec": 199.314,
+          "endSec": 199.526,
+          "probability": 1.0
+        },
+        {
+          "word": "tek",
+          "startSec": 199.526,
+          "endSec": 199.764,
+          "probability": 1.0
+        },
+        {
+          "word": "bir",
+          "startSec": 199.776,
+          "endSec": 199.976,
+          "probability": 1.0
+        },
+        {
+          "word": "blok",
+          "startSec": 199.976,
+          "endSec": 200.251,
+          "probability": 1.0
+        },
+        {
+          "word": "halinde",
+          "startSec": 200.251,
+          "endSec": 200.626,
+          "probability": 1.0
+        },
+        {
+          "word": "ayırır.",
+          "startSec": 200.626,
+          "endSec": 201.051,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 27,
-      "startSec": 145.06,
-      "endSec": 149.16,
-      "text": "önce tarih çakışması veri tabanı seviyesinde kilitlenerek kontrol ediliyor.",
+      "startSec": 202.189,
+      "endSec": 207.339,
+      "text": "Harita yüklenirken veriler sadece tek bir pointer ileri kaydırılarak peş peşe yazılır.",
       "words": [
         {
-          "word": "önce",
-          "startSec": 145.06,
-          "endSec": 145.28,
-          "probability": 0.9749
+          "word": "Harita",
+          "startSec": 202.189,
+          "endSec": 202.801,
+          "probability": 1.0
         },
         {
-          "word": "tarih",
-          "startSec": 145.28,
-          "endSec": 145.84,
-          "probability": 0.9523
+          "word": "yüklenirken",
+          "startSec": 202.814,
+          "endSec": 203.514,
+          "probability": 1.0
         },
         {
-          "word": "çakışması",
-          "startSec": 145.84,
-          "endSec": 146.44,
-          "probability": 0.9817
+          "word": "veriler",
+          "startSec": 203.514,
+          "endSec": 203.939,
+          "probability": 1.0
         },
         {
-          "word": "veri",
-          "startSec": 146.44,
-          "endSec": 146.9,
-          "probability": 0.6997
+          "word": "sadece",
+          "startSec": 203.951,
+          "endSec": 204.514,
+          "probability": 1.0
         },
         {
-          "word": "tabanı",
-          "startSec": 146.9,
-          "endSec": 147.12,
-          "probability": 0.9123
+          "word": "tek",
+          "startSec": 204.514,
+          "endSec": 204.764,
+          "probability": 1.0
         },
         {
-          "word": "seviyesinde",
-          "startSec": 147.12,
-          "endSec": 147.7,
-          "probability": 0.9583
+          "word": "bir",
+          "startSec": 204.764,
+          "endSec": 204.926,
+          "probability": 1.0
         },
         {
-          "word": "kilitlenerek",
-          "startSec": 147.7,
-          "endSec": 148.34,
-          "probability": 0.9961
+          "word": "pointer",
+          "startSec": 204.926,
+          "endSec": 205.426,
+          "probability": 1.0
         },
         {
-          "word": "kontrol",
-          "startSec": 148.34,
-          "endSec": 148.8,
-          "probability": 0.9686
+          "word": "ileri",
+          "startSec": 205.426,
+          "endSec": 205.676,
+          "probability": 1.0
         },
         {
-          "word": "ediliyor.",
-          "startSec": 148.8,
-          "endSec": 149.16,
-          "probability": 0.9904
+          "word": "kaydırılarak",
+          "startSec": 205.676,
+          "endSec": 206.364,
+          "probability": 1.0
+        },
+        {
+          "word": "peş",
+          "startSec": 206.401,
+          "endSec": 206.614,
+          "probability": 1.0
+        },
+        {
+          "word": "peşe",
+          "startSec": 206.614,
+          "endSec": 206.914,
+          "probability": 1.0
+        },
+        {
+          "word": "yazılır.",
+          "startSec": 206.914,
+          "endSec": 207.339,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 28,
-      "startSec": 149.86,
-      "endSec": 154.42,
-      "text": "İlk gelen istek, 201 created yanıtıyla işlemi güvenle tamamlarken",
+      "startSec": 208.514,
+      "endSec": 217.364,
+      "text": "Bölüm bittiğinde binlerce ayrı free çağrısı yapmak yerine, tek bir pointer başlangıç adresine sıfırlanır ve tüm bellek mikrosaniyeler içinde tertemiz olur.",
       "words": [
         {
-          "word": "İlk",
-          "startSec": 149.86,
-          "endSec": 150.22,
-          "probability": 0.9815
+          "word": "Bölüm",
+          "startSec": 208.514,
+          "endSec": 209.164,
+          "probability": 1.0
         },
         {
-          "word": "gelen",
-          "startSec": 150.22,
-          "endSec": 150.38,
-          "probability": 0.9976
+          "word": "bittiğinde",
+          "startSec": 209.164,
+          "endSec": 209.626,
+          "probability": 1.0
         },
         {
-          "word": "istek,",
-          "startSec": 150.38,
-          "endSec": 150.86,
-          "probability": 0.9897
+          "word": "binlerce",
+          "startSec": 209.639,
+          "endSec": 210.176,
+          "probability": 1.0
         },
         {
-          "word": "201",
-          "startSec": 151.22,
-          "endSec": 151.72,
-          "probability": 0.5204
+          "word": "ayrı",
+          "startSec": 210.176,
+          "endSec": 210.526,
+          "probability": 1.0
         },
         {
-          "word": "created",
-          "startSec": 151.72,
-          "endSec": 152.14,
-          "probability": 0.2686
+          "word": "free",
+          "startSec": 210.526,
+          "endSec": 210.726,
+          "probability": 1.0
         },
         {
-          "word": "yanıtıyla",
-          "startSec": 152.14,
-          "endSec": 152.8,
-          "probability": 0.8575
+          "word": "çağrısı",
+          "startSec": 210.726,
+          "endSec": 211.201,
+          "probability": 1.0
         },
         {
-          "word": "işlemi",
-          "startSec": 152.8,
-          "endSec": 153.3,
-          "probability": 0.9533
+          "word": "yapmak",
+          "startSec": 211.201,
+          "endSec": 211.601,
+          "probability": 1.0
         },
         {
-          "word": "güvenle",
-          "startSec": 153.3,
-          "endSec": 153.74,
-          "probability": 0.9849
+          "word": "yerine,",
+          "startSec": 211.614,
+          "endSec": 212.026,
+          "probability": 1.0
         },
         {
-          "word": "tamamlarken",
-          "startSec": 153.74,
-          "endSec": 154.42,
-          "probability": 0.9864
+          "word": "tek",
+          "startSec": 212.226,
+          "endSec": 212.414,
+          "probability": 1.0
+        },
+        {
+          "word": "bir",
+          "startSec": 212.451,
+          "endSec": 212.614,
+          "probability": 1.0
+        },
+        {
+          "word": "pointer",
+          "startSec": 212.614,
+          "endSec": 213.114,
+          "probability": 1.0
+        },
+        {
+          "word": "başlangıç",
+          "startSec": 213.114,
+          "endSec": 213.714,
+          "probability": 1.0
+        },
+        {
+          "word": "adresine",
+          "startSec": 213.714,
+          "endSec": 214.214,
+          "probability": 1.0
+        },
+        {
+          "word": "sıfırlanır",
+          "startSec": 214.214,
+          "endSec": 214.814,
+          "probability": 1.0
+        },
+        {
+          "word": "ve",
+          "startSec": 214.951,
+          "endSec": 215.076,
+          "probability": 1.0
+        },
+        {
+          "word": "tüm",
+          "startSec": 215.089,
+          "endSec": 215.326,
+          "probability": 1.0
+        },
+        {
+          "word": "bellek",
+          "startSec": 215.339,
+          "endSec": 215.676,
+          "probability": 1.0
+        },
+        {
+          "word": "mikrosaniyeler",
+          "startSec": 215.726,
+          "endSec": 216.501,
+          "probability": 1.0
+        },
+        {
+          "word": "içinde",
+          "startSec": 216.501,
+          "endSec": 216.826,
+          "probability": 1.0
+        },
+        {
+          "word": "tertemiz",
+          "startSec": 216.501,
+          "endSec": 216.826,
+          "probability": 1.0
+        },
+        {
+          "word": "olur.",
+          "startSec": 216.826,
+          "endSec": 217.364,
+          "probability": 1.0
         }
       ]
     },
     {
       "id": 29,
-      "startSec": 154.42,
-      "endSec": 160.54,
-      "text": "milisanyeler sonra gelen ikinci istek, doğrudan 409 konflik hatasıyla geri çevriliyor.",
+      "startSec": 217.364,
+      "endSec": 230.176,
+      "text": "İşletim sistemine bağımlı olmayan bu deterministik saf C mimarisi o kadar sağlamdı ki, bugün Xash3D motoruyla WebAssembly'e derlenip doğrudan tarayıcıda bile akıcı şekilde çalışabiliyor.",
       "words": [
         {
-          "word": "milisanyeler",
-          "startSec": 154.42,
-          "endSec": 155.58,
-          "probability": 0.4538
+          "word": "İşletim",
+          "startSec": 217.364,
+          "endSec": 217.651,
+          "probability": 1.0
         },
         {
-          "word": "sonra",
-          "startSec": 155.58,
-          "endSec": 155.86,
-          "probability": 0.9439
+          "word": "sistemine",
+          "startSec": 218.826,
+          "endSec": 219.551,
+          "probability": 1.0
         },
         {
-          "word": "gelen",
-          "startSec": 155.86,
-          "endSec": 156.18,
-          "probability": 0.9962
+          "word": "bağımlı",
+          "startSec": 219.551,
+          "endSec": 220.101,
+          "probability": 1.0
         },
         {
-          "word": "ikinci",
-          "startSec": 156.18,
-          "endSec": 156.7,
-          "probability": 0.9211
-        },
-        {
-          "word": "istek,",
-          "startSec": 156.7,
-          "endSec": 157.06,
-          "probability": 0.9687
-        },
-        {
-          "word": "doğrudan",
-          "startSec": 157.46,
-          "endSec": 157.9,
-          "probability": 0.9858
-        },
-        {
-          "word": "409",
-          "startSec": 157.9,
-          "endSec": 158.58,
-          "probability": 0.9563
-        },
-        {
-          "word": "konflik",
-          "startSec": 158.58,
-          "endSec": 159.2,
-          "probability": 0.9246
-        },
-        {
-          "word": "hatasıyla",
-          "startSec": 159.2,
-          "endSec": 159.8,
-          "probability": 0.8605
-        },
-        {
-          "word": "geri",
-          "startSec": 159.8,
-          "endSec": 160.08,
-          "probability": 0.9561
-        },
-        {
-          "word": "çevriliyor.",
-          "startSec": 160.08,
-          "endSec": 160.54,
-          "probability": 0.8635
-        }
-      ]
-    },
-    {
-      "id": 30,
-      "startSec": 161.36,
-      "endSec": 163.74,
-      "text": "Ya tüm adımlar eksiksiz tamamlanıyor",
-      "words": [
-        {
-          "word": "Ya",
-          "startSec": 161.36,
-          "endSec": 161.66,
-          "probability": 0.6919
-        },
-        {
-          "word": "tüm",
-          "startSec": 161.66,
-          "endSec": 161.96,
-          "probability": 0.9736
-        },
-        {
-          "word": "adımlar",
-          "startSec": 161.96,
-          "endSec": 162.38,
-          "probability": 0.9945
-        },
-        {
-          "word": "eksiksiz",
-          "startSec": 162.38,
-          "endSec": 163.04,
-          "probability": 0.9764
-        },
-        {
-          "word": "tamamlanıyor",
-          "startSec": 163.04,
-          "endSec": 163.74,
-          "probability": 0.9973
-        }
-      ]
-    },
-    {
-      "id": 31,
-      "startSec": 163.74,
-      "endSec": 168.02,
-      "text": "ya da en ufak bir hatada sistem kendini tamamen geri sarıyor.",
-      "words": [
-        {
-          "word": "ya",
-          "startSec": 163.74,
-          "endSec": 164.28,
-          "probability": 0.5628
-        },
-        {
-          "word": "da",
-          "startSec": 164.28,
-          "endSec": 164.46,
-          "probability": 0.9971
-        },
-        {
-          "word": "en",
-          "startSec": 164.46,
-          "endSec": 164.74,
-          "probability": 0.9942
-        },
-        {
-          "word": "ufak",
-          "startSec": 164.74,
-          "endSec": 165.0,
-          "probability": 0.9988
-        },
-        {
-          "word": "bir",
-          "startSec": 165.0,
-          "endSec": 165.16,
-          "probability": 0.9969
-        },
-        {
-          "word": "hatada",
-          "startSec": 165.16,
-          "endSec": 165.7,
-          "probability": 0.98
-        },
-        {
-          "word": "sistem",
-          "startSec": 165.7,
-          "endSec": 166.18,
-          "probability": 0.9883
-        },
-        {
-          "word": "kendini",
-          "startSec": 166.18,
-          "endSec": 166.8,
-          "probability": 0.9958
-        },
-        {
-          "word": "tamamen",
-          "startSec": 166.8,
-          "endSec": 167.36,
-          "probability": 0.9939
-        },
-        {
-          "word": "geri",
-          "startSec": 167.36,
-          "endSec": 167.58,
-          "probability": 0.8987
-        },
-        {
-          "word": "sarıyor.",
-          "startSec": 167.58,
-          "endSec": 168.02,
-          "probability": 0.994
-        }
-      ]
-    },
-    {
-      "id": 32,
-      "startSec": 168.76,
-      "endSec": 169.38,
-      "text": "Bölüm 4",
-      "words": [
-        {
-          "word": "Bölüm",
-          "startSec": 168.76,
-          "endSec": 169.1,
-          "probability": 0.7608
-        },
-        {
-          "word": "4",
-          "startSec": 169.1,
-          "endSec": 169.38,
-          "probability": 0.8059
-        }
-      ]
-    },
-    {
-      "id": 33,
-      "startSec": 169.97,
-      "endSec": 170.42,
-      "text": "Triggers",
-      "words": [
-        {
-          "word": "Triggers",
-          "startSec": 169.97,
-          "endSec": 170.42,
-          "probability": 0.206
-        }
-      ]
-    },
-    {
-      "id": 34,
-      "startSec": 171.11,
-      "endSec": 173.36,
-      "text": "Stored Procedure ve Performance",
-      "words": [
-        {
-          "word": "Stored",
-          "startSec": 171.11,
-          "endSec": 171.56,
-          "probability": 0.52
-        },
-        {
-          "word": "Procedure",
-          "startSec": 171.56,
-          "endSec": 172.32,
-          "probability": 0.8933
-        },
-        {
-          "word": "ve",
-          "startSec": 172.32,
-          "endSec": 172.72,
-          "probability": 0.7208
-        },
-        {
-          "word": "Performance",
-          "startSec": 172.72,
-          "endSec": 173.36,
-          "probability": 0.876
-        }
-      ]
-    },
-    {
-      "id": 35,
-      "startSec": 173.99,
-      "endSec": 177.08,
-      "text": "İş mantığının sadece Java kodunda yaşamaması,",
-      "words": [
-        {
-          "word": "İş",
-          "startSec": 173.99,
-          "endSec": 174.44,
-          "probability": 0.7077
-        },
-        {
-          "word": "mantığının",
-          "startSec": 174.44,
-          "endSec": 175.04,
-          "probability": 0.9547
-        },
-        {
-          "word": "sadece",
-          "startSec": 175.04,
-          "endSec": 175.38,
-          "probability": 0.9914
-        },
-        {
-          "word": "Java",
-          "startSec": 175.38,
-          "endSec": 175.9,
-          "probability": 0.7099
-        },
-        {
-          "word": "kodunda",
-          "startSec": 175.9,
-          "endSec": 176.32,
-          "probability": 0.9642
-        },
-        {
-          "word": "yaşamaması,",
-          "startSec": 176.32,
-          "endSec": 177.08,
-          "probability": 0.8033
-        }
-      ]
-    },
-    {
-      "id": 36,
-      "startSec": 177.54,
-      "endSec": 181.02,
-      "text": "veri tabanının da kendi bütünlüğünü koruması gerekiyor.",
-      "words": [
-        {
-          "word": "veri",
-          "startSec": 177.54,
-          "endSec": 177.9,
-          "probability": 0.8311
-        },
-        {
-          "word": "tabanının",
-          "startSec": 177.9,
-          "endSec": 178.3,
-          "probability": 0.9647
-        },
-        {
-          "word": "da",
-          "startSec": 178.3,
-          "endSec": 178.56,
-          "probability": 0.9775
-        },
-        {
-          "word": "kendi",
-          "startSec": 178.56,
-          "endSec": 178.9,
-          "probability": 0.9951
-        },
-        {
-          "word": "bütünlüğünü",
-          "startSec": 178.9,
-          "endSec": 179.44,
-          "probability": 0.9549
-        },
-        {
-          "word": "koruması",
-          "startSec": 179.44,
-          "endSec": 179.88,
-          "probability": 0.9856
-        },
-        {
-          "word": "gerekiyor.",
-          "startSec": 179.88,
-          "endSec": 181.02,
-          "probability": 0.997
-        }
-      ]
-    },
-    {
-      "id": 37,
-      "startSec": 181.02,
-      "endSec": 185.48,
-      "text": "Bu yüzden kritik noktalarda Trigger ve Stored Procedure yapıları kurduk.",
-      "words": [
-        {
-          "word": "Bu",
-          "startSec": 181.02,
-          "endSec": 181.3,
-          "probability": 0.9136
-        },
-        {
-          "word": "yüzden",
-          "startSec": 181.3,
-          "endSec": 181.6,
-          "probability": 0.999
-        },
-        {
-          "word": "kritik",
-          "startSec": 181.6,
-          "endSec": 182.14,
-          "probability": 0.9609
-        },
-        {
-          "word": "noktalarda",
-          "startSec": 182.14,
-          "endSec": 182.78,
-          "probability": 0.9216
-        },
-        {
-          "word": "Trigger",
-          "startSec": 182.78,
-          "endSec": 183.3,
-          "probability": 0.6367
-        },
-        {
-          "word": "ve",
-          "startSec": 183.3,
-          "endSec": 183.6,
-          "probability": 0.9393
-        },
-        {
-          "word": "Stored",
-          "startSec": 183.6,
-          "endSec": 184.0,
-          "probability": 0.7619
-        },
-        {
-          "word": "Procedure",
-          "startSec": 184.0,
-          "endSec": 184.6,
-          "probability": 0.9304
-        },
-        {
-          "word": "yapıları",
-          "startSec": 184.6,
-          "endSec": 185.02,
-          "probability": 0.9519
-        },
-        {
-          "word": "kurduk.",
-          "startSec": 185.02,
-          "endSec": 185.48,
-          "probability": 0.9922
-        }
-      ]
-    },
-    {
-      "id": 38,
-      "startSec": 186.08,
-      "endSec": 191.38,
-      "text": "Örneğin müsait odaları listelerken uygulama tarafına binlerce gereksiz satır çekmek yerine,",
-      "words": [
-        {
-          "word": "Örneğin",
-          "startSec": 186.08,
-          "endSec": 186.48,
-          "probability": 0.9754
-        },
-        {
-          "word": "müsait",
-          "startSec": 186.48,
-          "endSec": 186.94,
-          "probability": 0.8532
-        },
-        {
-          "word": "odaları",
-          "startSec": 186.94,
-          "endSec": 187.38,
-          "probability": 0.9899
-        },
-        {
-          "word": "listelerken",
-          "startSec": 187.38,
-          "endSec": 188.1,
-          "probability": 0.9345
-        },
-        {
-          "word": "uygulama",
-          "startSec": 188.1,
-          "endSec": 188.68,
-          "probability": 0.9697
-        },
-        {
-          "word": "tarafına",
-          "startSec": 188.68,
-          "endSec": 189.14,
-          "probability": 0.9844
-        },
-        {
-          "word": "binlerce",
-          "startSec": 189.14,
-          "endSec": 189.7,
-          "probability": 0.9923
-        },
-        {
-          "word": "gereksiz",
-          "startSec": 189.7,
-          "endSec": 190.2,
-          "probability": 0.9947
-        },
-        {
-          "word": "satır",
-          "startSec": 190.2,
-          "endSec": 190.54,
-          "probability": 0.9912
-        },
-        {
-          "word": "çekmek",
-          "startSec": 190.54,
-          "endSec": 190.92,
-          "probability": 0.9944
-        },
-        {
-          "word": "yerine,",
-          "startSec": 190.92,
-          "endSec": 191.38,
-          "probability": 0.9985
-        }
-      ]
-    },
-    {
-      "id": 39,
-      "startSec": 191.74,
-      "endSec": 195.04,
-      "text": "doğrudan MySQL içinde çalışan saklı yordamlarla",
-      "words": [
-        {
-          "word": "doğrudan",
-          "startSec": 191.74,
-          "endSec": 192.36,
-          "probability": 0.9926
-        },
-        {
-          "word": "MySQL",
-          "startSec": 192.36,
-          "endSec": 192.92,
-          "probability": 0.5172
-        },
-        {
-          "word": "içinde",
-          "startSec": 192.92,
-          "endSec": 193.3,
-          "probability": 0.6652
-        },
-        {
-          "word": "çalışan",
-          "startSec": 193.3,
-          "endSec": 193.84,
-          "probability": 0.9993
-        },
-        {
-          "word": "saklı",
-          "startSec": 193.84,
-          "endSec": 194.26,
-          "probability": 0.9514
-        },
-        {
-          "word": "yordamlarla",
-          "startSec": 194.26,
-          "endSec": 195.04,
-          "probability": 0.9413
-        }
-      ]
-    },
-    {
-      "id": 40,
-      "startSec": 195.04,
-      "endSec": 198.66,
-      "text": "sadece tarih aralığına uyan boş odaları filtreliyoruz.",
-      "words": [
-        {
-          "word": "sadece",
-          "startSec": 195.04,
-          "endSec": 195.7,
-          "probability": 0.8276
-        },
-        {
-          "word": "tarih",
-          "startSec": 195.7,
-          "endSec": 196.34,
-          "probability": 0.9609
-        },
-        {
-          "word": "aralığına",
-          "startSec": 196.34,
-          "endSec": 196.84,
-          "probability": 0.9919
-        },
-        {
-          "word": "uyan",
-          "startSec": 196.84,
-          "endSec": 197.12,
-          "probability": 0.9806
-        },
-        {
-          "word": "boş",
-          "startSec": 197.12,
-          "endSec": 197.42,
-          "probability": 0.9896
-        },
-        {
-          "word": "odaları",
-          "startSec": 197.42,
-          "endSec": 197.86,
-          "probability": 0.9916
-        },
-        {
-          "word": "filtreliyoruz.",
-          "startSec": 197.86,
-          "endSec": 198.66,
-          "probability": 0.8398
-        }
-      ]
-    },
-    {
-      "id": 41,
-      "startSec": 199.14,
-      "endSec": 201.5,
-      "text": "Ayrıca rezervasyon durumu değiştiğinde",
-      "words": [
-        {
-          "word": "Ayrıca",
-          "startSec": 199.14,
-          "endSec": 199.68,
-          "probability": 0.995
-        },
-        {
-          "word": "rezervasyon",
-          "startSec": 199.68,
-          "endSec": 200.42,
-          "probability": 0.9159
-        },
-        {
-          "word": "durumu",
-          "startSec": 200.42,
-          "endSec": 200.74,
-          "probability": 0.9437
-        },
-        {
-          "word": "değiştiğinde",
-          "startSec": 200.74,
-          "endSec": 201.5,
-          "probability": 0.9911
-        }
-      ]
-    },
-    {
-      "id": 42,
-      "startSec": 201.5,
-      "endSec": 206.44,
-      "text": "oda durumunu veya log kayıtlarını otomatik güncelleyen tetikleyiciler sayesinde",
-      "words": [
-        {
-          "word": "oda",
-          "startSec": 201.5,
-          "endSec": 202.1,
-          "probability": 0.6817
-        },
-        {
-          "word": "durumunu",
-          "startSec": 202.1,
-          "endSec": 202.58,
-          "probability": 0.898
-        },
-        {
-          "word": "veya",
-          "startSec": 202.58,
-          "endSec": 202.88,
-          "probability": 0.9632
-        },
-        {
-          "word": "log",
-          "startSec": 202.88,
-          "endSec": 203.24,
-          "probability": 0.4917
-        },
-        {
-          "word": "kayıtlarını",
-          "startSec": 203.24,
-          "endSec": 203.8,
-          "probability": 0.99
-        },
-        {
-          "word": "otomatik",
-          "startSec": 203.8,
-          "endSec": 204.4,
-          "probability": 0.9936
-        },
-        {
-          "word": "güncelleyen",
-          "startSec": 204.4,
-          "endSec": 205.04,
-          "probability": 0.9023
-        },
-        {
-          "word": "tetikleyiciler",
-          "startSec": 205.04,
-          "endSec": 205.72,
-          "probability": 0.9681
-        },
-        {
-          "word": "sayesinde",
-          "startSec": 205.72,
-          "endSec": 206.44,
-          "probability": 0.9945
-        }
-      ]
-    },
-    {
-      "id": 43,
-      "startSec": 206.44,
-      "endSec": 210.42,
-      "text": "insan hatasına veya unutulan bir sorguya yer kalmıyor.",
-      "words": [
-        {
-          "word": "insan",
-          "startSec": 206.44,
-          "endSec": 207.14,
-          "probability": 0.7757
-        },
-        {
-          "word": "hatasına",
-          "startSec": 207.14,
-          "endSec": 207.78,
-          "probability": 0.9852
-        },
-        {
-          "word": "veya",
-          "startSec": 207.78,
-          "endSec": 208.38,
-          "probability": 0.9771
-        },
-        {
-          "word": "unutulan",
-          "startSec": 208.38,
-          "endSec": 209.02,
-          "probability": 0.9852
-        },
-        {
-          "word": "bir",
-          "startSec": 209.02,
-          "endSec": 209.18,
-          "probability": 0.9942
-        },
-        {
-          "word": "sorguya",
-          "startSec": 209.18,
-          "endSec": 209.7,
-          "probability": 0.9387
-        },
-        {
-          "word": "yer",
-          "startSec": 209.7,
-          "endSec": 209.94,
-          "probability": 0.9986
-        },
-        {
-          "word": "kalmıyor.",
-          "startSec": 209.94,
-          "endSec": 210.42,
-          "probability": 0.9963
-        }
-      ]
-    },
-    {
-      "id": 44,
-      "startSec": 211.02,
-      "endSec": 213.52,
-      "text": "Doğru kolonlara eklenen indekslerle birlikte",
-      "words": [
-        {
-          "word": "Doğru",
-          "startSec": 211.02,
-          "endSec": 211.42,
-          "probability": 0.9628
-        },
-        {
-          "word": "kolonlara",
-          "startSec": 211.42,
-          "endSec": 211.92,
-          "probability": 0.9853
-        },
-        {
-          "word": "eklenen",
-          "startSec": 211.92,
-          "endSec": 212.4,
-          "probability": 0.8706
-        },
-        {
-          "word": "indekslerle",
-          "startSec": 212.4,
-          "endSec": 213.1,
-          "probability": 0.9425
-        },
-        {
-          "word": "birlikte",
-          "startSec": 213.1,
-          "endSec": 213.52,
-          "probability": 0.993
-        }
-      ]
-    },
-    {
-      "id": 45,
-      "startSec": 214.04,
-      "endSec": 216.64,
-      "text": "normalde yüzlerce milisaniye süren sorbular",
-      "words": [
-        {
-          "word": "normalde",
-          "startSec": 214.04,
-          "endSec": 214.56,
-          "probability": 0.7414
-        },
-        {
-          "word": "yüzlerce",
-          "startSec": 214.56,
-          "endSec": 215.2,
-          "probability": 0.9721
-        },
-        {
-          "word": "milisaniye",
-          "startSec": 215.2,
-          "endSec": 215.86,
-          "probability": 0.8523
-        },
-        {
-          "word": "süren",
-          "startSec": 215.86,
-          "endSec": 216.14,
-          "probability": 0.7937
-        },
-        {
-          "word": "sorbular",
-          "startSec": 216.14,
-          "endSec": 216.64,
-          "probability": 0.8809
-        }
-      ]
-    },
-    {
-      "id": 46,
-      "startSec": 216.64,
-      "endSec": 218.94,
-      "text": "tekhaneli milisaniyelere iniyor.",
-      "words": [
-        {
-          "word": "tekhaneli",
-          "startSec": 216.64,
-          "endSec": 217.64,
-          "probability": 0.7705
-        },
-        {
-          "word": "milisaniyelere",
-          "startSec": 217.64,
-          "endSec": 218.48,
-          "probability": 0.9824
-        },
-        {
-          "word": "iniyor.",
-          "startSec": 218.48,
-          "endSec": 218.94,
-          "probability": 0.916
-        }
-      ]
-    },
-    {
-      "id": 47,
-      "startSec": 219.56,
-      "endSec": 225.32,
-      "text": "Özetle bu proje sadece veri ekleyen ve silen standard bir CREUD uygulaması değil.",
-      "words": [
-        {
-          "word": "Özetle",
-          "startSec": 219.56,
-          "endSec": 220.08,
-          "probability": 0.8562
+          "word": "olmayan",
+          "startSec": 220.101,
+          "endSec": 220.501,
+          "probability": 1.0
         },
         {
           "word": "bu",
-          "startSec": 220.08,
-          "endSec": 220.26,
-          "probability": 0.887
+          "startSec": 220.501,
+          "endSec": 221.039,
+          "probability": 1.0
         },
         {
-          "word": "proje",
-          "startSec": 220.26,
-          "endSec": 220.74,
-          "probability": 0.9771
+          "word": "deterministik",
+          "startSec": 221.039,
+          "endSec": 221.189,
+          "probability": 1.0
         },
         {
-          "word": "sadece",
-          "startSec": 220.74,
-          "endSec": 221.32,
-          "probability": 0.9183
+          "word": "saf",
+          "startSec": 221.189,
+          "endSec": 221.989,
+          "probability": 1.0
         },
         {
-          "word": "veri",
-          "startSec": 221.32,
-          "endSec": 221.84,
-          "probability": 0.9726
+          "word": "C",
+          "startSec": 221.989,
+          "endSec": 222.276,
+          "probability": 1.0
         },
         {
-          "word": "ekleyen",
-          "startSec": 221.84,
-          "endSec": 222.28,
-          "probability": 0.9724
+          "word": "mimarisi",
+          "startSec": 222.276,
+          "endSec": 222.476,
+          "probability": 1.0
         },
         {
-          "word": "ve",
-          "startSec": 222.28,
-          "endSec": 222.46,
-          "probability": 0.6261
+          "word": "o",
+          "startSec": 222.476,
+          "endSec": 223.201,
+          "probability": 1.0
         },
         {
-          "word": "silen",
-          "startSec": 222.46,
-          "endSec": 222.82,
-          "probability": 0.9203
+          "word": "kadar",
+          "startSec": 223.376,
+          "endSec": 223.464,
+          "probability": 1.0
         },
         {
-          "word": "standard",
-          "startSec": 222.82,
-          "endSec": 223.26,
-          "probability": 0.5044
+          "word": "sağlamdı",
+          "startSec": 223.464,
+          "endSec": 223.826,
+          "probability": 1.0
         },
         {
-          "word": "bir",
-          "startSec": 223.26,
-          "endSec": 223.58,
-          "probability": 0.9903
+          "word": "ki,",
+          "startSec": 223.826,
+          "endSec": 224.364,
+          "probability": 1.0
         },
         {
-          "word": "CREUD",
-          "startSec": 223.58,
-          "endSec": 224.36,
-          "probability": 0.5187
+          "word": "bugün",
+          "startSec": 224.376,
+          "endSec": 224.589,
+          "probability": 1.0
         },
         {
-          "word": "uygulaması",
-          "startSec": 224.36,
-          "endSec": 225.08,
-          "probability": 0.9902
+          "word": "Xash3D",
+          "startSec": 224.764,
+          "endSec": 225.514,
+          "probability": 1.0
         },
         {
-          "word": "değil.",
-          "startSec": 225.08,
-          "endSec": 225.32,
-          "probability": 0.9953
-        }
-      ]
-    },
-    {
-      "id": 48,
-      "startSec": 225.94,
-      "endSec": 227.64,
-      "text": "13 tablolu temiz şeması,",
-      "words": [
-        {
-          "word": "13",
-          "startSec": 225.94,
-          "endSec": 226.22,
-          "probability": 0.8402
+          "word": "motoruyla",
+          "startSec": 225.526,
+          "endSec": 225.651,
+          "probability": 1.0
         },
         {
-          "word": "tablolu",
-          "startSec": 226.22,
-          "endSec": 226.74,
-          "probability": 0.8269
+          "word": "WebAssembly",
+          "startSec": 225.651,
+          "endSec": 226.389,
+          "probability": 1.0
         },
         {
-          "word": "temiz",
-          "startSec": 226.74,
-          "endSec": 227.12,
-          "probability": 0.9838
+          "word": "'e",
+          "startSec": 226.389,
+          "endSec": 226.901,
+          "probability": 1.0
         },
         {
-          "word": "şeması,",
-          "startSec": 227.12,
-          "endSec": 227.64,
-          "probability": 0.9359
-        }
-      ]
-    },
-    {
-      "id": 49,
-      "startSec": 228.12,
-      "endSec": 229.44,
-      "text": "3 NF kuralları,",
-      "words": [
-        {
-          "word": "3",
-          "startSec": 228.12,
-          "endSec": 228.38,
-          "probability": 0.927
+          "word": "derlenip",
+          "startSec": 226.901,
+          "endSec": 227.376,
+          "probability": 1.0
         },
         {
-          "word": "NF",
-          "startSec": 228.38,
-          "endSec": 228.66,
-          "probability": 0.5828
+          "word": "doğrudan",
+          "startSec": 227.389,
+          "endSec": 227.851,
+          "probability": 1.0
         },
         {
-          "word": "kuralları,",
-          "startSec": 228.66,
-          "endSec": 229.44,
-          "probability": 0.9694
-        }
-      ]
-    },
-    {
-      "id": 50,
-      "startSec": 229.92,
-      "endSec": 232.68,
-      "text": "işlem bütünlüğü ve çakışma korumasıyla",
-      "words": [
-        {
-          "word": "işlem",
-          "startSec": 229.92,
-          "endSec": 230.24,
-          "probability": 0.7598
+          "word": "tarayıcıda",
+          "startSec": 227.864,
+          "endSec": 228.389,
+          "probability": 1.0
         },
         {
-          "word": "bütünlüğü",
-          "startSec": 230.24,
-          "endSec": 231.18,
-          "probability": 0.9
+          "word": "bile",
+          "startSec": 228.389,
+          "endSec": 228.601,
+          "probability": 1.0
         },
         {
-          "word": "ve",
-          "startSec": 231.18,
-          "endSec": 231.38,
-          "probability": 0.9872
+          "word": "akıcı",
+          "startSec": 228.614,
+          "endSec": 229.001,
+          "probability": 1.0
         },
         {
-          "word": "çakışma",
-          "startSec": 231.38,
-          "endSec": 231.98,
-          "probability": 0.9799
+          "word": "şekilde",
+          "startSec": 229.001,
+          "endSec": 229.414,
+          "probability": 1.0
         },
         {
-          "word": "korumasıyla",
-          "startSec": 231.98,
-          "endSec": 232.68,
-          "probability": 0.9483
-        }
-      ]
-    },
-    {
-      "id": 51,
-      "startSec": 232.68,
-      "endSec": 236.76,
-      "text": "gerçek bir konaklama sisteminin çekirdeğini modelleyen bir mimari.",
-      "words": [
-        {
-          "word": "gerçek",
-          "startSec": 232.68,
-          "endSec": 233.36,
-          "probability": 0.963
-        },
-        {
-          "word": "bir",
-          "startSec": 233.36,
-          "endSec": 233.68,
-          "probability": 0.9892
-        },
-        {
-          "word": "konaklama",
-          "startSec": 233.68,
-          "endSec": 234.24,
-          "probability": 0.9847
-        },
-        {
-          "word": "sisteminin",
-          "startSec": 234.24,
-          "endSec": 234.8,
-          "probability": 0.9509
-        },
-        {
-          "word": "çekirdeğini",
-          "startSec": 234.8,
-          "endSec": 235.42,
-          "probability": 0.9435
-        },
-        {
-          "word": "modelleyen",
-          "startSec": 235.42,
-          "endSec": 236.1,
-          "probability": 0.8602
-        },
-        {
-          "word": "bir",
-          "startSec": 236.1,
-          "endSec": 236.24,
-          "probability": 0.9946
-        },
-        {
-          "word": "mimari.",
-          "startSec": 236.24,
-          "endSec": 236.76,
-          "probability": 0.9811
-        }
-      ]
-    },
-    {
-      "id": 52,
-      "startSec": 237.68,
-      "endSec": 239.22,
-      "text": "Tüm SQL şemasına,",
-      "words": [
-        {
-          "word": "Tüm",
-          "startSec": 237.68,
-          "endSec": 237.98,
-          "probability": 0.9963
-        },
-        {
-          "word": "SQL",
-          "startSec": 237.98,
-          "endSec": 238.44,
-          "probability": 0.4168
-        },
-        {
-          "word": "şemasına,",
-          "startSec": 238.44,
-          "endSec": 239.22,
-          "probability": 0.8446
-        }
-      ]
-    },
-    {
-      "id": 53,
-      "startSec": 239.22,
-      "endSec": 240.78,
-      "text": "eR diagramına",
-      "words": [
-        {
-          "word": "eR",
-          "startSec": 239.22,
-          "endSec": 239.98,
-          "probability": 0.2596
-        },
-        {
-          "word": "diagramına",
-          "startSec": 239.98,
-          "endSec": 240.78,
-          "probability": 0.8667
-        }
-      ]
-    },
-    {
-      "id": 54,
-      "startSec": 240.78,
-      "endSec": 244.62,
-      "text": "ve kaynak kodlara git hap reposu üzerinden ulaşabilirsiniz.",
-      "words": [
-        {
-          "word": "ve",
-          "startSec": 240.78,
-          "endSec": 241.28,
-          "probability": 0.9757
-        },
-        {
-          "word": "kaynak",
-          "startSec": 241.28,
-          "endSec": 241.78,
-          "probability": 0.9277
-        },
-        {
-          "word": "kodlara",
-          "startSec": 241.78,
-          "endSec": 242.24,
-          "probability": 0.9555
-        },
-        {
-          "word": "git",
-          "startSec": 242.24,
-          "endSec": 242.6,
-          "probability": 0.3143
-        },
-        {
-          "word": "hap",
-          "startSec": 242.6,
-          "endSec": 242.88,
-          "probability": 0.6595
-        },
-        {
-          "word": "reposu",
-          "startSec": 242.88,
-          "endSec": 243.26,
-          "probability": 0.8688
-        },
-        {
-          "word": "üzerinden",
-          "startSec": 243.26,
-          "endSec": 243.72,
-          "probability": 0.998
-        },
-        {
-          "word": "ulaşabilirsiniz.",
-          "startSec": 243.72,
-          "endSec": 244.62,
-          "probability": 0.998
-        }
-      ]
-    },
-    {
-      "id": 55,
-      "startSec": 245.46,
-      "endSec": 247.08,
-      "text": "İzlediğiniz için teşekkürler.",
-      "words": [
-        {
-          "word": "İzlediğiniz",
-          "startSec": 245.46,
-          "endSec": 246.12,
-          "probability": 0.9812
-        },
-        {
-          "word": "için",
-          "startSec": 246.12,
-          "endSec": 246.34,
-          "probability": 0.9993
-        },
-        {
-          "word": "teşekkürler.",
-          "startSec": 246.34,
-          "endSec": 247.08,
-          "probability": 0.966
+          "word": "çalışabiliyor.",
+          "startSec": 229.414,
+          "endSec": 230.176,
+          "probability": 1.0
         }
       ]
     }

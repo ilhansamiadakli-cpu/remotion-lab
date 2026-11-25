@@ -1,0 +1,432 @@
+{
+  "meta": {
+    "title": "Bölüm 2: BSP Ağaçları ve Derleme Anında Düzlem Bölünmesi",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 54.664
+  },
+  "audio": "doom_goldsrc.wav",
+  "audioVolume": 1,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "ch02-01-highlightertext",
+      "startSec": 0.0,
+      "endSec": 3.41,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "VURGU · SAHNE 01",
+        "text": "Bu devrimin ilk sütunu BSP , yani",
+        "highlights": [
+          "sütunu BSP"
+        ],
+        "highlightAtSecs": [
+          1.48
+        ]
+      },
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-02-glasscard",
+      "startSec": 3.41,
+      "endSec": 6.84,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 02",
+        "title": "Binary Space Partitioning ağaçlarıydı",
+        "badge": "SAHNE 02",
+        "body": "Binary Space Partitioning ağaçlarıydı.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-03-highlightertext",
+      "startSec": 6.84,
+      "endSec": 10.07,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 03",
+        "text": "Harita henüz oyuncunun bilgisayarına ulaşmadan, offline",
+        "highlights": [
+          "bilgisayarına ulaşmadan"
+        ],
+        "highlightAtSecs": [
+          1.52
+        ]
+      },
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-04-stepcard",
+      "startSec": 10.07,
+      "endSec": 13.2,
+      "component": "StepCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "tick",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "UYGULAMA ADIMLARI",
+        "title": "Adım Adım Akış",
+        "activeStepIndex": 0,
+        "steps": [
+          {
+            "title": "1. derleme aşamasında tüm duvarlar ve yüzeyler",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          },
+          {
+            "title": "2. Kontrollü ilerleme",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          },
+          {
+            "title": "3. Temiz kapanış",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          }
+        ]
+      },
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-05-highlightertext",
+      "startSec": 13.2,
+      "endSec": 16.88,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 05",
+        "text": "düzlemlerle özyinelemeli olarak ikiye bölünür.",
+        "highlights": [
+          "olarak ikiye"
+        ],
+        "highlightAtSecs": [
+          1.11
+        ]
+      },
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-06-glasscard",
+      "startSec": 16.88,
+      "endSec": 19.92,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 06",
+        "title": "Ortaya haritanın tüm geometrisini",
+        "badge": "SAHNE 06",
+        "body": "Ortaya haritanın tüm geometrisini dışbükey odacıklara",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-07-nodeflow",
+      "startSec": 19.92,
+      "endSec": 22.95,
+      "component": "NodeFlow",
+      "background": "obsidianGrid",
+      "transition": "slideLeft",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "AKIŞ · SAHNE 07",
+        "title": "Süreç Bağlantısı",
+        "nodes": [
+          {
+            "badge": "01",
+            "label": "ayıran statik bir ikili ağaç",
+            "highlighted": false
+          },
+          {
+            "badge": "02",
+            "label": "Sonuç",
+            "highlighted": true
+          }
+        ],
+        "caption": "ayıran statik bir ikili ağaç çıkar."
+      },
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-08-highlightertext",
+      "startSec": 22.95,
+      "endSec": 26.11,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 08",
+        "text": "Oyun çalışırken motor her karede binlerce poligonu",
+        "highlights": [
+          "karede binlerce"
+        ],
+        "highlightAtSecs": [
+          1.65
+        ]
+      },
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-09-glasscard",
+      "startSec": 26.11,
+      "endSec": 28.84,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 09",
+        "title": "sıralamak zorunda kalmaz",
+        "badge": "SAHNE 09",
+        "body": "sıralamak zorunda kalmaz.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-10-comparisoncard",
+      "startSec": 28.84,
+      "endSec": 31.33,
+      "component": "ComparisonCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "KARŞILAŞTIRMA · SAHNE 10",
+        "title": "Yanlış Yaklaşım vs Doğru Yöntem",
+        "leftTitle": "Eski / Hatalı Yaklaşım",
+        "leftBadge": "HATALI",
+        "leftItems": [
+          "Kontrolsüz ve tutarsız uygulama",
+          "Beklenmeyen kalite kaybı"
+        ],
+        "rightTitle": "Önerilen Doğru Yaklaşım",
+        "rightBadge": "DOĞRU",
+        "rightItems": [
+          "Kamera koordinatı kök düğümdeki düzleme karşı tek",
+          "Ölçülebilir ve tekrarlanabilir sonuç"
+        ]
+      },
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-11-highlightertext",
+      "startSec": 31.33,
+      "endSec": 33.92,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 11",
+        "text": "bir işaret testiyle kontrol edilir.",
+        "highlights": [
+          "kontrol edilir"
+        ],
+        "highlightAtSecs": [
+          1.11
+        ]
+      },
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-12-glasscard",
+      "startSec": 33.92,
+      "endSec": 37.09,
+      "component": "GlassCard",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 12",
+        "title": "Kamera düzlemin önündeyse önce",
+        "badge": "SAHNE 12",
+        "body": "Kamera düzlemin önündeyse önce ön dal,",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-13-stepcard",
+      "startSec": 37.09,
+      "endSec": 42.0,
+      "component": "StepCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "tick",
+      "sfxVolume": 0.13,
+      "props": {
+        "eyebrow": "UYGULAMA ADIMLARI",
+        "title": "Adım Adım Akış",
+        "activeStepIndex": 0,
+        "steps": [
+          {
+            "title": "1. ardından arka dal gezilir",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          },
+          {
+            "title": "2. Böylece tüm sahne önden arkaya",
+            "detail": "Zaman çizelgesine göre düzenleyebilirsiniz."
+          }
+        ]
+      },
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-14-highlightertext",
+      "startSec": 42.0,
+      "endSec": 45.04,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 14",
+        "text": "kesin bir derinlik sırasıyla taranır.",
+        "highlights": [
+          "sırasıyla taranır"
+        ],
+        "highlightAtSecs": [
+          0.91
+        ]
+      },
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-15-mediawindow",
+      "startSec": 45.04,
+      "endSec": 48.77,
+      "component": "MediaWindow",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "src": "schema_preview.png",
+        "title": "ekran-15.png",
+        "badge": "ÖRNEK GÖRSEL",
+        "zoomPan": true,
+        "caption": "Ekranda bir piksel dolduğu anda arkasındaki hiçbir duvar bir daha"
+      },
+      "blurBackground": true,
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-16-highlightertext",
+      "startSec": 48.77,
+      "endSec": 51.81,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "frameless": false,
+        "eyebrow": "VURGU · SAHNE 16",
+        "text": "çizilmez; Z-Buffer olmadan mükemmel gizleme",
+        "highlights": [
+          "olmadan mükemmel"
+        ],
+        "highlightAtSecs": [
+          1.54
+        ]
+      },
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    },
+    {
+      "id": "ch02-17-glasscard",
+      "startSec": 51.81,
+      "endSec": 54.664,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "sfx": "pop",
+      "sfxVolume": 0.13,
+      "props": {
+        "subtitle": "ODAK KARTI · 17",
+        "title": "ve sıfır overdraw sağlanır",
+        "badge": "SAHNE 17",
+        "body": "ve sıfır overdraw sağlanır.",
+        "items": [
+          {
+            "label": "Kilit Çıkarım",
+            "value": "Konuşma akışına senkronlandı",
+            "tag": "TASLAK",
+            "highlighted": true
+          }
+        ]
+      },
+      "blurBackground": true,
+      "chapterLabel": "02 · BÖLÜM 2: BSP AĞAÇLARI VE DER"
+    }
+  ],
+  "audioOffsetSec": 60.872
+}

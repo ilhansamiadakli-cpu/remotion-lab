@@ -1,0 +1,298 @@
+{
+  "meta": {
+    "title": "Bölüm 02 · BSP Ağaçları ve Derleme Anında Düzlem Bölünmesi",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "durationSec": 54.664
+  },
+  "audio": "doom_goldsrc.wav",
+  "audioOffsetSec": 60.872,
+  "audioVolume": 1,
+  "bgMusic": "audio/ambient.mp3",
+  "bgMusicVolume": 0.06,
+  "showHud": true,
+  "background": "obsidianGrid",
+  "beats": [
+    {
+      "id": "ch02-01-bsp-banner",
+      "startSec": 0,
+      "endSec": 4.7,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "02 · BSP AĞAÇLARI",
+      "sfx": "thud",
+      "sfxVolume": 0.22,
+      "props": {
+        "frameless": true,
+        "badge": "BÖLÜM 02 · İLK MİMARİ SÜTUN",
+        "value": "BSP AĞACI",
+        "label": "BINARY SPACE PARTITIONING",
+        "subtext": "Harita geometrisini çalışma anından önce düzlemlerle bölen statik ikili ağaç."
+      }
+    },
+    {
+      "id": "ch02-02-offline-split-text",
+      "startSec": 4.7,
+      "endSec": 9.65,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "02 · OFFLINE BÖLÜNME",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "ÖZYİNELEMELİ BÖLÜNME",
+        "text": "Harita oyuncuya ulaşmadan offline derleme aşamasında tüm duvarlar düzlemlerle ikiye bölünür.",
+        "highlights": ["offline derleme", "düzlemlerle ikiye bölünür"],
+        "highlightAtSecs": [2.3, 3.8]
+      }
+    },
+    {
+      "id": "ch02-03-qbsp-terminal",
+      "startSec": 9.65,
+      "endSec": 14.6,
+      "component": "TerminalTrace",
+      "background": "dotMatrix",
+      "transition": "editorial",
+      "chapterLabel": "02 · QBSP DERLEYİCİSİ",
+      "sfx": "tick",
+      "sfxVolume": 0.14,
+      "props": {
+        "title": "bash — Offline BSP Map Compiler",
+        "prompt": "carmack@nextstation ~ %",
+        "command": "qbsp e1m1.map -subdivide 240 -o e1m1.bsp",
+        "requestBody": "INPUT: 1,842 raw wall planes  |  MODE: Recursive Binary Split",
+        "statusCode": 200,
+        "statusText": "COMPILED",
+        "latency": "offline",
+        "responseAtSec": 1.3,
+        "highlightResponseLines": [2, 3, 4],
+        "responseBody": "{\n  \"bspNodes\": 614,\n  \"convexLeaves\": 615,\n  \"runtimeSortCost\": \"0 ms\"\n}",
+        "caption": "Geometri bir kez derleyicide bölünür; çalışma anında sıralama maliyeti sıfırlanır."
+      }
+    },
+    {
+      "id": "ch02-04-bsp-diagram-full",
+      "startSec": 14.6,
+      "endSec": 19.55,
+      "component": "MediaWindow",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "02 · BSP DİYAGRAMI",
+      "sfx": "whoosh",
+      "sfxVolume": 0.14,
+      "props": {
+        "src": "bsp-tree-split.png",
+        "title": "bsp-tree-split.png",
+        "badge": "BSP AĞACI",
+        "zoomPan": true,
+        "caption": "Solda düzlemlerle bölünmüş 2D harita poligonu, sağda karşılık gelen ikili BSP ağaç düğümleri."
+      }
+    },
+    {
+      "id": "ch02-05-convex-leaves-split",
+      "startSec": 19.55,
+      "endSec": 24.4,
+      "component": "SplitStage",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "chapterLabel": "02 · DIŞBÜKEY ODACIKLAR",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "reverse": true,
+        "eyebrow": "STATİK İKİLİ AĞAÇ",
+        "title": "Dışbükey Odacıklar",
+        "subtitle": "Haritanın karmaşık geometrisi kesin sıralanabilir dışbükey yapraklara ayrılır.",
+        "points": [
+          {
+            "title": "Örtüşmesiz Yaprak Düğümler",
+            "detail": "Her alt bölge dışbükey olduğundan içindeki yüzeyler çakışmaz.",
+            "tag": "CONVEX",
+            "highlighted": true
+          },
+          {
+            "title": "Sıfır Çalışma Anı Sıralaması",
+            "detail": "Motor her karede binlerce poligonu sıralamak zorunda kalmaz.",
+            "tag": "O(N)"
+          }
+        ],
+        "footerNote": "Doom (1993) & GoldSrc • Static Binary Space Partitioning",
+        "visual": {
+          "type": "media",
+          "src": "bsp-tree-split.png",
+          "title": "bsp-convex-leaves.png",
+          "badge": "DIŞBÜKEY YAPRAK",
+          "zoomPan": true
+        }
+      }
+    },
+    {
+      "id": "ch02-06-no-sort-text",
+      "startSec": 24.4,
+      "endSec": 28.95,
+      "component": "HighlighterText",
+      "background": "obsidianGrid",
+      "transition": "focusBlur",
+      "chapterLabel": "02 · SIRALAMA YOK",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "ÇALIŞMA ANI KAZANIMI",
+        "text": "Oyun çalışırken motor her karede binlerce poligonu sıralamak zorunda kalmaz.",
+        "highlights": ["binlerce poligonu", "sıralamak zorunda kalmaz"],
+        "highlightAtSecs": [0.75, 2.25]
+      }
+    },
+    {
+      "id": "ch02-07-bsp-traversal-code",
+      "startSec": 28.95,
+      "endSec": 33.9,
+      "component": "CodeWindow",
+      "background": "dotMatrix",
+      "transition": "slideLeft",
+      "chapterLabel": "02 · İŞARET TESTİ KODU",
+      "sfx": "tick",
+      "sfxVolume": 0.15,
+      "props": {
+        "language": "java",
+        "title": "r_bsp.c",
+        "code": "void RenderBSPNode(BSPNode *node, Vec3 cam) {\n  if (node->isLeaf) { DrawSubsector(node); return; }\n  float side = DotProduct(cam, node->normal) - node->dist;\n  if (side >= 0) { // Kamera duzlemin onunde\n    RenderBSPNode(node->front, cam); // 1. Once on dal\n    RenderBSPNode(node->back,  cam); // 2. Sonra arka dal\n  } else {\n    RenderBSPNode(node->back,  cam);\n    RenderBSPNode(node->front, cam);\n  }\n}",
+        "focusSteps": [
+          {
+            "atSec": 0,
+            "lines": [3],
+            "caption": "Kamera koordinatı kök düzleme karşı tek bir işaret testiyle kontrol edilir."
+          },
+          {
+            "atSec": 2.45,
+            "lines": [4, 5, 6],
+            "caption": "Kamera öndeyse önce ön dal, ardından arka dal gezilir."
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch02-08-front-back-flow",
+      "startSec": 33.9,
+      "endSec": 38.75,
+      "component": "NodeFlow",
+      "background": "obsidianGrid",
+      "transition": "slideLeft",
+      "chapterLabel": "02 · ÖN DAL → ARKA DAL",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "eyebrow": "ÖNDEN ARKAYA GEZİNTİ",
+        "title": "İşaret Testi → Ön Dal → Arka Dal",
+        "nodes": [
+          {
+            "badge": "01 · TEST",
+            "label": "dot(cam, n) >= 0",
+            "sublabel": "Kök düzlem işaret kontrolü"
+          },
+          {
+            "badge": "02 · ÖN",
+            "label": "Ön Dal (S1, S2)",
+            "sublabel": "Kameraya en yakın duvarlar"
+          },
+          {
+            "badge": "03 · ARKA",
+            "label": "Arka Dal (S3, S4)",
+            "sublabel": "Yalnızca açık kalan pikseller",
+            "highlighted": true
+          }
+        ],
+        "edgeLabels": ["Önce yakın", "Sonra uzak"],
+        "caption": "Her düğümde tek bir işaret testiyle kesin derinlik sırası garanti edilir."
+      }
+    },
+    {
+      "id": "ch02-09-depth-order-text",
+      "startSec": 38.75,
+      "endSec": 43.7,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "focusBlur",
+      "chapterLabel": "02 · KESİN DERİNLİK",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "MATEMATİKSEL SIRALAMA",
+        "text": "Böylece tüm sahne önden arkaya kesin bir derinlik sırasıyla taranır.",
+        "highlights": ["önden arkaya", "kesin bir derinlik sırasıyla"],
+        "highlightAtSecs": [2.5, 3.6]
+      }
+    },
+    {
+      "id": "ch02-10-early-out-card",
+      "startSec": 43.7,
+      "endSec": 47.7,
+      "component": "GlassCard",
+      "background": "obsidianGrid",
+      "transition": "editorial",
+      "chapterLabel": "02 · TEK PİKSEL YAZMA",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "subtitle": "ERKEN DURDURMA (EARLY-OUT)",
+        "title": "Dolu Pikseller Bir Daha Çizilmez",
+        "badge": "OCCLUSION",
+        "items": [
+          {
+            "label": "Ekran Sütun Maskesi",
+            "value": "Öndeki duvar bir sütunu doldurursa arkadaki tüm duvarlar atlanır",
+            "tag": "MASK",
+            "highlighted": true
+          },
+          {
+            "label": "Bellek Tasarrufu",
+            "value": "Z-Buffer olmadan piksel başına maksimum 1 çizim işlemi",
+            "tag": "1x DRAW"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch02-11-pixel-filled-text",
+      "startSec": 47.7,
+      "endSec": 51.1,
+      "component": "HighlighterText",
+      "background": "dotMatrix",
+      "transition": "focusBlur",
+      "chapterLabel": "02 · MÜKEMMEL GİZLEME",
+      "sfx": "pop",
+      "sfxVolume": 0.14,
+      "props": {
+        "frameless": true,
+        "eyebrow": "Z-BUFFER OLMADAN",
+        "text": "Ekranda bir piksel dolduğu anda arkasındaki hiçbir duvar bir daha çizilmez.",
+        "highlights": ["piksel dolduğu anda", "bir daha çizilmez"],
+        "highlightAtSecs": [0.2, 1.8]
+      }
+    },
+    {
+      "id": "ch02-12-zero-overdraw-banner",
+      "startSec": 51.1,
+      "endSec": 54.664,
+      "component": "MetricBanner",
+      "background": "radialGlow",
+      "transition": "depthZoom",
+      "chapterLabel": "02 · 0 OVERDRAW",
+      "sfx": "thud",
+      "sfxVolume": 0.22,
+      "props": {
+        "frameless": true,
+        "badge": "BSP SONUCU",
+        "value": "0 OVERDRAW",
+        "label": "Z-BUFFER OLMADAN MÜKEMMEL GİZLEME",
+        "subtext": "Her piksel tam olarak bir kez çizilir; gereksiz arka duvar hesabı biter."
+      }
+    }
+  ]
+}
